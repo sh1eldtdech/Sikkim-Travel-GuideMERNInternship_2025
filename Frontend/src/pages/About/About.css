@@ -1,7 +1,10 @@
+/* About Page - Modern Premium Styling */
+
 .about-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  font-family: var(--font-primary, 'Inter', sans-serif);
 }
 
 .about-hero {
@@ -58,19 +61,26 @@
 }
 
 .about-hero h1 {
-  font-size: 3.5rem;
+  font-size: var(--text-5xl, clamp(2.5rem, 2rem + 3vw, 4rem));
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
   animation: slideDown 1s ease-out 0.5s both;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
 }
 
 .about-hero p {
-  font-size: 1.5rem;
+  font-size: var(--text-xl, clamp(1.125rem, 1rem + 0.5vw, 1.5rem));
   position: relative;
   z-index: 2;
   animation: slideUp 1s ease-out 0.5s both;
-  font-style: italic;
+  font-weight: 500;
+  opacity: 1;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
 }
 
 @keyframes slideDown {
@@ -105,15 +115,17 @@
 .info-section {
   display: flex;
   margin-bottom: 80px;
-  background: white;
-  border-radius: 15px;
+  background: var(--color-white, white);
+  border-radius: var(--radius-2xl, 1.5rem);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .info-section:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
 }
 
 .info-section.reverse {
@@ -151,23 +163,26 @@
 }
 
 .info-text h2 {
-  font-size: 2rem;
-  color: #2c3e50;
+  font-size: var(--text-2xl, clamp(1.5rem, 1.2rem + 1vw, 2rem));
+  color: var(--color-dark, #0f172a);
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .section-icon {
-  color: #3498db;
+  color: var(--color-primary, #6366f1);
   font-size: 1.8rem;
 }
 
 .info-text p {
-  color: #666;
-  line-height: 1.6;
+  color: var(--color-gray-600, #4b5563);
+  line-height: 1.7;
   margin-bottom: 30px;
+  font-size: var(--text-base, clamp(1rem, 0.9rem + 0.4vw, 1.125rem));
 }
 
 .info-details {
@@ -177,31 +192,34 @@
 }
 
 .info-item {
-  background: #f8f9fa;
+  background: var(--color-gray-50, #f9fafb);
   padding: 20px;
-  border-radius: 10px;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg, 0.75rem);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .info-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(99, 102, 241, 0.1);
 }
 
 .info-item h3 {
-  color: #2c3e50;
-  font-size: 1.2rem;
+  color: var(--color-dark, #0f172a);
+  font-size: var(--text-lg, clamp(1.125rem, 1rem + 0.5vw, 1.25rem));
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-weight: 600;
 }
 
 .info-item p {
-  color: #666;
-  font-size: 0.95rem;
-  line-height: 1.5;
+  color: var(--color-gray-600, #4b5563);
+  font-size: var(--text-sm, clamp(0.875rem, 0.8rem + 0.3vw, 1rem));
+  line-height: 1.6;
   margin: 0;
 }
 

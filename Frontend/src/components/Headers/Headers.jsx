@@ -56,7 +56,7 @@ const Headers = () => {
   return (
     <header className={headerClasses}>
       <div className="header-content">
-        <Link to="/" className="logo">SH1ELD Tech TravelGuide</Link>
+        <Link to="/" className="logo">SH1ELD Tech</Link>
 
         <nav className="nav-links">
           <Link to="/" className="nav-link">Home</Link>

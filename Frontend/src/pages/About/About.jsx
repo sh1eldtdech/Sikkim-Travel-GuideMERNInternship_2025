@@ -13,7 +13,7 @@ import SikkimHeroImage from '../../assets/sikkim-hero.jpg';
 const About = () => {
   return (
     <div className="about-page">
-      <div className="about-hero" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${SikkimHeroImage})` }}>
+      <div className="about-hero" style={{ backgroundImage: `linear-gradient(rgba(49, 48, 48, 0.5), rgba(0, 0, 0, 0.5)), url(${SikkimHeroImage})` }}>
         <h1>Discover Sikkim</h1>
         <p>Your Gateway to the Himalayan Paradise</p>
         <div className="hero-overlay"></div>

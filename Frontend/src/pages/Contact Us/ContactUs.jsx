@@ -77,7 +77,7 @@ const Contact = () => {
     const marker = new window.google.maps.Marker({
       position: { lat: 27.3389, lng: 88.6065 },
       map: map,
-      title: 'SH1ELD Tech GuideBook Office',
+      title: 'SH1ELD Tech Office',
       animation: window.google.maps.Animation.DROP
     });
 
@@ -184,7 +184,7 @@ const Contact = () => {
               <div className="contact-card">
                 <div className="card-icon phone-icon">📞</div>
                 <h3>Phone</h3>
-                <p>+917903994710</p>
+                <p>+91 9547250772</p>
                 <span className="card-subtitle">Call us anytime</span>
               </div>
               
@@ -198,7 +198,7 @@ const Contact = () => {
               <div className="contact-card">
                 <div className="card-icon location-icon">📍</div>
                 <h3>Address</h3>
-                <p>Mahatma Gandhi<br/>Marg, Gangtok<br/>Sikkim 737103</p>
+                <p>Mahatma Gandhi,<br/>Marg, Gangtok<br/>Sikkim, 737103</p>
                 {/* <span className="card-subtitle">Visit our office</span> */}
               </div>
             </div>

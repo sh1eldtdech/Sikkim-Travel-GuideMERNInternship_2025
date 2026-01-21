@@ -54,7 +54,8 @@
   font-size: 3.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 8px rgba(165, 165, 165, 0.3);
+  color: #ffffff;
   animation: fadeInUp 1s ease-out;
 }
 
@@ -64,6 +65,7 @@
   max-width: 600px;
   margin: 0 auto;
   opacity: 0.9;
+  color: #ffffff;
   animation: fadeInUp 2s ease-out 0.3s both;
 }
 
@@ -251,7 +253,7 @@
 }
 
 .readMoreBtn {
-  background: linear-gradient(135deg, #253eaa, #4e1f7c);
+  background: linear-gradient(135deg, #c4c125, #4e1f7c);
   color: white;
   border: none;
   padding: 12px 24px;

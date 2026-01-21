@@ -1,9 +1,12 @@
+/* Places Page - Modern Premium Styling */
+
 /* Hero Section - Full Screen */
 .travel-page-top {
   padding: 60px 20px;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: var(--font-primary, "Inter", sans-serif);
   text-align: center;
-  background-image: url('../../assets/TravelBg.jpg');
+  background-image: url("../../assets/TravelBg.jpg");
+  background-image: url("../../assets/TravelBg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -23,14 +26,22 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, rgba(0, 0, 0, 0.4), rgba(0, 150, 136, 0.3));
+  background: linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 150, 136, 0.3)
+  );
   animation: overlayPulse 6s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
 @keyframes overlayPulse {
-  0% { opacity: 0.4; }
-  100% { opacity: 0.7; }
+  0% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.7;
+  }
 }
 
 .hero-content {
@@ -41,26 +52,25 @@
 }
 
 .travel-heading {
-  font-size: 3.5rem;
-  color: #ffffff;
-  margin-bottom: 60px;
-  font-style: italic;
-  text-shadow: 3px 3px 6px rgba(250, 250, 250, 0.7);
+  font-size: clamp(1.4rem, 1.2rem + 1.2vw, 1.8rem);
+  color: var(--color-white, #ffffff);
+  margin-top: 60px;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
   animation: titleGlow 3s ease-in-out infinite alternate;
-  background: linear-gradient(45deg, #ffffff, #ffffff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 @keyframes titleGlow {
-  0% { 
+  0% {
     text-shadow: 3px 3px 6px rgba(144, 144, 144, 0.7);
     transform: scale(1);
   }
-  100% { 
-    text-shadow: 0 0 25px rgba(173, 169, 169, 0.9), 3px 3px 6px rgba(144, 144, 144, 0.7);
+  100% {
+    text-shadow:
+      0 0 25px rgba(173, 169, 169, 0.9),
+      3px 3px 6px rgba(144, 144, 144, 0.7);
     transform: scale(1.03);
   }
 }
@@ -115,7 +125,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
     opacity: 0.7;
   }
@@ -143,14 +154,14 @@
 
 .region-card {
   text-decoration: none;
-  /* background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.88)); */
-  background: #fff;
-  backdrop-filter: blur(50px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-2xl, 1.5rem);
   padding: 30px 20px;
-  box-shadow: 0 15px 35px rgba(255, 255, 255, 0.15);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   transform: translateY(30px);
@@ -164,10 +175,18 @@
   align-items: center;
 }
 
-.region-card:nth-child(1) { animation-delay: 0.3s; }
-.region-card:nth-child(2) { animation-delay: 0.5s; }
-.region-card:nth-child(3) { animation-delay: 0.7s; }
-.region-card:nth-child(4) { animation-delay: 0.9s; }
+.region-card:nth-child(1) {
+  animation-delay: 0.3s;
+}
+.region-card:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.region-card:nth-child(3) {
+  animation-delay: 0.7s;
+}
+.region-card:nth-child(4) {
+  animation-delay: 0.9s;
+}
 
 @keyframes cardSlideIn {
   to {
@@ -177,9 +196,9 @@
 }
 
 .region-card:hover {
-  transform: translateY(-15px) scale(1.08);
-  box-shadow: 0 25px 50px rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
 }
 
 .card-shine {
@@ -188,7 +207,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
   transition: left 0.6s ease;
 }
 
@@ -204,77 +228,94 @@
 }
 
 @keyframes iconFloat {
-  0%, 100% { 
-    transform: translateY(0) rotate(0deg); 
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
   }
-  50% { 
-    transform: translateY(-12px) rotate(5deg); 
+  50% {
+    transform: translateY(-12px) rotate(5deg);
     filter: drop-shadow(0 8px 16px rgba(205, 205, 205, 0.2));
   }
 }
 
 .region-card h2 {
-  font-size: 1.6rem;
-  color: #152332;
+  font-size: var(--text-xl, clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem));
+  color: var(--color-dark, #0f172a);
   margin-bottom: 15px;
-  font-weight: 800;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .region-card p {
-  font-size: 1rem;
-  color: #000000;
+  font-size: var(--text-sm, clamp(0.875rem, 0.8rem + 0.3vw, 1rem));
+  color: var(--color-gray-600, #4b5563);
   line-height: 1.6;
-  font-weight: 500;
+  font-weight: 400;
   text-align: center;
 }
 
-/* Card Color Variations with Gradient Borders */
+/* Card Color Variations with Modern Gradients */
 .north-card {
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(255, 255, 255, 0.95));
-  /* background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(255, 255, 255, 0.30)); */
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.08),
+    rgba(255, 255, 255, 0.98)
+  );
 }
 
-.north-card:hover { 
-  border: 2px solid #3498db;
-  box-shadow: 0 25px 50px rgba(52, 152, 219, 0.3);
+.north-card:hover {
+  border-color: var(--color-primary, #6366f1);
+  box-shadow: 0 24px 60px rgba(99, 102, 241, 0.2);
 }
 
 .east-card {
-  background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(255, 255, 255, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(244, 63, 94, 0.08),
+    rgba(255, 255, 255, 0.98)
+  );
 }
 
-.east-card:hover { 
-  border: 2px solid #e74c3c;
-  box-shadow: 0 25px 50px rgba(231, 76, 60, 0.3);
+.east-card:hover {
+  border-color: var(--color-accent, #f43f5e);
+  box-shadow: 0 24px 60px rgba(244, 63, 94, 0.2);
 }
 
 .west-card {
-  background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(255, 255, 255, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.08),
+    rgba(255, 255, 255, 0.98)
+  );
 }
 
-.west-card:hover { 
-  border: 2px solid #9b59b6;
-  box-shadow: 0 25px 50px rgba(155, 89, 182, 0.3);
+.west-card:hover {
+  border-color: var(--color-secondary, #8b5cf6);
+  box-shadow: 0 24px 60px rgba(139, 92, 246, 0.2);
 }
 
 .south-card {
-  background: linear-gradient(135deg, rgba(243, 156, 18, 0.1), rgba(255, 255, 255, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.08),
+    rgba(255, 255, 255, 0.98)
+  );
 }
 
-.south-card:hover { 
-  border: 2px solid #f39c12;
-  box-shadow: 0 25px 50px rgba(243, 156, 18, 0.3);
+.south-card:hover {
+  border-color: var(--color-warning, #f59e0b);
+  box-shadow: 0 24px 60px rgba(245, 158, 11, 0.2);
 }
 
 /* Responsive Design */
 @media screen and (max-width: 1024px) {
   .travel-heading {
-    font-size: 3rem;
-    margin-bottom: 50px;
+    font-size: 1.9rem;
+    margin-top: 50px;
+    margin-bottom: 36px;
   }
-  
+
   .regions-container {
     max-width: 700px;
     gap: 25px;
@@ -306,10 +347,11 @@
     background-attachment: scroll;
     min-height: 100vh;
   }
-  
+
   .travel-heading {
-    font-size: 2.5rem;
-    margin-bottom: 40px;
+    font-size: 1.7rem;
+    margin-top: 40px;
+    margin-bottom: 36px;
   }
 
   .regions-container {
@@ -425,16 +467,11 @@
     border: 3px solid #000;
     background: rgba(255, 255, 255, 0.98);
   }
-  
+
   .region-card h2,
   .region-card p {
     color: #000;
   }
 }
 
-.north-card,
-.east-card,
-.west-card,
-.south-card {
-  background: #a8a8a8;
-}
+/* Remove the old gray override - cards should use their gradient backgrounds */

@@ -9,7 +9,7 @@
   position: relative;
   background: linear-gradient(135deg, #2563eb, #16a34a);
   color: white;
-  padding: 5rem 0;
+  padding: 8rem 0 5rem 0;
   text-align: center;
   overflow: hidden;
 }
@@ -91,8 +91,10 @@
   max-width: 48rem;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.6;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  line-height: 1.7;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  font-weight: 400;
 }
 
 .hero-features {
