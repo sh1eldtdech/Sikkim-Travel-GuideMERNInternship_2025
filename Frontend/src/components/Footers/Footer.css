@@ -5,8 +5,8 @@
   background: linear-gradient(135deg, 
     #0f172a 0%, 
     #1e293b 25%, 
-    #334155 50%, 
-    #1e293b 75%, 
+    #101011 50%, 
+    #30353b 75%, 
     #0f172a 100%);
   background-size: 400% 400%;
   animation: gradientShift 20s ease infinite;
@@ -288,13 +288,27 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+/* Social Media Icon Images */
+.social-icon {
+  width: 60px;
+  height: 30px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: brightness(1.2);
+}
+
+.social-icons a:hover .social-icon {
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(0, 0, 0, 0.6));
+  transform: scale(1.1);
+}
+
 .footer-bottom {
   text-align: center;
   padding: 1.5rem 0;
   margin-top: 2rem;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 400;
+  color: rgba(255, 255, 255, 0.705);
+  font-weight: 00;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(20px);

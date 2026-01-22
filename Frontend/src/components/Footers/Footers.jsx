@@ -1,6 +1,11 @@
 import React from 'react';
 import './Footer.css';
 
+// Import social media icons
+import instagramIcon from '../../assets/icons/instagram.png';
+import facebookIcon from '../../assets/icons/facebook.png';
+import twitterIcon from '../../assets/icons/twitter.png';
+
 const Footers = () => {
   const currentYear = new Date().getFullYear();
 
@@ -28,7 +33,7 @@ const Footers = () => {
                 <li><a href="/homestays">Homestays</a></li>
                 <li><a href="/bikerentals">Bike Rentals</a></li>
                 <li><a href="/places">Places to Visit</a></li>
-                <li><a href="/vlogs">Blogs</a></li>
+                <li><a href="/vlog">Blogs</a></li>
               </ul>
             </div>
 
@@ -44,9 +49,15 @@ const Footers = () => {
             <div className="footer-column">
               <h4>Follow Us</h4>
               <div className="social-icons">
-                <a href="https://instagram.com" target="_blank" rel="noreferrer">📱 Instagram</a>
-                <a href="https://facebook.com" target="_blank" rel="noreferrer">👥 Facebook</a>
-                <a href="https://twitter.com" target="_blank" rel="noreferrer">🐦 Twitter</a>
+                <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
+                  <img src={instagramIcon} alt="Instagram" className="social-icon" />
+                </a>
+                <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
+                  <img src={facebookIcon} alt="Facebook" className="social-icon" />
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter">
+                  <img src={twitterIcon} alt="Twitter" className="social-icon" />
+                </a>
               </div>
             </div>
           </div>
