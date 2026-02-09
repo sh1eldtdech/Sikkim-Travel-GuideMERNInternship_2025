@@ -2,10 +2,10 @@
 
 .contact-container {
   min-height: 100vh;
-  background: var(--gradient-primary, linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%));
+  background: var(--gradient-primary, linear-gradient(135deg, #E86A47 0%, #F59E42 100%));
   position: relative;
   overflow-x: hidden;
-  font-family: var(--font-primary, 'Inter', sans-serif);
+  font-family: var(--font-primary, 'Outfit', sans-serif);
 }
 
 /* Hero Section */
@@ -13,7 +13,7 @@
   position: relative;
   padding: 100px 20px 80px;
   text-align: center;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(232, 106, 71, 0.9) 0%, rgba(245, 158, 66, 0.9) 100%);
   overflow: hidden;
 }
 
@@ -88,10 +88,10 @@
 .contact-content {
   position: relative;
   display: flex;
-  max-width: 1400px;
+  max-width: 95%;
   margin: 0 auto;
-  padding: 0 20px 60px;
-  gap: 40px;
+  padding: 0 40px 60px;
+  gap: 50px;
   background: var(--color-white, white);
   border-radius: var(--radius-3xl, 2rem) var(--radius-3xl, 2rem) 0 0;
   box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.08);
@@ -99,7 +99,9 @@
 
 .contact-main {
   flex: 1;
-  padding: 60px 40px;
+  padding: 60px 20px;
+  width: 100%;
+  margin: 0;
 }
 
 /* Section Titles */
@@ -120,80 +122,112 @@
   left: 0;
   width: 60px;
   height: 4px;
-  background: var(--gradient-primary, linear-gradient(90deg, #6366f1, #8b5cf6));
+  background: var(--gradient-primary, linear-gradient(90deg, #E86A47, #F59E42));
   border-radius: 2px;
 }
 
-/* Contact Cards */
+/* Contact Information Section */
+.contact-info-section {
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+/* Contact Cards Grid */
 .contact-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
   margin-bottom: 60px;
+  width: 100%;
 }
 
 .contact-card {
-  background: var(--color-gray-50, #f9fafb);
-  padding: 30px;
-  border-radius: var(--radius-xl, 1rem);
+  background: #ebe9e9;
+  padding: 50px 30px;
+  border-radius: 23px;
   text-align: center;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(99, 102, 241, 0.08);
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
 
-.contact-card::before {
+/* Color-coded top accent for cards */
+.contact-card::after {
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-  transition: left 0.5s ease;
+  height: 6px;
 }
 
 .contact-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(99, 102, 241, 0.12);
-  border-color: var(--color-primary, #6366f1);
-}
-
-.contact-card:hover::before {
-  left: 100%;
+  transform: translateY(-12px);
+  box-shadow: 0 20px 40px rgba(232, 106, 71, 0.15);
+  border-color: rgba(232, 106, 71, 0.2);
 }
 
 .card-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 20px;
-  border-radius: var(--radius-full, 9999px);
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 28px;
+  border-radius: 22px; /* Smoother squircle shape */
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.8rem;
-  background: var(--gradient-primary, linear-gradient(135deg, #6366f1, #8b5cf6));
-  color: white;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+  background: var(--color-gray-50);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.contact-card:hover .card-icon {
+  transform: scale(1.1) rotate(2deg);
+  background: #ffffff;
+  box-shadow: 0 12px 24px rgba(232, 106, 71, 0.1);
+}
+
+/* Animated Video Icons */
+.icon-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: var(--radius-full, 9999px);
 }
 
 .contact-card h3 {
-  font-size: var(--text-lg, clamp(1.125rem, 1rem + 0.5vw, 1.25rem));
+  font-size: var(--text-xl, clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem));
   font-weight: 600;
   color: var(--color-dark, #0f172a);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+/* Video icon scale effect on card hover */
+.contact-card:hover .icon-video {
+  transform: scale(1.15);
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .contact-card p {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #000000;
-  margin-bottom: 8px;
-  line-height: 1.5;
+  margin-bottom: 10px;
+  line-height: 1.6;
 }
 
 .card-subtitle {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #1d2a3d;
   font-style: italic;
 }
@@ -204,9 +238,9 @@
 }
 
 .contact-form {
-  background: #f8fafc;
+  background: #dde3e9;
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 22px;
   border: 1px solid #e2e8f0;
 }
 
@@ -237,15 +271,15 @@
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
+  background: rgb(255, 255, 255);
   font-family: inherit;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #E86A47;
+  box-shadow: 0 0 0 3px rgba(232, 106, 71, 0.1);
   transform: translateY(-2px);
 }
 
@@ -255,7 +289,7 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #506ce9 0%, #6e419b 100%);
+  background: linear-gradient(135deg, #e88747 0%, #F59E42 100%);
   color: white;
   padding: 18px 40px;
   border: none;
@@ -269,12 +303,12 @@
   justify-content: center;
   gap: 10px;
   min-width: 160px;
-  box-shadow: 0 8px 20px rgba(75, 95, 182, 0.3);
+  box-shadow: 0 8px 20px rgba(232, 106, 71, 0.3);
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 12px 30px rgba(245, 158, 66, 0.4);
 }
 
 .submit-btn:disabled {
@@ -472,7 +506,7 @@
 }
 
 .preview-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #E86A47 0%, #F59E42 100%);
   color: white;
   padding: 12px 24px;
   border: none;
@@ -481,13 +515,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(232, 106, 71, 0.3);
   width: 100%;
 }
 
 .preview-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(245, 158, 66, 0.4);
 }
 
 /* .api-key-notice {
@@ -521,6 +555,13 @@
   .map-container {
     max-width: 600px;
     height: 350px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contact-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 }
 

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './ContactUs.css';
 
+// Animated Icon Videos
+import PhoneIconVideo from '../../assets/Contact Us page/Phone Icon animated.mp4';
+import EmailIconVideo from '../../assets/Contact Us page/Email icon animated.mp4';
+import LocationIconVideo from '../../assets/Contact Us page/Location Icon animated.mp4';
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -182,21 +187,33 @@ const Contact = () => {
             <h2 className="section-title">Contact Information</h2>
             <div className="contact-cards">
               <div className="contact-card">
-                <div className="card-icon phone-icon">📞</div>
+                <div className="card-icon phone-icon">
+                  <video autoPlay loop muted playsInline className="icon-video">
+                    <source src={PhoneIconVideo} type="video/mp4" />
+                  </video>
+                </div>
                 <h3>Phone</h3>
                 <p>+91 9547250772</p>
                 <span className="card-subtitle">Call us anytime</span>
               </div>
               
               <div className="contact-card">
-                <div className="card-icon email-icon">✉️</div>
+                <div className="card-icon email-icon">
+                  <video autoPlay loop muted playsInline className="icon-video">
+                    <source src={EmailIconVideo} type="video/mp4" />
+                  </video>
+                </div>
                 <h3>Email</h3>
                 <p>shieldslabs@gmail.com</p>
                 <span className="card-subtitle">We'll respond within 24 hours</span>
               </div>
               
               <div className="contact-card">
-                <div className="card-icon location-icon">📍</div>
+                <div className="card-icon location-icon">
+                  <video autoPlay loop muted playsInline className="icon-video">
+                    <source src={LocationIconVideo} type="video/mp4" />
+                  </video>
+                </div>
                 <h3>Address</h3>
                 <p>Mahatma Gandhi,<br/>Marg, Gangtok<br/>Sikkim, 737103</p>
                 {/* <span className="card-subtitle">Visit our office</span> */}

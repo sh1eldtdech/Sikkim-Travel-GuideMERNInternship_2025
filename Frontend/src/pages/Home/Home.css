@@ -77,23 +77,23 @@
   font-size: var(--text-sm, clamp(0.875rem, 0.8rem + 0.3vw, 1rem));
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: var(--radius-full, 9999px);
-  background: var(--gradient-primary, linear-gradient(135deg, #6366f1, #8b5cf6));
+  background: var(--gradient-primary, linear-gradient(135deg, #E86A47, #F59E42));
   color: #fff;
   font-weight: 600;
-  font-family: var(--font-primary, 'Inter', sans-serif);
+  font-family: var(--font-primary, 'Outfit', sans-serif);
   letter-spacing: 0.02em;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 20px rgba(232, 106, 71, 0.35);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .explore-button:hover {
-  background: var(--gradient-accent, linear-gradient(135deg, #f43f5e, #ec4899));
+  background: var(--gradient-accent, linear-gradient(135deg, #F59E42, #E88E2D));
   border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(244, 63, 94, 0.4);
+  box-shadow: 0 8px 30px rgba(245, 158, 66, 0.4);
   color: #fff;
 }
 
@@ -253,7 +253,7 @@
   text-align: center;
   margin-bottom: 3rem;
   color: var(--color-white, #ffffff);
-  font-family: var(--font-primary, 'Inter', sans-serif);
+  font-family: var(--font-display, 'Poppins', sans-serif);
   padding: 0 1rem;
 }
 
@@ -322,7 +322,7 @@
 .feature-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  border-color: rgba(99, 102, 241, 0.1);
+  border-color: rgba(232, 106, 71, 0.2);
 }
 
 .feature-card img {
