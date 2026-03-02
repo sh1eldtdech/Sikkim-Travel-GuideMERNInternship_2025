@@ -70,7 +70,7 @@ const Headers = () => {
           >
             <Link to="/places" className="nav-link">
             <span className="nav-link dropdown-trigger">
-              Travel Destinations
+              Destinations
             </span>
             </Link>
 
@@ -84,7 +84,7 @@ const Headers = () => {
             )}
           </div>
 
-          <Link to="/adventure-zone" className="nav-link">Adventure Zone</Link>
+          <Link to="/adventure-zone" className="nav-link">Adventure</Link>
           <Link to="/vlog" className="nav-link">Blogs & Articles</Link>
         </nav>
 
