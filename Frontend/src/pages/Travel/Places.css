@@ -276,6 +276,13 @@
   font-family: "Plus Jakarta Sans", var(--font-primary, "Outfit"), sans-serif;
 }
 
+.places-region-sub{
+  color: lightsalmon;
+  font-weight: 650;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  font-family: "Plus Jakarta Sans", var(--font-primary, "Outfit"), sans-serif;
+}
 .places-region-description {
   color: rgba(0, 0, 0, 0.856);
   font-size: 0.875rem;
@@ -593,6 +600,7 @@
   .places-regions-grid {
     gap: 1.75rem;
   }
+
 
   .places-region-image-wrapper {
     margin-bottom: 1rem;

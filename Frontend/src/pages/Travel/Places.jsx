@@ -125,11 +125,12 @@ const Places = () => {
                 <ImageCarousel images={northImages} alt="North Sikkim" />
               </div>
               <h3 className="places-region-title">North Sikkim</h3>
-              <p className="places-region-subtitle">Alpine Wilderness</p>
+              <p className="places-region-subtitle">Alpine Wilderness </p>
               <p className="places-region-description">
                 Gateway to snow-capped giants and high-altitude valleys like
                 Yumthang.
               </p>
+              <p className="places-region-sub">Read more...</p>
             </Link>
 
             <Link to="/east-sikkim" className="places-region-card">
@@ -143,6 +144,7 @@ const Places = () => {
                 Home to the sacred Tsomgo Lake and the bustling capital of
                 Gangtok.
               </p>
+              <p className="places-region-sub">Read more...</p>
             </Link>
 
             <Link to="/west-sikkim" className="places-region-card">
@@ -156,6 +158,7 @@ const Places = () => {
                 The historical seat of the Chogyals and the serene town of
                 Pelling.
               </p>
+              <p className="places-region-sub">Read more...</p>
             </Link>
 
             <Link to="/south-sikkim" className="places-region-card">
@@ -169,6 +172,7 @@ const Places = () => {
                 Famed for its Temi Tea gardens and the majestic Buddha Park in
                 Ravangla.
               </p>
+              <p className="places-region-sub">Read more...</p>
             </Link>
           </div>
         </div>

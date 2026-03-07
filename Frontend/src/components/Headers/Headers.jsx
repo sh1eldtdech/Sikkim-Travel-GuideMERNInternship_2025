@@ -106,7 +106,7 @@ const Headers = () => {
               <Link to="/disaster-alerts" className="nav-link" onClick={() => setMoreOpen(false)}>Disaster Alerts</Link>
               <Link to="/contact" className="nav-link" onClick={() => setMoreOpen(false)}>Contact Us</Link>
               <Link to="/login" className="nav-link" onClick={() => setMoreOpen(false)}>Admin Login</Link>
-              <Link to="/permit" className="nav-link" onClick={() => setMoreOpen(false)}>Permit</Link>
+              {/* <Link to="/permit" className="nav-link" onClick={() => setMoreOpen(false)}>Permit</Link> */}
             </div>
           )}
         </div>
