@@ -373,10 +373,12 @@
   font-size: .83rem;
   color: var(--sub);
   line-height: 1.65;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  /* stylelint-disable-next-line */
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /* Article expand */
