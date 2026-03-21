@@ -5,7 +5,6 @@ import Headers from "./components/Headers/Headers";
 import Footers from "./components/Footers/Footers";
 import Home from "./pages/Home/Home";
 import About from "./pages/About/About";
-import AboutUs from "./pages/About Us/AboutUs";
 import Places from "./pages/Travel/Places";
 import EastSikkim from "./pages/Travel/EastSikkim";
 import NorthSikkim from "./pages/Travel/NorthSikkim";
@@ -31,7 +30,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/places" element={<Places />} />
           <Route path="/north-sikkim" element={<NorthSikkim />} />
           <Route path="/east-sikkim" element={<EastSikkim />} />

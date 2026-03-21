@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Headers.css";
 
+const scrollTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
 const Headers = () => {
   const [scrolled, setScrolled]             = useState(false);
-  const [scrollDir, setScrollDir]           = useState("up");
   const [lastY, setLastY]                   = useState(0);
   const [destOpen, setDestOpen]             = useState(false);
   const [moreOpen, setMoreOpen]             = useState(false);
@@ -15,19 +16,16 @@ const Headers = () => {
   const moreTimer = useRef(null);
   const navigate  = useNavigate();
 
-  /* ── Scroll ── */
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 60);
-      setScrollDir(y > lastY && y > 100 ? "down" : "up");
       setLastY(y);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [lastY]);
 
-  /* ── Close mobile panel on outside click ── */
   useEffect(() => {
     const handler = (e) => {
       if (!e.target.closest(".sh-mobile-area")) {
@@ -39,7 +37,6 @@ const Headers = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  /* ── Hover helpers ── */
   const destEnter = () => { clearTimeout(destTimer.current); setDestOpen(true); };
   const destLeave = () => { destTimer.current = setTimeout(() => setDestOpen(false), 130); };
   const moreEnter = () => { clearTimeout(moreTimer.current); setMoreOpen(true); };
@@ -47,79 +44,69 @@ const Headers = () => {
 
   const closeMobile = () => { setMobileOpen(false); setMobileDestOpen(false); };
 
-  /* Navigate to /places when clicking "Destinations" label directly */
-  const handleDestClick = () => {
-    navigate("/places");
+  const goTo = (path) => {
+    scrollTop();
+    navigate(path);
+    closeMobile();
     setDestOpen(false);
+    setMoreOpen(false);
   };
 
-  const rootClass = [
-    "sh-header",
-    scrolled ? "sh-scrolled" : "",
-  ].filter(Boolean).join(" ");
+  const rootClass = ["sh-header", scrolled ? "sh-scrolled" : ""].filter(Boolean).join(" ");
 
   return (
     <>
       <header className={rootClass}>
         <div className="sh-bar">
 
-          {/* ── Logo ── */}
-          <Link to="/" className="sh-logo">SH1ELD Tech</Link>
+          {/* Logo */}
+          <span className="sh-logo" onClick={() => goTo("/")} style={{cursor:"pointer"}}>SH1ELD Tech</span>
 
-          {/* ── Desktop Nav (hidden on mobile) ── */}
+          {/* Desktop Nav */}
           <nav className="sh-nav">
-            <Link to="/" className="sh-link">Home</Link>
+            <span className="sh-link" onClick={() => goTo("/")}>Home</span>
 
-            {/* Destinations hover dropdown */}
+            {/* Destinations dropdown */}
             <div className="sh-dd" onMouseEnter={destEnter} onMouseLeave={destLeave}>
-              <span
-                className={`sh-link sh-trig ${destOpen ? "active" : ""}`}
-                onClick={handleDestClick}
-              >
+              <span className={`sh-link sh-trig ${destOpen ? "active" : ""}`} onClick={() => goTo("/places")}>
                 Destinations
                 <svg className={`sh-arr ${destOpen ? "flip" : ""}`} viewBox="0 0 10 6" fill="none">
                   <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </span>
               <div className={`sh-panel ${destOpen ? "sh-panel-open" : ""}`}>
-                <Link to="/north-sikkim" className="sh-plink" onClick={() => setDestOpen(false)}><span>🏔</span>North Sikkim</Link>
-                <Link to="/east-sikkim"  className="sh-plink" onClick={() => setDestOpen(false)}><span>🌄</span>East Sikkim</Link>
-                <Link to="/west-sikkim"  className="sh-plink" onClick={() => setDestOpen(false)}><span>🌿</span>West Sikkim</Link>
-                <Link to="/south-sikkim" className="sh-plink" onClick={() => setDestOpen(false)}><span>🌸</span>South Sikkim</Link>
+                <span className="sh-plink" onClick={() => goTo("/north-sikkim")}><span>🏔</span>North Sikkim</span>
+                <span className="sh-plink" onClick={() => goTo("/east-sikkim")}><span>🌄</span>East Sikkim</span>
+                <span className="sh-plink" onClick={() => goTo("/west-sikkim")}><span>🌿</span>West Sikkim</span>
+                <span className="sh-plink" onClick={() => goTo("/south-sikkim")}><span>🌸</span>South Sikkim</span>
               </div>
             </div>
 
-            <Link to="/adventure-zone"  className="sh-link">Adventure</Link>
-            <Link to="/disaster-alerts" className="sh-link sh-alert-link">
-              Disaster Alerts
-            </Link>
-            <Link to="/vlog" className="sh-link">Blogs &amp; Articles</Link>
+            <span className="sh-link" onClick={() => goTo("/adventure-zone")}>Adventure</span>
+            <span className="sh-link sh-alert-link" onClick={() => goTo("/disaster-alerts")}>Disaster Alerts</span>
+            <span className="sh-link" onClick={() => goTo("/vlog")}>Blogs &amp; Articles</span>
           </nav>
 
-          {/* ── Desktop Hamburger more-menu ── */}
+          {/* Desktop hamburger */}
           <div className="sh-dd sh-more-dd" onMouseEnter={moreEnter} onMouseLeave={moreLeave}>
             <button className={`sh-hbg ${moreOpen ? "sh-hbg-open" : ""}`} aria-label="More">
               <span/><span/><span/>
             </button>
             <div className={`sh-panel sh-panel-right ${moreOpen ? "sh-panel-open" : ""}`}>
-              <Link to="/about"   className="sh-plink" onClick={() => setMoreOpen(false)}>About</Link>
-              <Link to="/hotels"  className="sh-plink" onClick={() => setMoreOpen(false)}>Hotels &amp; Accommodations</Link>
-              <Link to="/contact" className="sh-plink" onClick={() => setMoreOpen(false)}>Contact Us</Link>
-              <Link to="/login"   className="sh-plink" onClick={() => setMoreOpen(false)}>Admin Login</Link>
+              <span className="sh-plink" onClick={() => goTo("/about")}>About</span>
+              <span className="sh-plink" onClick={() => goTo("/hotels")}>Hotels &amp; Accommodations</span>
+              <span className="sh-plink" onClick={() => goTo("/contact")}>Contact Us</span>
+              <span className="sh-plink" onClick={() => goTo("/login")}>Admin Login</span>
             </div>
           </div>
 
-          {/* ── Mobile: 3 visible links + hamburger ── */}
+          {/* Mobile area */}
           <div className="sh-mobile-area">
-
-            {/* 3 always-visible mobile nav links */}
             <div className="sh-mob-inline">
-              <Link to="/" className="sh-mob-inline-link" onClick={closeMobile}>Home</Link>
-              <Link to="/places" className="sh-mob-inline-link" onClick={closeMobile}>Destinations</Link>
-              <Link to="/adventure-zone" className="sh-mob-inline-link" onClick={closeMobile}>Adventure</Link>
+              <span className="sh-mob-inline-link" onClick={() => goTo("/")}>Home</span>
+              <span className="sh-mob-inline-link" onClick={() => goTo("/places")}>Destinations</span>
+              <span className="sh-mob-inline-link" onClick={() => goTo("/adventure-zone")}>Adventure</span>
             </div>
-
-            {/* Mobile hamburger → opens full panel */}
             <button
               className={`sh-hbg sh-mob-ham ${mobileOpen ? "sh-hbg-open" : ""}`}
               onClick={() => setMobileOpen(v => !v)}
@@ -132,38 +119,34 @@ const Headers = () => {
         </div>
       </header>
 
-      {/* ── Mobile slide-down panel — rendered OUTSIDE header so it's not clipped ── */}
+      {/* Mobile overlay + panel */}
       <div className={`sh-mob-overlay ${mobileOpen ? "open" : ""}`} onClick={closeMobile} />
       <div className={`sh-mob-panel ${mobileOpen ? "sh-mob-open" : ""} sh-mobile-area`}>
         <div className="sh-mob-panel-inner">
 
-          {/* Destinations accordion */}
           <div>
-            <button
-              className={`sh-mlink sh-macc ${mobileDestOpen ? "open" : ""}`}
-              onClick={() => setMobileDestOpen(v => !v)}
-            >
+            <button className={`sh-mlink sh-macc ${mobileDestOpen ? "open" : ""}`} onClick={() => setMobileDestOpen(v => !v)}>
               <span>Destinations</span>
               <svg className={`sh-arr ${mobileDestOpen ? "flip" : ""}`} viewBox="0 0 10 6" fill="none">
                 <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
             <div className={`sh-msub ${mobileDestOpen ? "sh-msub-open" : ""}`}>
-              <Link to="/north-sikkim" className="sh-msub-link" onClick={closeMobile}>🏔 North Sikkim</Link>
-              <Link to="/east-sikkim"  className="sh-msub-link" onClick={closeMobile}>🌄 East Sikkim</Link>
-              <Link to="/west-sikkim"  className="sh-msub-link" onClick={closeMobile}>🌿 West Sikkim</Link>
-              <Link to="/south-sikkim" className="sh-msub-link" onClick={closeMobile}>🌸 South Sikkim</Link>
+              <span className="sh-msub-link" onClick={() => goTo("/north-sikkim")}>🏔 North Sikkim</span>
+              <span className="sh-msub-link" onClick={() => goTo("/east-sikkim")}>🌄 East Sikkim</span>
+              <span className="sh-msub-link" onClick={() => goTo("/west-sikkim")}>🌿 West Sikkim</span>
+              <span className="sh-msub-link" onClick={() => goTo("/south-sikkim")}>🌸 South Sikkim</span>
             </div>
           </div>
 
           <div className="sh-mdiv"/>
 
-          <Link to="/disaster-alerts" className="sh-mlink sh-malert"  onClick={closeMobile}>⚠ Disaster Alerts</Link>
-          <Link to="/vlog"            className="sh-mlink"            onClick={closeMobile}>Blogs &amp; Articles</Link>
-          <Link to="/about"           className="sh-mlink"            onClick={closeMobile}>About</Link>
-          <Link to="/hotels"          className="sh-mlink"            onClick={closeMobile}>Hotels &amp; Accommodations</Link>
-          <Link to="/contact"         className="sh-mlink"            onClick={closeMobile}>Contact Us</Link>
-          <Link to="/login"           className="sh-mlink sh-mlogin"  onClick={closeMobile}>Admin Login</Link>
+          <span className="sh-mlink sh-malert" onClick={() => goTo("/disaster-alerts")}>⚠ Disaster Alerts</span>
+          <span className="sh-mlink" onClick={() => goTo("/vlog")}>Blogs &amp; Articles</span>
+          <span className="sh-mlink" onClick={() => goTo("/about")}>About</span>
+          <span className="sh-mlink" onClick={() => goTo("/hotels")}>Hotels &amp; Accommodations</span>
+          <span className="sh-mlink" onClick={() => goTo("/contact")}>Contact Us</span>
+          <span className="sh-mlink sh-mlogin" onClick={() => goTo("/login")}>Admin Login</span>
         </div>
       </div>
     </>

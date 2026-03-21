@@ -6,6 +6,7 @@ import HomestayImage from "../../assets/Homestays.jpg";
 import BikeImage     from "../../assets/BikeRents.jpg";
 import PlacesImage   from "../../assets/Places.jpg";
 import HeroVideo     from "../../assets/HeroVideo.mp4";
+import CtaBg         from "../../assets/North Sikkim/Gurudongmar Lake.jpg";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
@@ -274,7 +275,7 @@ export default function Home() {
       {/* ══════ MARQUEE ══════ */}
       <div className="hm-marquee">
         <div className="hm-marquee-track">
-          {[...TICKER,...TICKER].map((p,i) => (
+          {[...TICKER,...TICKER,...TICKER,...TICKER].map((p,i) => (
             <span key={i} className="hm-mitem">{p}<span className="hm-mdot">✦</span></span>
           ))}
         </div>
@@ -334,8 +335,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══════ CTA — dark green ══════ */}
-      <section className="hm-cta-sec" data-s="cta">
+      {/* ══════ CTA — image background ══════ */}
+      <section className="hm-cta-sec" data-s="cta" style={{ backgroundImage: `url(${CtaBg})` }}>
         <div className="hm-cta-orbs">
           <div className="orb o1"/><div className="orb o2"/><div className="orb o3"/>
         </div>

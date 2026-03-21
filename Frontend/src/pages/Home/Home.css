@@ -393,9 +393,23 @@
   overflow: hidden;
   padding: .9rem 0;
   white-space: nowrap;
+  /* Prevent layout recalc causing stutter */
+  contain: layout style;
 }
-.hm-marquee-track { display:inline-flex; animation:marq 28s linear infinite; }
-@keyframes marq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.hm-marquee-track {
+  display: inline-flex;
+  animation: marq 32s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  /* Never pause on hover */
+  animation-play-state: running !important;
+}
+@keyframes marq {
+  0%   { transform: translateX(0) translateZ(0); }
+  100% { transform: translateX(-25%) translateZ(0); }
+}
 .hm-mitem { display:inline-flex; align-items:center; gap:.8rem; font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.92); padding:0 1.5rem; }
 .hm-mdot  { font-size:.42rem; color:rgba(255,255,255,.45); }
 
@@ -531,19 +545,30 @@
 ───────────────────────────────────────────────── */
 .hm-cta-sec {
   position: relative;
-  background: linear-gradient(135deg, #0d2818 0%, #1a5c38 52%, #0d2818 100%);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   padding: 8rem 1.5rem;
   text-align: center;
   overflow: hidden;
 }
 
-.hm-cta-orbs { position:absolute; inset:0; pointer-events:none; z-index:0; }
-.orb   { position:absolute; border-radius:50%; filter:blur(80px); opacity:.16; }
+/* Dark overlay over the image */
+.hm-cta-sec::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  z-index: 0;
+}
+
+.hm-cta-orbs { position:absolute; inset:0; pointer-events:none; z-index:1; }
+.orb   { position:absolute; border-radius:50%; filter:blur(80px); opacity:.12; }
 .o1    { width:400px; height:400px; background:#F59E42; top:-120px; left:-80px; }
 .o2    { width:320px; height:320px; background:#10b981; bottom:-80px; right:8%; }
 .o3    { width:260px; height:260px; background:#E86A47; top:35%; left:58%; }
 
-.hm-cta-inner { position:relative; z-index:1; max-width:680px; margin:0 auto; opacity:0; }
+.hm-cta-inner { position:relative; z-index:2; max-width:680px; margin:0 auto; opacity:0; }
 .hm-cta-inner.hm-up { opacity:1; }
 
 .hm-cta-badge {

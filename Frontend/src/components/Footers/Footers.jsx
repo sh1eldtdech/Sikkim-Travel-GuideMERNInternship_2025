@@ -1,74 +1,134 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Footer.css';
 
-// Import social media icons
 import instagramIcon from '../../assets/icons/instagram.png';
-import facebookIcon from '../../assets/icons/facebook.png';
-import twitterIcon from '../../assets/icons/twitter.png';
+import facebookIcon  from '../../assets/icons/facebook.png';
+import twitterIcon   from '../../assets/icons/twitter.png';
 
-const Footers = () => {
-  const currentYear = new Date().getFullYear();
+const scrollTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+
+const EXPLORE = [
+  { label:'Home',             to:'/' },
+  { label:'Destinations',     to:'/places' },
+  { label:'Adventure',        to:'/adventure-zone' },
+  { label:'Blogs & Articles', to:'/vlog' },
+  { label:'Hotels & Stays',   to:'/hotels' },
+  { label:'Disaster Alerts',  to:'/disaster-alerts' },
+];
+
+const DISTRICTS = [
+  { label:'North Sikkim', to:'/north-sikkim' },
+  { label:'East Sikkim',  to:'/east-sikkim' },
+  { label:'West Sikkim',  to:'/west-sikkim' },
+  { label:'South Sikkim', to:'/south-sikkim' },
+];
+
+const COMPANY = [
+  { label:'About Us',    to:'/about' },
+  { label:'Contact Us',  to:'/contact' },
+  { label:'Admin Login', to:'/login' },
+];
+
+const SOCIALS = [
+  { icon: instagramIcon, alt: 'Instagram',   href: 'https://www.instagram.com', label: 'Instagram', color: '#E1306C', bg: '#fce4ec' },
+  { icon: facebookIcon,  alt: 'Facebook',    href: 'https://www.facebook.com',  label: 'Facebook',  color: '#1877F2', bg: '#e3f0ff' },
+  { icon: twitterIcon,   alt: 'Twitter / X', href: 'https://www.twitter.com',   label: 'Twitter',   color: '#1DA1F2', bg: '#e1f5fe' },
+];
+
+export default function Footers() {
+  const year     = new Date().getFullYear();
+  const navigate = useNavigate();
+
+  const goTo = (path) => { scrollTop(); navigate(path); };
 
   return (
-    <footer className="footer">
-      {/* Animated Background Pattern */}
-      <div className="footer-background"></div>
-      
-      {/* Overlay */}
-      <div className="footer-overlay"></div>
-      
-      {/* Content */}
-      <div className="footer-content">
-        <div className="footer-container">
-          <div className="footer-branding">
-            <h2>Explore Sikkim</h2>
-            <p>Your ultimate guide to discovering the beauty of Sikkim — homestays, bike rentals, and places to explore!</p>
-          </div>
+    <footer className="ft">
 
-          <div className="footer-columns">
-            <div className="footer-column">
-              <h4>Quick Links</h4>
-              <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/homestays">Homestays</a></li>
-                <li><a href="/bikerentals">Bike Rentals</a></li>
-                <li><a href="/places">Places to Visit</a></li>
-                <li><a href="/vlog">Blogs</a></li>
-              </ul>
-            </div>
+      <div className="ft-accent-bar" />
 
-            <div className="footer-column">
-              <h4>Company</h4>
-              <ul>
-                <li><a href="/aboutus">About Us</a></li>
-                <li><a href="/contact">Contact Us</a></li>
-                <li><a href="/login">Login</a></li>
-              </ul>
-            </div>
+      <div className="ft-body">
+        <div className="ft-inner">
 
-            <div className="footer-column">
-              <h4>Follow Us</h4>
-              <div className="social-icons">
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
-                  <img src={instagramIcon} alt="Instagram" className="social-icon" />
+          {/* Brand */}
+          <div className="ft-brand">
+            <span className="ft-logo" onClick={() => goTo("/")} style={{ cursor:"pointer" }}>
+              SH1ELD Tech
+            </span>
+            <p className="ft-tagline">
+              Your complete guide to Sikkim — real-time alerts, curated destinations and everything you need for the perfect Himalayan journey.
+            </p>
+            <div className="ft-socials">
+              {SOCIALS.map((s, i) => (
+                <a
+                  key={i}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.label}
+                  className="ft-social"
+                  style={{ '--s-color': s.color, '--s-bg': s.bg }}
+                >
+                  <img src={s.icon} alt={s.alt} className="ft-social-img" />
+                  <span className="ft-social-label">{s.label}</span>
                 </a>
-                <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
-                  <img src={facebookIcon} alt="Facebook" className="social-icon" />
-                </a>
-                <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter">
-                  <img src={twitterIcon} alt="Twitter" className="social-icon" />
-                </a>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
 
-        <div className="footer-bottom">
-          © {currentYear} Sikkim Travel Guidebook. All rights reserved.
+          {/* Explore */}
+          <div className="ft-col">
+            <h4 className="ft-col-title">Explore</h4>
+            <ul className="ft-list">
+              {EXPLORE.map((n, i) => (
+                <li key={i}>
+                  <span className="ft-link" onClick={() => goTo(n.to)}>
+                    <span className="ft-link-arrow">→</span>{n.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Districts */}
+          <div className="ft-col">
+            <h4 className="ft-col-title">Districts</h4>
+            <ul className="ft-list">
+              {DISTRICTS.map((d, i) => (
+                <li key={i}>
+                  <span className="ft-link" onClick={() => goTo(d.to)}>
+                    <span className="ft-link-arrow">→</span>{d.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div className="ft-col">
+            <h4 className="ft-col-title">Company</h4>
+            <ul className="ft-list">
+              {COMPANY.map((c, i) => (
+                <li key={i}>
+                  <span className="ft-link" onClick={() => goTo(c.to)}>
+                    <span className="ft-link-arrow">→</span>{c.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
         </div>
       </div>
+
+      {/* Bottom */}
+      <div className="ft-bottom">
+        <div className="ft-bottom-inner">
+          <span>© {year} SH1ELD Tech · Sikkim Travel Guide. All rights reserved.</span>
+          <span className="ft-heart">Made with ❤️ for Sikkim</span>
+        </div>
+      </div>
+
     </footer>
   );
-};
-
-export default Footers;
+}
