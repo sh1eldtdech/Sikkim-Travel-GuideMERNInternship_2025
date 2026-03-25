@@ -14,7 +14,7 @@ const Login = () => {
         navigate("/government-login");
         break;
       case "business":
-        navigate("/business-login");
+        navigate("/owner-login");
         break;
       default:
         break;
