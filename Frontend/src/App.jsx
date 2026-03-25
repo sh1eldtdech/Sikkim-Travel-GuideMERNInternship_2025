@@ -1,9 +1,11 @@
 
 import React, { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Headers from "./components/Headers/Headers";
 import Footers from "./components/Footers/Footers";
+import { useOwnerAuth } from "./context/OwnerAuthContext";
 
+// Existing pages
 const Home = lazy(() => import("./pages/Home/Home"));
 const About = lazy(() => import("./pages/About/About"));
 const Places = lazy(() => import("./pages/Travel/Places"));
@@ -23,13 +25,32 @@ const DisasterAlert = lazy(() => import("./pages/Disaster/DisasterAlert"));
 const SikkimTourDashboard = lazy(() => import("./pages/Login/Dashboard/Dashboard"));
 const Article = lazy(() => import("./pages/Vlog/Article"));
 
+// Hotel Owner pages
+const OwnerLogin = lazy(() => import("./pages/Login/OwnerLogin/OwnerLogin"));
+const OwnerDashboard = lazy(() => import("./pages/HotelOwner/Dashboard/OwnerDashboard"));
+const AddHotel = lazy(() => import("./pages/HotelOwner/AddHotel/AddHotel"));
+const MyHotels = lazy(() => import("./pages/HotelOwner/MyHotels/MyHotels"));
+const OwnerBookings = lazy(() => import("./pages/HotelOwner/Bookings/OwnerBookings"));
+
+// Tourist Hotel pages
+const HotelList = lazy(() => import("./pages/Login/Hotels/HotelList/HotelList"));
+const HotelDetails = lazy(() => import("./pages/Login/Hotels/HotelDetails/HotelDetails"));
+const BookingPage = lazy(() => import("./pages/Login/Hotels/BookingPage/BookingPage"));
+
+// Protected route wrapper for Hotel Owner pages
+const OwnerRoute = ({ children }) => {
+  const { isAuthenticated } = useOwnerAuth();
+  return isAuthenticated ? children : <Navigate to="/owner-login" replace />;
+};
+
 function App() {
   return (
     <Router>
       <div className="app">
         <Headers />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>Loading...</div>}>
           <Routes>
+            {/* Existing routes */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/places" element={<Places />} />
@@ -48,6 +69,18 @@ function App() {
             <Route path="/disaster-alerts" element={<DisasterAlert />} />
             <Route path="/government-dashboard" element={<SikkimTourDashboard />} />
             <Route path="/article" element={<Article />} />
+
+            {/* Tourist Hotel routes */}
+            <Route path="/hotels" element={<HotelList />} />
+            <Route path="/hotel/:id" element={<HotelDetails />} />
+            <Route path="/booking/:hotelId" element={<BookingPage />} />
+
+            {/* Hotel Owner routes */}
+            <Route path="/owner-login" element={<OwnerLogin />} />
+            <Route path="/owner/dashboard" element={<OwnerRoute><OwnerDashboard /></OwnerRoute>} />
+            <Route path="/owner/add-hotel" element={<OwnerRoute><AddHotel /></OwnerRoute>} />
+            <Route path="/owner/my-hotels" element={<OwnerRoute><MyHotels /></OwnerRoute>} />
+            <Route path="/owner/bookings" element={<OwnerRoute><OwnerBookings /></OwnerRoute>} />
           </Routes>
         </Suspense>
         <Footers />

@@ -1,0 +1,289 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --sikkim-gold: #c9a84c;
+  --sikkim-dark: #1a1a2e;
+  --sikkim-forest: #2d4a3e;
+  --sikkim-snow: #f5f3ef;
+  --sikkim-mist: #8a9ba8;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.ol-page {
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  background: var(--sikkim-snow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+.ol-card {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 880px;
+  width: 100%;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.12);
+}
+
+.ol-card.reg { max-width: 980px; }
+
+.ol-left {
+  background: linear-gradient(135deg, var(--sikkim-dark) 0%, var(--sikkim-forest) 100%);
+  padding: 48px 40px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ol-left::before {
+  content: '🏔️';
+  position: absolute;
+  font-size: 200px;
+  bottom: -30px;
+  right: -40px;
+  opacity: 0.05;
+}
+
+.ol-left-content { position: relative; z-index: 1; }
+
+.ol-brand {
+  font-size: 14px;
+  color: var(--sikkim-gold);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 28px;
+}
+
+.ol-left-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.ol-left-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.ol-features { display: flex; flex-direction: column; gap: 12px; }
+
+.ol-feature {
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ol-steps-list { display: flex; flex-direction: column; gap: 14px; }
+
+.ol-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+}
+
+.ol-step span {
+  width: 26px;
+  height: 26px;
+  background: var(--sikkim-gold);
+  color: var(--sikkim-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* RIGHT */
+.ol-right {
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ol-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--sikkim-dark);
+  margin-bottom: 6px;
+}
+
+.ol-sub {
+  font-size: 14px;
+  color: var(--sikkim-mist);
+  margin-bottom: 28px;
+}
+
+.ol-error {
+  background: #fce4ec;
+  color: #c62828;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.ol-form { display: flex; flex-direction: column; }
+
+.ol-form-group { margin-bottom: 18px; }
+
+.ol-form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--sikkim-mist);
+  margin-bottom: 8px;
+}
+
+.ol-form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--sikkim-dark);
+  outline: none;
+  transition: var(--transition);
+}
+
+.ol-form-group input:focus {
+  border-color: var(--sikkim-dark);
+  box-shadow: 0 0 0 3px rgba(26,26,46,0.08);
+}
+
+.ol-file-upload { position: relative; }
+.ol-file-upload input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.ol-file-label {
+  display: block;
+  padding: 14px 16px;
+  border: 1.5px dashed #ccc;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--sikkim-mist);
+  cursor: pointer;
+  text-align: center;
+  transition: var(--transition);
+}
+.ol-file-label:hover { border-color: var(--sikkim-dark); color: var(--sikkim-dark); }
+
+.ol-submit {
+  background: var(--sikkim-dark);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: var(--transition);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ol-submit:hover:not(:disabled) {
+  background: var(--sikkim-gold);
+  color: var(--sikkim-dark);
+}
+
+.ol-submit:disabled { background: #ccc; cursor: not-allowed; }
+
+.ol-spinner {
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ol-footer-text {
+  font-size: 13px;
+  color: var(--sikkim-mist);
+  margin-top: 16px;
+  text-align: center;
+}
+
+.ol-link {
+  color: var(--sikkim-dark);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--sikkim-gold);
+}
+
+.ol-link:hover { color: var(--sikkim-gold); }
+
+/* SUCCESS */
+.ol-success-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 56px 48px;
+  max-width: 480px;
+  text-align: center;
+  box-shadow: 0 16px 60px rgba(0,0,0,0.1);
+}
+
+.ol-success-icon { font-size: 56px; margin-bottom: 20px; }
+
+.ol-success-card h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  color: var(--sikkim-dark);
+  margin-bottom: 14px;
+}
+
+.ol-success-card p {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.ol-success-btn {
+  display: inline-block;
+  background: var(--sikkim-dark);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: var(--transition);
+}
+
+.ol-success-btn:hover { background: var(--sikkim-gold); color: var(--sikkim-dark); }
+
+@media (max-width: 700px) {
+  .ol-card { grid-template-columns: 1fr; }
+  .ol-left { display: none; }
+  .ol-right { padding: 36px 28px; }
+}

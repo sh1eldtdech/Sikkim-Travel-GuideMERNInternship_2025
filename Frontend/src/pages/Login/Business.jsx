@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../../utils/api";
+import { useOwnerAuth } from "../../context/OwnerAuthContext";
 import styles from "./Business.module.css";
 
 const Business = () => {
@@ -7,10 +9,16 @@ const Business = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+  // Auth Context
+  const { login } = useOwnerAuth();
+
+  // Status state
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+
   // Login form state
   const [loginData, setLoginData] = useState({
-    fullName: "",
     email: "",
     password: ""
   });
@@ -47,20 +55,55 @@ const Business = () => {
     "Central Registered"
   ];
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Connect with backend API for login
-    console.log("Login data:", loginData);
-    // For now, just navigate to dashboard (you can create this later)
-    // navigate("/business-dashboard");
+    setLoading(true);
+    setErrorMsg("");
+    try {
+      const response = await API.post("/owner/login", {
+        email: loginData.email,
+        password: loginData.password,
+      });
+      login(response.data.token, response.data.owner);
+      navigate("/owner/dashboard");
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSignupSubmit = (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Connect with backend API for signup
-    console.log("Signup data:", signupData);
-    // For now, just navigate to dashboard (you can create this later)
-    // navigate("/business-dashboard");
+    setErrorMsg("");
+    setSuccessMsg("");
+    
+    if (signupData.password !== signupData.confirmPassword) {
+      return setErrorMsg("Passwords do not match.");
+    }
+    
+    setLoading(true);
+    try {
+      const submitData = {
+        name: signupData.name,
+        email: signupData.email,
+        phone: signupData.contactNo,
+        password: signupData.password,
+      };
+      
+      const response = await API.post("/owner/register", submitData);
+      
+      setSuccessMsg("Registration successful! Admin will review your application before granting access.");
+      setSignupData({ name: "", email: "", contactNo: "", tourismService: "", businessName: "", password: "", confirmPassword: "" });
+      setTimeout(() => {
+        setIsLogin(true);
+        setSuccessMsg("");
+      }, 5000);
+    } catch (err) {
+      setErrorMsg(err.response?.data?.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleSignIn = () => {
@@ -128,19 +171,8 @@ const Business = () => {
           {isLogin ? (
             // Login Form
             <form className={styles.form} onSubmit={handleLoginSubmit}>
-              <div className={styles.inputGroup}>
-                <label htmlFor="fullName" className={styles.label}>Full Name</label>
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={loginData.fullName}
-                  onChange={(e) => handleInputChange(e, "login")}
-                  className={styles.input}
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
+              {errorMsg && <div style={{ color: "#fc8181", background: "rgba(252,129,129,0.1)", padding: "10px", borderRadius: "8px", marginBottom: "15px" }}>{errorMsg}</div>}
+              {successMsg && <div style={{ color: "#68d391", background: "rgba(104,211,145,0.1)", padding: "10px", borderRadius: "8px", marginBottom: "15px" }}>{successMsg}</div>}
 
               <div className={styles.inputGroup}>
                 <label htmlFor="email" className={styles.label}>Email Address</label>
@@ -195,8 +227,8 @@ const Business = () => {
                 <a href="#" className={styles.forgotLink}>Forgot Password?</a>
               </div>
 
-              <button type="submit" className={styles.submitBtn}>
-                Sign In
+              <button type="submit" className={styles.submitBtn} disabled={loading}>
+                {loading ? "Signing in..." : "Sign In"}
               </button>
 
               <div className={styles.divider}>
@@ -220,6 +252,9 @@ const Business = () => {
           ) : (
             // Signup Form
             <form className={styles.form} onSubmit={handleSignupSubmit}>
+              {errorMsg && <div style={{ color: "#fc8181", background: "rgba(252,129,129,0.1)", padding: "10px", borderRadius: "8px", marginBottom: "15px" }}>{errorMsg}</div>}
+              {successMsg && <div style={{ color: "#68d391", background: "rgba(104,211,145,0.1)", padding: "10px", borderRadius: "8px", marginBottom: "15px" }}>{successMsg}</div>}
+              
               <div className={styles.inputGroup}>
                 <label htmlFor="name" className={styles.label}>Full Name</label>
                 <input
@@ -364,8 +399,8 @@ const Business = () => {
                 </div>
               </div>
 
-              <button type="submit" className={styles.submitBtn}>
-                Create Account
+              <button type="submit" className={styles.submitBtn} disabled={loading}>
+                {loading ? "Creating Account..." : "Create Account"}
               </button>
 
               <div className={styles.divider}>

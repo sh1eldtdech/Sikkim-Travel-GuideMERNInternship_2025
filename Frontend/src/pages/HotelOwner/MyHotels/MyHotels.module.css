@@ -1,0 +1,116 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.title { font-size: 1.7rem; font-weight: 700; margin: 0; flex: 1; }
+.backBtn {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  transition: all 0.2s;
+}
+.backBtn:hover { color: #fff; }
+.addBtn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+.addBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+
+.errorBox { background: rgba(252,129,129,0.1); border: 1px solid rgba(252,129,129,0.3); border-radius: 10px; padding: 0.8rem 1rem; color: #fca5a5; margin-bottom: 1rem; }
+
+/* Loading */
+.loadingState { text-align: center; padding: 4rem 0; color: rgba(255,255,255,0.5); }
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Empty */
+.emptyState { text-align: center; padding: 5rem 0; color: rgba(255,255,255,0.5); }
+.emptyIcon { font-size: 4rem; margin-bottom: 1rem; }
+.emptyState h2 { font-size: 1.3rem; color: rgba(255,255,255,0.7); margin: 0 0 0.5rem; }
+.emptyState p { margin: 0 0 1.5rem; }
+
+/* Grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.3rem; }
+
+.hotelCard {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.hotelCard:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+.inactive { opacity: 0.5; }
+
+.imageWrap { position: relative; height: 180px; background: rgba(255,255,255,0.05); }
+.hotelImg { width: 100%; height: 100%; object-fit: cover; }
+.noImage { height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 1.1rem; }
+
+.statusBadge {
+  position: absolute;
+  top: 10px; right: 10px;
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+}
+.activeBadge { background: rgba(72,187,120,0.25); border: 1px solid rgba(72,187,120,0.5); color: #68d391; }
+.inactiveBadge { background: rgba(245,101,101,0.2); border: 1px solid rgba(245,101,101,0.4); color: #fc8181; }
+
+.info { padding: 1.2rem; }
+.hotelName { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.3rem; color: #fff; }
+.location { font-size: 0.82rem; color: rgba(255,255,255,0.5); margin: 0 0 0.7rem; }
+.meta { display: flex; gap: 1rem; font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-bottom: 0.7rem; }
+.amenities { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tag { background: rgba(102,126,234,0.15); border: 1px solid rgba(102,126,234,0.3); border-radius: 20px; padding: 0.2rem 0.6rem; font-size: 0.75rem; color: #a5b4fc; }
+.moreTag { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 0.2rem 0.6rem; font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+.actions { padding: 0 1.2rem 1.2rem; }
+.deactivateBtn {
+  width: 100%;
+  background: rgba(245,101,101,0.12);
+  border: 1px solid rgba(245,101,101,0.25);
+  color: #fc8181;
+  border-radius: 10px;
+  padding: 0.55rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+.deactivateBtn:hover:not(:disabled) { background: rgba(245,101,101,0.2); }
+.deactivateBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 600px) { .page { padding: 1.2rem; } }
