@@ -265,7 +265,7 @@ const Adventure = () => {
                   "1538576294001-022ea161539d",
                   "1504280390367-361c6d9f38f4",
                   "1551632811-561732d1e306"
-                ][i]}?w=600&q=80')`
+                ][i]}?w=400&q=60&auto=format&fit=crop')`
               }}>
                 <div className={styles.destImgOver} />
                 <span className={styles.destTag} style={{ background: pl.color }}>{pl.tag}</span>
@@ -291,9 +291,9 @@ const Adventure = () => {
       <div className={styles.tagline}>
         <h2>
           Take the step and explore{" "}
-          <span className={styles.taglineImgInline} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=80')" }} />{" "}
+          <span className={styles.taglineImgInline} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=60&auto=format&fit=crop')" }} />{" "}
           the world{" "}
-          <span className={styles.taglineImgInline} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=80')" }} />{" "}
+          <span className={styles.taglineImgInline} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=60&auto=format&fit=crop')" }} />{" "}
           waiting for you.
         </h2>
         <p>Travelling changes you. You see new places, meet new people, and become a new version of yourself.</p>
@@ -363,9 +363,9 @@ const Adventure = () => {
           </div>
           <div className={styles.whyRight}>
             <div className={styles.whyImgGrid}>
-              <div className={styles.whyImg1} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&q=80')" }} />
-              <div className={styles.whyImg2} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=80')" }} />
-              <div className={styles.whyImg3} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?w=300&q=80')" }} />
+              <div className={styles.whyImg1} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=60&auto=format&fit=crop')" }} />
+              <div className={styles.whyImg2} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=60&auto=format&fit=crop')" }} />
+              <div className={styles.whyImg3} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?w=400&q=60&auto=format&fit=crop')" }} />
               <div className={styles.whyBadge}>
                 <span className={styles.whyBadgeNum}>4.9</span>
                 <Star size={18} fill="#f59e0b" color="#f59e0b" />
@@ -396,7 +396,7 @@ const Adventure = () => {
         </div>
         <div className={styles.bikeCTARight}>
           <div className={styles.bikePreview}>
-            <div className={styles.bikePreviewImg} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1558981852-426c349548ab?w=600&q=80')" }} />
+            <div className={styles.bikePreviewImg} style={{ backgroundImage: "url('https://images.unsplash.com/photo-1558981852-426c349548ab?w=400&q=60&auto=format&fit=crop')" }} />
             <div className={styles.bikePreviewCard}>
               <div className={styles.bpIcon}>🏍️</div>
               <div>
@@ -538,7 +538,7 @@ const Adventure = () => {
           <div className={styles.detailModal}>
             <button className={styles.modalClose} style={{ position: "absolute", top: "1.25rem", right: "1.25rem" }} onClick={() => setShowDetailModal(false)}><X size={20} /></button>
 
-            <div className={styles.detailHero} style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80')` }}>
+            <div className={styles.detailHero} style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=60&auto=format&fit=crop')` }}>
               <div className={styles.detailHeroOver} />
               <div className={styles.detailHeroContent}>
                 <span className={styles.detailTag} style={{ background: activeLocation.color }}>{activeLocation.tag}</span>
@@ -570,7 +570,7 @@ const Adventure = () => {
               <div className={styles.detailRight}>
                 <div className={styles.vidWrap}>
                   <video ref={videoRef} className={styles.vid}
-                    poster="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"
+                    poster="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=60&auto=format&fit=crop"
                     onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)}>
                     <source src={activeLocation.videoUrl} type="video/mp4" />
                   </video>

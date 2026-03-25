@@ -1,7 +1,8 @@
 import React from 'react';
-import styles from './EastSikkim.module.css';
+import styles from './SikkimRegion.module.css';
 import Zuluk1 from "../../assets/East4.jpg"
 import Gangtok1 from "../../assets/East Sikkim/Gangtok.jpg"
+import VideoHero from "../../components/VideoHero";
 
 const EastSikkim = () => {
   
@@ -265,16 +266,10 @@ const destinations = [
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.videoContainer}>
-          <video
-            className={styles.heroVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-          >
-            <source src="https://media.istockphoto.com/id/2150271703/video/aerial-view-of-solomons-temple-in-aizawl-the-capital-city-of-mizoram-this-architectural.mp4?s=mp4-640x640-is&k=20&c=dz2m_3Cz0b64bKHDVufOon-1f4SeH6WSJIs6S3vOwts=" type="video/mp4" />
-            {/* Fallback for browsers that don't support video */}
-          </video>
+          <VideoHero 
+            className={styles.heroVideo} 
+            src="https://media.istockphoto.com/id/2150271703/video/aerial-view-of-solomons-temple-in-aizawl-the-capital-city-of-mizoram-this-architectural.mp4?s=mp4-640x640-is&k=20&c=dz2m_3Cz0b64bKHDVufOon-1f4SeH6WSJIs6S3vOwts=" 
+          />
           <div className={styles.videoOverlay}></div>
         </div>
         <div className={styles.heroContent}>
@@ -309,6 +304,10 @@ const destinations = [
                         src={destination.image1}
                         alt={`${destination.name} view 1`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>
@@ -332,6 +331,10 @@ const destinations = [
                         src={destination.image2}
                         alt={`${destination.name} view 2`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>

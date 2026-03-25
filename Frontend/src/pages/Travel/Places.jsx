@@ -59,6 +59,10 @@ const ImageCarousel = ({ images, alt }) => {
           alt={`${alt} ${index + 1}`}
           className={`places-region-image places-carousel-image ${index === currentIndex ? "places-carousel-active" : ""
             }`}
+          loading="lazy"
+          width="400"
+          height="300"
+          decoding="async"
         />
       ))}
       <div className="places-carousel-dots">
@@ -197,6 +201,10 @@ const Places = () => {
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0tDoTsCe5zcITgEK6ddpvbed-pN_CCxfua_ybpZuyCc_117fEw9mi5dr6-rCfLiR_BTEbUYBmxD07oSTLMGd39BBnbarD8tN3lBygGtAeLB5TlbPhy__wkyDgThYsvlsBwRa0SA0i1EMYnB0eOZvLsULQcYsSVwbQbOulLT5pw-k0wcr7_VlkW2oNI6wrxACpv0090OyhI_6MGUmWpYd4kP9Gc-6rKzOooVlHgE-Dbz9bJaT24ANsjwVWn58PpBy_XAgaN9SO"
                   alt="Quiet morning in North Sikkim"
                   className="places-story-image"
+                  loading="lazy"
+                  width="400"
+                  height="300"
+                  decoding="async"
                 />
                 <div className="places-story-image-overlay"></div>
               </div>
@@ -218,6 +226,10 @@ const Places = () => {
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoGhdo0U_oTPMv4ebiKvU5BtYbUHgm58RPgG8OLSrjOKsPzb2n6NaxDD5T9JKFbzD3892f1Um0T2JlSZLf8uQTds3c2GftAR4l8rUe56WAETROr4Wi4UR2PfA9e-Qlq5y-gUh8RXVvIFNwcblQASGEXVAi8OTytx3NP9IwX6low_QakaWxr4t_XUfaE4SaCas28BZvlm30a09L1CffwPKWFYtY7KODcCACmW6_o4W_asW2r1FBoMTRw5lFlws9iUazPlqslLdE"
                   alt="Buddhist Monastery"
                   className="places-story-image"
+                  loading="lazy"
+                  width="400"
+                  height="300"
+                  decoding="async"
                 />
                 <div className="places-story-image-overlay"></div>
               </div>
@@ -239,6 +251,10 @@ const Places = () => {
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgGhZ4gd5z7gVcqxv9NfOy1JK3zeVfdqDQg6Lqp6TklJnkgDe52H0qK3xZUsrycE0yWyen54zGEz7S4iaCyrrVOe8a1O2mNLOPSEpTDtMytTAPWDPTZMFB-c4CnxutY2UWfLf9sJIyNpZjOsjmZrD2R1XWAiVoqeLnMILnXRFLlL6z7EYdzi6XXaPd1v8FriFSFfXr_53Lpxy8_nUmx9K4zaffDLwFH4qACAdZdd5uYmE8D4TTRQCj_MP-nctV1t8YYE9AsdmG"
                   alt="Temi Tea Garden"
                   className="places-story-image"
+                  loading="lazy"
+                  width="400"
+                  height="300"
+                  decoding="async"
                 />
                 <div className="places-story-image-overlay"></div>
               </div>

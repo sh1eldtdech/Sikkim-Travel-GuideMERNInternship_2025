@@ -1,7 +1,8 @@
 import React from 'react';
-import styles from './WestSikkim.module.css';
+import styles from './SikkimRegion.module.css';
 import Pelling1 from "../../assets/West Sikkim/Pelling.jpg";
 import Yuksom from "../../assets/West Sikkim/Yuksom.webp";
+import VideoHero from "../../components/VideoHero";
 
 const WestSikkim = () => {
   const destinations = [
@@ -264,16 +265,10 @@ const WestSikkim = () => {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.videoContainer}>
-          <video 
+          <VideoHero 
             className={styles.heroVideo} 
-            autoPlay 
-            muted 
-            loop 
-            playsInline
-          >
-            <source src="https://media.istockphoto.com/id/2216220084/video/breathtaking-landscapes-of-the-everest-region-with-snow-capped-peaks-glacial-rivers-and.mp4?s=mp4-640x640-is&k=20&c=OqiD7F0Y4KSeKAw4wPulhWx4MO7g2MF9yNM2TjkMdgU=" type="video/mp4" />
-            {/* Fallback for browsers that don't support video */}
-          </video>
+            src="https://media.istockphoto.com/id/2216220084/video/breathtaking-landscapes-of-the-everest-region-with-snow-capped-peaks-glacial-rivers-and.mp4?s=mp4-640x640-is&k=20&c=OqiD7F0Y4KSeKAw4wPulhWx4MO7g2MF9yNM2TjkMdgU=" 
+          />
           <div className={styles.videoOverlay}></div>
         </div>
         <div className={styles.heroContent}>
@@ -305,6 +300,10 @@ const WestSikkim = () => {
                         src={destination.image1}
                         alt={`${destination.name} view 1`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>
@@ -328,6 +327,10 @@ const WestSikkim = () => {
                         src={destination.image2}
                         alt={`${destination.name} view 2`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>

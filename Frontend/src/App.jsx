@@ -1,52 +1,55 @@
-import "./App.css";
-import React from "react";
+
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Headers from "./components/Headers/Headers";
 import Footers from "./components/Footers/Footers";
-import Home from "./pages/Home/Home";
-import About from "./pages/About/About";
-import Places from "./pages/Travel/Places";
-import EastSikkim from "./pages/Travel/EastSikkim";
-import NorthSikkim from "./pages/Travel/NorthSikkim";
-import WestSikkim from "./pages/Travel/WestSikkim";
-import SouthSikkim from "./pages/Travel/SouthSikkim";
-import Adventure from "./pages/Adventure Zone/Adventure"
-import Vlog from "./pages/Vlog/Vlog";
-import PlanTravel from "./pages/Vlog/PlanTrip";
-import ContactUs from "./pages/Contact Us/ContactUs";
-import Login from "./pages/Login/Login";
-import Traveler from "./pages/Login/Traveler";
-import Government from "./pages/Login/Government";
-import Business from "./pages/Login/Business"
-import DisasterAlert from "./pages/Disaster/DisasterAlert";
-import SikkimTourDashboard from "./pages/Login/Dashboard/Dashboard";
-import Article from "./pages/Vlog/Article";
+
+const Home = lazy(() => import("./pages/Home/Home"));
+const About = lazy(() => import("./pages/About/About"));
+const Places = lazy(() => import("./pages/Travel/Places"));
+const EastSikkim = lazy(() => import("./pages/Travel/EastSikkim"));
+const NorthSikkim = lazy(() => import("./pages/Travel/NorthSikkim"));
+const WestSikkim = lazy(() => import("./pages/Travel/WestSikkim"));
+const SouthSikkim = lazy(() => import("./pages/Travel/SouthSikkim"));
+const Adventure = lazy(() => import("./pages/Adventure Zone/Adventure"));
+const Vlog = lazy(() => import("./pages/Vlog/Vlog"));
+const PlanTravel = lazy(() => import("./pages/Vlog/PlanTrip"));
+const ContactUs = lazy(() => import("./pages/Contact Us/ContactUs"));
+const Login = lazy(() => import("./pages/Login/Login"));
+const Traveler = lazy(() => import("./pages/Login/Traveler"));
+const Government = lazy(() => import("./pages/Login/Government"));
+const Business = lazy(() => import("./pages/Login/Business"));
+const DisasterAlert = lazy(() => import("./pages/Disaster/DisasterAlert"));
+const SikkimTourDashboard = lazy(() => import("./pages/Login/Dashboard/Dashboard"));
+const Article = lazy(() => import("./pages/Vlog/Article"));
 
 function App() {
   return (
     <Router>
       <div className="app">
         <Headers />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/places" element={<Places />} />
-          <Route path="/north-sikkim" element={<NorthSikkim />} />
-          <Route path="/east-sikkim" element={<EastSikkim />} />
-          <Route path="/west-sikkim" element={<WestSikkim />} />
-          <Route path="/south-sikkim" element={<SouthSikkim />} />
-          <Route path="/adventure-zone" element={<Adventure />} />
-          <Route path="/vlog" element={<Vlog />} />
-          <Route path="/plan-trip" element={<PlanTravel />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/traveler-login" element={<Traveler />} />
-          <Route path="/government-login" element={<Government />} />
-          <Route path="/business-login" element={<Business />} />
-          <Route path="/disaster-alerts" element={<DisasterAlert />} />
-          <Route path="/government-dashboard" element={<SikkimTourDashboard />} />
-          <Route path="/article" element={<Article />} />
-        </Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/places" element={<Places />} />
+            <Route path="/north-sikkim" element={<NorthSikkim />} />
+            <Route path="/east-sikkim" element={<EastSikkim />} />
+            <Route path="/west-sikkim" element={<WestSikkim />} />
+            <Route path="/south-sikkim" element={<SouthSikkim />} />
+            <Route path="/adventure-zone" element={<Adventure />} />
+            <Route path="/vlog" element={<Vlog />} />
+            <Route path="/plan-trip" element={<PlanTravel />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/traveler-login" element={<Traveler />} />
+            <Route path="/government-login" element={<Government />} />
+            <Route path="/business-login" element={<Business />} />
+            <Route path="/disaster-alerts" element={<DisasterAlert />} />
+            <Route path="/government-dashboard" element={<SikkimTourDashboard />} />
+            <Route path="/article" element={<Article />} />
+          </Routes>
+        </Suspense>
         <Footers />
       </div>
     </Router>

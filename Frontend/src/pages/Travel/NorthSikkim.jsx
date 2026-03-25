@@ -1,8 +1,9 @@
 // NorthSikkim.jsx
 import React from "react";
-import styles from "./NorthSikkim.module.css";
+import styles from "./SikkimRegion.module.css";
 import NorthImg from "../../assets/North Sikkim/Gurudongmar Lake.jpg";
 import North1 from "../../assets/North1.jpg"
+import VideoHero from "../../components/VideoHero";
 
 const NorthSikkim = () => {
   const destinations = [
@@ -257,13 +258,10 @@ const NorthSikkim = () => {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.videoContainer}>
-          <video className={styles.heroVideo} autoPlay muted loop playsInline>
-            <source
-              src="https://videos.pexels.com/video-files/15983714/15983714-hd_1920_1080_30fps.mp4"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
+          <VideoHero 
+            className={styles.heroVideo} 
+            src="https://videos.pexels.com/video-files/15983714/15983714-hd_1920_1080_30fps.mp4" 
+          />
 
           <div className={styles.videoOverlay}></div>
         </div>
@@ -300,6 +298,10 @@ const NorthSikkim = () => {
                         src={destination.image1}
                         alt={`${destination.name} view 1`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>
@@ -323,6 +325,10 @@ const NorthSikkim = () => {
                         src={destination.image2}
                         alt={`${destination.name} view 2`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>

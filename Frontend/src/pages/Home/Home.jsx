@@ -118,6 +118,7 @@ function DistrictCarousel({ slides, accent }) {
           src={src}
           alt=""
           className={`dc-img ${i === idx ? "dc-active" : ""}`}
+          loading="lazy" width="400" height="300" decoding="async"
         />
       ))}
       <div className="dc-dots">
@@ -215,7 +216,7 @@ export default function Home() {
         <div className={`hm-sec-text hm-center ${v("discover") ? "hm-up" : ""}`}>
           <span className="hm-label">✦ Explore Sikkim</span>
           <h2 className="hm-h2">Discover Sikkim's <em>Timeless Beauty</em></h2>
-          <p className="hm-body">Breathtaking landscapes, vibrant monasteries and unforgettable moments — Sikkim is unlike anywhere else on earth.</p>
+          <p className="hm-body">Breathtaking landscapes, vibrant monasteries and unforgettable moments Sikkim is unlike anywhere else on earth.</p>
           <p className="hm-note">📌 Tour &amp; Travel Guide Website</p>
         </div>
 
@@ -227,7 +228,7 @@ export default function Home() {
           >
             {[Slide1,Slide2,Slide3,Slide4,Slide5].map((img,i) => (
               <div className="hm-slide" key={i}>
-                <img src={img} alt={`Slide ${i+1}`} loading="eager" />
+                <img src={img} alt={`Slide ${i+1}`} loading="lazy" width="800" height="400" decoding="async" />
                 <div className="hm-slide-shade" />
               </div>
             ))}
@@ -240,7 +241,7 @@ export default function Home() {
         <div className={`hm-sec-text hm-center ${v("dist") ? "hm-up" : ""}`}>
           <span className="hm-label">✦ Four Regions</span>
           <h2 className="hm-h2">Explore by <em>District</em></h2>
-          <p className="hm-body">Each corner of Sikkim holds its own story — alpine peaks, cultural hubs, monastery trails and lush valleys.</p>
+          <p className="hm-body">Each corner of Sikkim holds its own story alpine peaks, cultural hubs, monastery trails and lush valleys.</p>
         </div>
 
         <div className="hm-dist-grid">
@@ -286,7 +287,7 @@ export default function Home() {
         <div className={`hm-sec-text hm-center ${v("exp") ? "hm-up" : ""}`}>
           <span className="hm-label">✦ What We Offer</span>
           <h2 className="hm-h2">Curated <em>Experiences</em></h2>
-          <p className="hm-body">Everything you need for the perfect Sikkim journey — stays, rides and expert-curated guides, all in one place.</p>
+          <p className="hm-body">Everything you need for the perfect Sikkim journey stays, rides and expert-curated guides, all in one place.</p>
         </div>
 
         <div className="hm-exp-grid">
@@ -298,7 +299,7 @@ export default function Home() {
               style={{ animationDelay: `${i * 0.15}s`, cursor:"pointer" }}
             >
               <div className="hm-exp-img">
-                <img src={e.img} alt={e.title} />
+                <img src={e.img} alt={e.title} loading="lazy" width="400" height="300" decoding="async" />
                 <span className="hm-exp-tag">{e.tag}</span>
               </div>
               <div className="hm-exp-body">
@@ -317,7 +318,7 @@ export default function Home() {
         <div className="hm-why-left">
           <span className="hm-label">✦ Why SH1ELD Tech</span>
           <h2 className="hm-h2">Your Smarter<br /><em>Sikkim Companion</em></h2>
-          <p className="hm-body">We go beyond listings — SH1ELD Tech is the complete ecosystem for safe, informed and meaningful travel across Sikkim.</p>
+          <p className="hm-body">We go beyond listings SH1ELD Tech is the complete ecosystem for safe, informed and meaningful travel across Sikkim.</p>
           <button className="hm-solid-btn" onClick={() => go("/about")}>Learn About Us →</button>
         </div>
         <div className="hm-why-grid">

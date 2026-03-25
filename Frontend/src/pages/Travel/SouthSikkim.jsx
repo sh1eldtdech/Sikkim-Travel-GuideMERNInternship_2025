@@ -1,9 +1,10 @@
 import React from "react";
-import styles from "./SouthSikkim.module.css";
+import styles from "./SikkimRegion.module.css";
 import TemiTeaGarden from "../../assets/South Sikkim/TemiTeaGarden.jpg";
 import Namchi from "../../assets/South Sikkim/Namchi.jpg";
 import South1 from "../../assets/South1.jpg";
 import MaenamHill from "../../assets/South Sikkim/MaenamHill.jpg"
+import VideoHero from "../../components/VideoHero";
 
 const SouthSikkim = () => {
   const destinations = [
@@ -269,13 +270,10 @@ const SouthSikkim = () => {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.videoContainer}>
-          <video className={styles.heroVideo} autoPlay muted loop playsInline>
-            <source
-              src="https://videocdn.cdnpk.net/videos/9e2b3f2b-7ee8-4a8b-9f79-cb650156e93b/horizontal/previews/watermarked/large.mp4"
-              type="video/mp4"
-            />
-            Your browser does not support the video tag.
-          </video>
+          <VideoHero 
+            className={styles.heroVideo} 
+            src="https://videocdn.cdnpk.net/videos/9e2b3f2b-7ee8-4a8b-9f79-cb650156e93b/horizontal/previews/watermarked/large.mp4" 
+          />
 
           <div className={styles.videoOverlay}></div>
         </div>
@@ -317,6 +315,10 @@ const SouthSikkim = () => {
                         src={destination.image1}
                         alt={`${destination.name} view 1`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>
@@ -340,6 +342,10 @@ const SouthSikkim = () => {
                         src={destination.image2}
                         alt={`${destination.name} view 2`}
                         className={styles.destinationImage}
+                        loading="lazy"
+                        width="400"
+                        height="300"
+                        decoding="async"
                       />
                     </div>
                     <div className={styles.flipCardBack}>
