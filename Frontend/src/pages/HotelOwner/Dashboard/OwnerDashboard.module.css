@@ -1,107 +1,216 @@
 .page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 100%);
-  padding: 2rem;
+  background: radial-gradient(circle at top, #101827 0%, #111827 45%, #0f172a 100%);
+  padding: 7.5rem 2rem 2rem;
   font-family: 'Poppins', sans-serif;
-  color: #fff;
+  color: #f8fafc;
 }
 
-/* Header */
 .header {
   display: flex;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 2.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 24px;
+  padding: 1.75rem 1.8rem;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.4);
 }
+
+.headerLeft {
+  max-width: 70%;
+  min-width: 220px;
+}
+
 .greeting {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 0.3rem;
-  background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin: 0 0 0.4rem;
+  color: #f8fafc;
+  line-height: 1.1;
 }
-.subGreet { color: rgba(255,255,255,0.5); margin: 0; font-size: 0.95rem; }
+
+.subGreet {
+  color: rgba(226, 232, 240, 0.75);
+  margin: 0;
+  font-size: 1rem;
+  max-width: 560px;
+}
 
 .logoutBtn {
-  background: rgba(255, 100, 100, 0.15);
-  border: 1px solid rgba(255, 100, 100, 0.3);
-  color: #fca5a5;
-  border-radius: 10px;
-  padding: 0.5rem 1.2rem;
+  background: #fff;
+  color: #111827;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  padding: 0.95rem 1.4rem;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.2s;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
 }
-.logoutBtn:hover { background: rgba(255, 100, 100, 0.25); border-color: rgba(255, 100, 100, 0.5); }
+
+.logoutBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
+}
 
 /* Stats */
 .statsRow {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
+
 .statCard {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
-  padding: 1.3rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  min-height: 130px;
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  backdrop-filter: blur(10px);
-  transition: transform 0.2s;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.55rem;
 }
-.statCard:hover { transform: translateY(-2px); }
-.statIcon { font-size: 2rem; }
-.statNum { font-size: 1.5rem; font-weight: 700; color: #fff; }
-.statLabel { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.1rem; }
+
+.statNum {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.statLabel {
+  font-size: 0.9rem;
+  color: rgba(226, 232, 240, 0.72);
+}
 
 /* Nav Cards */
 .navCards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.2rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
 }
-.navCard {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 20px;
-  padding: 2rem;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-  backdrop-filter: blur(10px);
-}
-.navCard::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--accent, #667eea);
-  border-radius: 20px 20px 0 0;
-}
-.navCard:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255,255,255,0.2);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-}
-.navIcon { font-size: 2.5rem; margin-bottom: 1rem; }
-.navLabel { font-size: 1.15rem; font-weight: 600; margin: 0 0 0.4rem; color: #fff; }
-.navDesc { font-size: 0.87rem; color: rgba(255,255,255,0.5); margin: 0 0 1.5rem; }
-.navArrow {
-  font-size: 1.3rem;
-  color: var(--accent, #667eea);
-  transition: transform 0.2s;
-}
-.navCard:hover .navArrow { transform: translateX(6px); }
 
-@media (max-width: 600px) {
-  .page { padding: 1.2rem; }
-  .greeting { font-size: 1.3rem; }
-  .header { flex-direction: column; gap: 1rem; }
+.navCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 1.75rem;
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.navCard::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 4px;
+  width: 100%;
+  border-radius: 24px 24px 0 0;
+}
+
+.navCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(148, 163, 184, 0.2);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.22);
+}
+
+.navLabel {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.65rem;
+  color: #f8fafc;
+}
+
+.navDesc {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.72);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+.navAction {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1rem;
+  color: var(--accent, #93c5fd);
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: transform 0.3s ease;
+}
+
+.navAction::after {
+  content: "\2192";
+  opacity: 0;
+  margin-left: 0px;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+.navCard:hover .navAction {
+  transform: translateX(6px);
+}
+
+.navCard:hover .navAction::after {
+  opacity: 1;
+  margin-left: 6px;
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 7rem 1.4rem 1.5rem;
+  }
+
+  .header {
+    padding: 1.4rem 1.3rem;
+  }
+
+  .logoutBtn {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding: 6.5rem 1rem 1.2rem;
+  }
+
+  .header {
+    gap: 0.8rem;
+  }
+
+  .headerLeft {
+    max-width: 100%;
+  }
+
+  .greeting {
+    font-size: 1.6rem;
+  }
+
+  .subGreet {
+    font-size: 0.95rem;
+  }
+
+  .statsRow {
+    gap: 0.9rem;
+  }
+
+  .navCard {
+    padding: 1.4rem;
+  }
 }

@@ -21,10 +21,13 @@ const MyHotels = () => {
     }
   };
 
-  useEffect(() => { fetchHotels(); }, []);
+  useEffect(() => {
+    fetchHotels();
+  }, []);
 
   const handleDeactivate = async (id) => {
-    if (!window.confirm("Are you sure you want to deactivate this hotel?")) return;
+    if (!window.confirm("Are you sure you want to deactivate this hotel?"))
+      return;
     setDeactivating(id);
     try {
       await API.delete(`/hotels/${id}`);
@@ -39,9 +42,19 @@ const MyHotels = () => {
   return (
     <div className={styles.page}>
       <div className={styles.topBar}>
-        <button className={styles.backBtn} onClick={() => navigate("/owner/dashboard")}>← Dashboard</button>
+        <button
+          className={styles.backBtn}
+          onClick={() => navigate("/owner/dashboard")}
+        >
+          Back to dashboard
+        </button>
         <h1 className={styles.title}>My Listed Hotels</h1>
-        <button className={styles.addBtn} onClick={() => navigate("/owner/add-hotel")}>+ Add Hotel</button>
+        <button
+          className={styles.addBtn}
+          onClick={() => navigate("/owner/add-hotel")}
+        >
+          Add Hotel
+        </button>
       </div>
 
       {error && <div className={styles.errorBox}>{error}</div>}
@@ -53,43 +66,62 @@ const MyHotels = () => {
         </div>
       ) : hotels.length === 0 ? (
         <div className={styles.emptyState}>
-          <div className={styles.emptyIcon}>🏨</div>
           <h2>No hotels listed yet</h2>
-          <p>Start by adding your first hotel property</p>
-          <button className={styles.addBtn} onClick={() => navigate("/owner/add-hotel")}>
-            + Add Your First Hotel
+          <p>Start by adding your first hotel property.</p>
+          <button
+            className={styles.addBtn}
+            onClick={() => navigate("/owner/add-hotel")}
+          >
+            Add your first hotel
           </button>
         </div>
       ) : (
         <div className={styles.grid}>
           {hotels.map((hotel) => (
-            <div key={hotel._id} className={`${styles.hotelCard} ${!hotel.isActive ? styles.inactive : ""}`}>
+            <div
+              key={hotel._id}
+              className={`${styles.hotelCard} ${!hotel.isActive ? styles.inactive : ""}`}
+            >
               {/* Image */}
               <div className={styles.imageWrap}>
                 {hotel.images && hotel.images.length > 0 ? (
-                  <img src={hotel.images[0]} alt={hotel.name} className={styles.hotelImg} />
+                  <img
+                    src={hotel.images[0]}
+                    alt={hotel.name}
+                    className={styles.hotelImg}
+                  />
                 ) : (
-                  <div className={styles.noImage}>📷 No Image</div>
+                  <div className={styles.noImage}>No image available</div>
                 )}
-                <div className={`${styles.statusBadge} ${hotel.isActive ? styles.activeBadge : styles.inactiveBadge}`}>
-                  {hotel.isActive ? "● Active" : "● Inactive"}
+                <div
+                  className={`${styles.statusBadge} ${hotel.isActive ? styles.activeBadge : styles.inactiveBadge}`}
+                >
+                  {hotel.isActive ? "Active" : "Inactive"}
                 </div>
               </div>
 
               {/* Info */}
               <div className={styles.info}>
                 <h3 className={styles.hotelName}>{hotel.name}</h3>
-                <p className={styles.location}>📍 {hotel.location} · {hotel.district} Sikkim</p>
+                <p className={styles.location}>
+                  {hotel.location} · {hotel.district} Sikkim
+                </p>
                 <div className={styles.meta}>
-                  <span>🛏 {hotel.rooms?.length || 0} Room Type(s)</span>
-                  <span>⭐ {hotel.rating || "N/A"}</span>
+                  <span>{hotel.rooms?.length || 0} room type(s)</span>
+                  <span>{hotel.rating || "N/A"} rating</span>
                 </div>
                 {hotel.amenities && hotel.amenities.length > 0 && (
                   <div className={styles.amenities}>
                     {hotel.amenities.slice(0, 4).map((a) => (
-                      <span key={a} className={styles.tag}>{a}</span>
+                      <span key={a} className={styles.tag}>
+                        {a}
+                      </span>
                     ))}
-                    {hotel.amenities.length > 4 && <span className={styles.moreTag}>+{hotel.amenities.length - 4} more</span>}
+                    {hotel.amenities.length > 4 && (
+                      <span className={styles.moreTag}>
+                        +{hotel.amenities.length - 4} more
+                      </span>
+                    )}
                   </div>
                 )}
               </div>
@@ -97,11 +129,21 @@ const MyHotels = () => {
               {/* Actions */}
               <div className={styles.actions}>
                 <button
+                  className={styles.editBtn}
+                  onClick={() => navigate("/owner/add-hotel", { state: { hotelData: hotel } })}
+                >
+                  Edit Details
+                </button>
+                <button
                   className={styles.deactivateBtn}
                   onClick={() => handleDeactivate(hotel._id)}
                   disabled={deactivating === hotel._id || !hotel.isActive}
                 >
-                  {deactivating === hotel._id ? "..." : hotel.isActive ? "🗑 Deactivate" : "Deactivated"}
+                  {deactivating === hotel._id
+                    ? "Processing..."
+                    : hotel.isActive
+                      ? "Deactivate"
+                      : "Deactivated"}
                 </button>
               </div>
             </div>

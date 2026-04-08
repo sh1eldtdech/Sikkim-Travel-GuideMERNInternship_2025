@@ -33,16 +33,26 @@ const OwnerBookings = () => {
     fetch();
   }, []);
 
-  const filtered = filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
+  const filtered =
+    filter === "all" ? bookings : bookings.filter((b) => b.status === filter);
 
   const fmt = (date) =>
-    new Date(date).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+    new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
 
   return (
     <div className={styles.page}>
       {/* Header */}
       <div className={styles.topBar}>
-        <button className={styles.backBtn} onClick={() => navigate("/owner/dashboard")}>← Dashboard</button>
+        <button
+          className={styles.backBtn}
+          onClick={() => navigate("/owner/dashboard")}
+        >
+          Back to dashboard
+        </button>
         <h1 className={styles.title}>Guest Bookings</h1>
       </div>
 
@@ -52,12 +62,16 @@ const OwnerBookings = () => {
       {stats && (
         <div className={styles.statsRow}>
           {[
-            { label: "Total", val: stats.totalBookings, icon: "📦", key: "all" },
-            { label: "Confirmed", val: stats.confirmed, icon: "✅", key: "confirmed" },
-            { label: "Upcoming", val: stats.upcoming, icon: "🔜", key: "upcoming" },
-            { label: "Completed", val: stats.completed, icon: "🏁", key: "completed" },
-            { label: "Cancelled", val: stats.cancelled, icon: "❌", key: "cancelled" },
-            { label: "Revenue", val: `₹${stats.totalRevenue.toLocaleString("en-IN")}`, icon: "💰", key: null },
+            { label: "Total", val: stats.totalBookings, key: "all" },
+            { label: "Confirmed", val: stats.confirmed, key: "confirmed" },
+            { label: "Upcoming", val: stats.upcoming, key: "upcoming" },
+            { label: "Completed", val: stats.completed, key: "completed" },
+            { label: "Cancelled", val: stats.cancelled, key: "cancelled" },
+            {
+              label: "Revenue",
+              val: `₹${stats.totalRevenue.toLocaleString("en-IN")}`,
+              key: null,
+            },
           ].map((s) => (
             <div
               key={s.label}
@@ -65,7 +79,6 @@ const OwnerBookings = () => {
               onClick={() => s.key !== null && setFilter(s.key)}
               style={{ cursor: s.key !== null ? "pointer" : "default" }}
             >
-              <span className={styles.statIcon}>{s.icon}</span>
               <span className={styles.statVal}>{s.val}</span>
               <span className={styles.statLabel}>{s.label}</span>
             </div>
@@ -87,11 +100,19 @@ const OwnerBookings = () => {
       </div>
 
       {loading ? (
-        <div className={styles.loadingState}><div className={styles.spinner}></div><p>Loading bookings...</p></div>
+        <div className={styles.loadingState}>
+          <div className={styles.spinner}></div>
+          <p>Loading bookings...</p>
+        </div>
       ) : filtered.length === 0 ? (
         <div className={styles.emptyState}>
-          <span className={styles.emptyIcon}>📭</span>
-          <p>No {filter === "all" ? "" : filter} bookings found</p>
+          <h2>
+            No{" "}
+            {filter === "all"
+              ? "bookings available"
+              : `${filter} bookings found`}
+          </h2>
+          <p>Try changing the filter or check back later.</p>
         </div>
       ) : (
         <div className={styles.table}>
@@ -110,23 +131,35 @@ const OwnerBookings = () => {
                 <div className={styles.guestPhone}>{b.user?.phone || ""}</div>
               </div>
               <div className={styles.hotelCell}>
-                <div className={styles.hotelName}>{b.hotel?.name || b.hotelName || "—"}</div>
-                <div className={styles.roomType}>{b.room?.roomType || b.roomType || ""}</div>
+                <div className={styles.hotelName}>
+                  {b.hotel?.name || b.hotelName || "—"}
+                </div>
+                <div className={styles.roomType}>
+                  {b.room?.roomType || b.roomType || ""}
+                </div>
               </div>
               <div className={styles.datesCell}>
                 <div>{fmt(b.checkIn)}</div>
                 <div className={styles.dateDivider}>→</div>
                 <div>{fmt(b.checkOut)}</div>
-                <div className={styles.nights}>{b.nights} night{b.nights !== 1 ? "s" : ""}</div>
+                <div className={styles.nights}>
+                  {b.nights} night{b.nights !== 1 ? "s" : ""}
+                </div>
               </div>
               <div className={styles.amountCell}>
-                <div className={styles.amount}>₹{b.totalAmount.toLocaleString("en-IN")}</div>
+                <div className={styles.amount}>
+                  ₹{b.totalAmount.toLocaleString("en-IN")}
+                </div>
                 <div className={styles.payStatus}>{b.paymentStatus}</div>
               </div>
               <div className={styles.statusCell}>
                 <span
                   className={styles.statusBadge}
-                  style={{ color: STATUS_COLORS[b.status] || "#fff", borderColor: STATUS_COLORS[b.status] || "rgba(255,255,255,0.2)" }}
+                  style={{
+                    color: STATUS_COLORS[b.status] || "#fff",
+                    borderColor:
+                      STATUS_COLORS[b.status] || "rgba(255,255,255,0.2)",
+                  }}
                 >
                   {b.status}
                 </span>
