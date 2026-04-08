@@ -32,14 +32,14 @@ const AddHotel = () => {
     district: editData?.district || "",
     location: editData?.location || "",
     description: editData?.description || "",
-    checkIn: editData?.policies?.checkIn || "2:00 PM",
-    checkOut: editData?.policies?.checkOut || "11:00 AM",
-    cancellation: editData?.policies?.cancellation || "Free cancellation up to 48 hours before check-in",
-    children: editData?.policies?.children || "Children above 5 years welcome",
-    roomType: editData?.rooms?.[0]?.roomType || "Standard Room",
-    price: editData?.rooms?.[0]?.price || 1500,
-    totalRooms: editData?.rooms?.[0]?.totalRooms || 10,
-    availableRooms: editData?.rooms?.[0]?.availableRooms || 10,
+    checkIn: editData?.policies?.checkIn || "",
+    checkOut: editData?.policies?.checkOut || "",
+    cancellation: editData?.policies?.cancellation || "",
+    children: editData?.policies?.children || "",
+    roomType: editData?.rooms?.[0]?.roomType || "",
+    price: editData?.rooms?.[0]?.price || "",
+    totalRooms: editData?.rooms?.[0]?.totalRooms || "",
+    availableRooms: editData?.rooms?.[0]?.availableRooms || "",
   });
   const [amenities, setAmenities] = useState(editData?.amenities || []);
   const [images, setImages] = useState([]);
@@ -93,6 +93,15 @@ const AddHotel = () => {
         if (editData.rooms && editData.rooms.length > 0) {
           const mainRoomId = editData.rooms[0]._id;
           await API.put(`/rooms/${mainRoomId}`, {
+            roomType: form.roomType,
+            price: form.price,
+            totalRooms: form.totalRooms,
+            availableRooms: form.availableRooms,
+          });
+        } else {
+          // If the hotel was added before rooms functionality, create the first room now
+          await API.post("/rooms/add", {
+            hotelId: editData._id,
             roomType: form.roomType,
             price: form.price,
             totalRooms: form.totalRooms,

@@ -62,7 +62,7 @@ const MyHotels = () => {
       {loading ? (
         <div className={styles.loadingState}>
           <div className={styles.spinner}></div>
-          <p>Loading your hotels...</p>
+          <p className={styles.loadingText}>Finding hotels...</p>
         </div>
       ) : hotels.length === 0 ? (
         <div className={styles.emptyState}>

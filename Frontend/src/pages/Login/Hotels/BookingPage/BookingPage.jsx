@@ -268,13 +268,13 @@ export default function BookingPage() {
               <span className="bp-btn-spinner" />
             ) : (
               <>
-                <span>Pay ₹{nights > 0 ? total.toLocaleString() : "—"}</span>
+                <span>Pay ₹{nights > 0 ? total.toLocaleString() : ""}</span>
                 <span className="bp-btn-sub">Secure Payment via Razorpay</span>
               </>
             )}
           </button>
 
-          <p className="bp-secure-note">🔒 Your payment is 100% secure and encrypted</p>
+          <p className="bp-secure-note">Your payment is 100% secure and encrypted</p>
         </div>
 
         {/* Right: Summary */}

@@ -1,5 +1,10 @@
 /* Contact Page - Modern Premium Styling */
 
+:root {
+  --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 .contact-container {
   min-height: 100vh;
   background: var(--gradient-primary, linear-gradient(135deg, #E86A47 0%, #F59E42 100%));
@@ -29,8 +34,13 @@
 }
 
 @keyframes moveGrid {
-  0% { transform: translateX(0) translateY(0); }
-  100% { transform: translateX(10px) translateY(10px); }
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+
+  100% {
+    transform: translateX(10px) translateY(10px);
+  }
 }
 
 .hero-content {
@@ -69,8 +79,15 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(-20px) rotate(0deg); }
-  50% { transform: translateY(20px) rotate(180deg); }
+
+  0%,
+  100% {
+    transform: translateY(-20px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(20px) rotate(180deg);
+  }
 }
 
 @keyframes fadeInUp {
@@ -78,6 +95,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -178,7 +196,8 @@
   width: 80px;
   height: 80px;
   margin: 0 auto 28px;
-  border-radius: 22px; /* Smoother squircle shape */
+  border-radius: 22px;
+  /* Smoother squircle shape */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -326,8 +345,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .status-message {
@@ -545,13 +569,13 @@
     flex-direction: column;
     gap: 0;
   }
-  
+
   .map-section {
     width: 100%;
     padding: 0 40px 40px;
     align-items: center;
   }
-  
+
   .map-container {
     max-width: 600px;
     height: 350px;
@@ -569,28 +593,28 @@
   .contact-main {
     padding: 40px 20px;
   }
-  
+
   .contact-form {
     padding: 30px 20px;
   }
-  
+
   .form-row {
     grid-template-columns: 1fr;
     gap: 0;
   }
-  
+
   .contact-cards {
     grid-template-columns: 1fr;
   }
-  
+
   .map-section {
     padding: 0 20px 40px;
   }
-  
+
   .map-container {
     height: 300px;
   }
-  
+
   .section-title {
     font-size: 1.8rem;
   }
@@ -600,29 +624,29 @@
   .contact-hero {
     padding: 80px 15px 60px;
   }
-  
+
   .contact-content {
     margin: 0 10px;
     border-radius: 20px 20px 0 0;
   }
-  
+
   .contact-main {
     padding: 30px 15px;
   }
-  
+
   .contact-form {
     padding: 25px 15px;
   }
-  
+
   .contact-card {
     padding: 25px 20px;
   }
-  
+
   .submit-btn {
     width: 100%;
     padding: 16px;
   }
-  
+
   .map-section {
     padding: 0 15px 30px;
   }
