@@ -137,13 +137,27 @@ export default function HotelList() {
                   key={hotel._id}
                 >
                   <div className="hl-card-img-wrap">
-                    <img
-                      src={resolveImage(hotel.images?.[0])}
-                      alt={hotel.name}
-                      onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600";
-                      }}
-                    />
+                    <div className="hl-image-gallery">
+                      {hotel.images && hotel.images.length > 0 ? (
+                        hotel.images.slice(0, 6).map((img, idx) => (
+                           <img
+                             key={idx}
+                             src={resolveImage(img)}
+                             alt={`${hotel.name} - ${idx + 1}`}
+                             onError={(e) => {
+                               e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600";
+                             }}
+                             className="hl-gallery-img"
+                           />
+                        ))
+                      ) : (
+                        <img
+                          src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600"
+                          alt={hotel.name}
+                          className="hl-gallery-img"
+                        />
+                      )}
+                    </div>
                     <span className="hl-badge">{hotel.district} Sikkim</span>
                     <div className="hl-card-overlay" />
                   </div>
@@ -164,7 +178,7 @@ export default function HotelList() {
                           <>
                             <span className="hl-price-from">from</span>
                             <span className="hl-price-val">
-                              ₹{hotel.startingPrice.toLocaleString()}
+                              ₹{hotel.startingPrice.toLocaleString()} {hotel.highestPrice > hotel.startingPrice ? `- ₹${hotel.highestPrice.toLocaleString()}` : ''}
                             </span>
                             <span className="hl-price-night">/night</span>
                           </>

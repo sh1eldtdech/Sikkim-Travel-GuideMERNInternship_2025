@@ -46,7 +46,7 @@ export default function OwnerDashboard() {
 
   // Add room form
   const [addRoomForm, setAddRoomForm] = useState({
-    hotelId: "", roomType: "", price: "", totalRooms: "", availableRooms: "", features: "",
+    hotelId: "", roomType: "", minPrice: "", maxPrice: "", totalRooms: "", availableRooms: "", features: "",
   });
   const [addRoomLoading, setAddRoomLoading] = useState(false);
   const [addRoomMsg, setAddRoomMsg] = useState("");
@@ -82,14 +82,15 @@ export default function OwnerDashboard() {
   // ── Inline room edit ───────────────────────────────────────────────
   const handleRoomEdit = (room) => {
     setEditingRoom(room._id);
-    setEditValues({ price: room.price, availableRooms: room.availableRooms });
+    setEditValues({ minPrice: room.minPrice || room.price, maxPrice: room.maxPrice || room.price, availableRooms: room.availableRooms });
   };
 
   const handleRoomSave = async (roomId) => {
     setSavingRoom(true);
     try {
       const updated = await updateRoom(roomId, {
-        price: Number(editValues.price),
+        minPrice: Number(editValues.minPrice),
+        maxPrice: Number(editValues.maxPrice),
         availableRooms: Number(editValues.availableRooms),
       });
       // Update local state
@@ -176,7 +177,8 @@ export default function OwnerDashboard() {
       const data = await addRoom({
         hotelId: addRoomForm.hotelId,
         roomType: addRoomForm.roomType,
-        price: Number(addRoomForm.price),
+        minPrice: Number(addRoomForm.minPrice),
+        maxPrice: Number(addRoomForm.maxPrice),
         totalRooms: Number(addRoomForm.totalRooms),
         availableRooms: Number(addRoomForm.availableRooms),
         features: JSON.stringify(featuresArr),
@@ -192,7 +194,7 @@ export default function OwnerDashboard() {
         )
       );
       setAddRoomForm({
-        hotelId: "", roomType: "", price: "", totalRooms: "", availableRooms: "", features: "",
+        hotelId: "", roomType: "", minPrice: "", maxPrice: "", totalRooms: "", availableRooms: "", features: "",
       });
     } catch (err) {
       setAddRoomMsg("❌ " + (err.message || "Failed to add room"));
@@ -423,7 +425,7 @@ export default function OwnerDashboard() {
                         <thead>
                           <tr>
                             <th>Room Type</th>
-                            <th>Price/Night</th>
+                            <th>Price Range</th>
                             <th>Available</th>
                             <th>Total</th>
                             <th>Occupancy</th>
@@ -436,17 +438,28 @@ export default function OwnerDashboard() {
                               <td style={{ fontWeight: 600 }}>{room.roomType}</td>
                               <td>
                                 {editingRoom === room._id ? (
-                                  <input
-                                    type="number"
-                                    value={editValues.price}
-                                    min={0}
-                                    onChange={(e) =>
-                                      setEditValues((v) => ({ ...v, price: e.target.value }))
-                                    }
-                                    className="db-inline-input"
-                                  />
+                                  <div style={{ display: "flex", gap: "4px" }}>
+                                    <input
+                                      type="number"
+                                      value={editValues.minPrice}
+                                      min={0}
+                                      onChange={(e) =>
+                                        setEditValues((v) => ({ ...v, minPrice: e.target.value }))
+                                      }
+                                      className="db-inline-input"
+                                    />
+                                    <input
+                                      type="number"
+                                      value={editValues.maxPrice}
+                                      min={0}
+                                      onChange={(e) =>
+                                        setEditValues((v) => ({ ...v, maxPrice: e.target.value }))
+                                      }
+                                      className="db-inline-input"
+                                    />
+                                  </div>
                                 ) : (
-                                  `₹${room.price.toLocaleString()}`
+                                  `₹${(room.minPrice || room.price || 0).toLocaleString()} - ₹${(room.maxPrice || room.price || 0).toLocaleString()}`
                                 )}
                               </td>
                               <td>
@@ -686,16 +699,29 @@ export default function OwnerDashboard() {
               </div>
               <div className="db-form-row">
                 <div className="db-form-group">
-                  <label>Price per Night (₹) *</label>
+                  <label>Min Price (₹) *</label>
                   <input
                     required
                     type="number"
                     min="0"
                     placeholder="e.g. 4500"
-                    value={addRoomForm.price}
-                    onChange={(e) => setAddRoomForm((p) => ({ ...p, price: e.target.value }))}
+                    value={addRoomForm.minPrice}
+                    onChange={(e) => setAddRoomForm((p) => ({ ...p, minPrice: e.target.value }))}
                   />
                 </div>
+                <div className="db-form-group">
+                  <label>Max Price (₹) *</label>
+                  <input
+                    required
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 6000"
+                    value={addRoomForm.maxPrice}
+                    onChange={(e) => setAddRoomForm((p) => ({ ...p, maxPrice: e.target.value }))}
+                  />
+                </div>
+              </div>
+              <div className="db-form-row">
                 <div className="db-form-group">
                   <label>Total Rooms *</label>
                   <input

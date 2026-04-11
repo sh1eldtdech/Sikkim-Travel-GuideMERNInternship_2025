@@ -37,9 +37,14 @@ const AddHotel = () => {
     cancellation: editData?.policies?.cancellation || "",
     children: editData?.policies?.children || "",
     roomType: editData?.rooms?.[0]?.roomType || "",
-    price: editData?.rooms?.[0]?.price || "",
+    minPrice: editData?.rooms?.[0]?.minPrice || editData?.rooms?.[0]?.price || "",
+    maxPrice: editData?.rooms?.[0]?.maxPrice || editData?.rooms?.[0]?.price || "",
     totalRooms: editData?.rooms?.[0]?.totalRooms || "",
     availableRooms: editData?.rooms?.[0]?.availableRooms || "",
+    upiId: editData?.paymentDetails?.upiId || "",
+    accountName: editData?.paymentDetails?.accountName || "",
+    accountNumber: editData?.paymentDetails?.accountNumber || "",
+    ifscCode: editData?.paymentDetails?.ifscCode || "",
   });
   const [amenities, setAmenities] = useState(editData?.amenities || []);
   const [images, setImages] = useState([]);
@@ -83,6 +88,15 @@ const AddHotel = () => {
           children: form.children,
         }),
       );
+      fd.append(
+        "paymentDetails",
+        JSON.stringify({
+          upiId: form.upiId,
+          accountName: form.accountName,
+          accountNumber: form.accountNumber,
+          ifscCode: form.ifscCode,
+        })
+      );
       images.forEach((img) => fd.append("images", img));
 
       if (editData) {
@@ -94,7 +108,8 @@ const AddHotel = () => {
           const mainRoomId = editData.rooms[0]._id;
           await API.put(`/rooms/${mainRoomId}`, {
             roomType: form.roomType,
-            price: form.price,
+            minPrice: form.minPrice,
+            maxPrice: form.maxPrice,
             totalRooms: form.totalRooms,
             availableRooms: form.availableRooms,
           });
@@ -103,7 +118,8 @@ const AddHotel = () => {
           await API.post("/rooms/add", {
             hotelId: editData._id,
             roomType: form.roomType,
-            price: form.price,
+            minPrice: form.minPrice,
+            maxPrice: form.maxPrice,
             totalRooms: form.totalRooms,
             availableRooms: form.availableRooms,
           });
@@ -118,7 +134,8 @@ const AddHotel = () => {
         await API.post("/rooms/add", {
           hotelId: resHotel.data.hotel._id,
           roomType: form.roomType,
-          price: form.price,
+          minPrice: form.minPrice,
+          maxPrice: form.maxPrice,
           totalRooms: form.totalRooms,
           availableRooms: form.availableRooms,
         });
@@ -207,7 +224,7 @@ const AddHotel = () => {
           {/* Room Configuration */}
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Default Room Setup</h2>
-            <div className={styles.grid2}>
+            <div className={styles.grid3}>
               <div className={styles.field}>
                 <label>Room Type *</label>
                 <input
@@ -219,12 +236,23 @@ const AddHotel = () => {
                 />
               </div>
               <div className={styles.field}>
-                <label>Price per Night (₹) *</label>
+                <label>Min Price (₹) *</label>
                 <input
                   type="number"
-                  name="price"
+                  name="minPrice"
                   min="0"
-                  value={form.price}
+                  value={form.minPrice}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className={styles.field}>
+                <label>Max Price (₹) *</label>
+                <input
+                  type="number"
+                  name="maxPrice"
+                  min="0"
+                  value={form.maxPrice}
                   onChange={handleChange}
                   required
                 />
@@ -308,6 +336,49 @@ const AddHotel = () => {
                 value={form.children}
                 onChange={handleChange}
               />
+            </div>
+          </section>
+
+          {/* Payment Details */}
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>Receiving Payment Details</h2>
+            <div className={styles.grid2}>
+              <div className={styles.field}>
+                <label>UPI ID (For direct QR transfers)</label>
+                <input
+                  name="upiId"
+                  placeholder="e.g. hotelname@okhdfcbank"
+                  value={form.upiId}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className={styles.field}>
+                <label>Bank Account Name</label>
+                <input
+                  name="accountName"
+                  placeholder="e.g. Sikkim Mountain Resort"
+                  value={form.accountName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className={styles.field}>
+                <label>Bank Account Number</label>
+                <input
+                  name="accountNumber"
+                  placeholder="e.g. 123456789012"
+                  value={form.accountNumber}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className={styles.field}>
+                <label>IFSC Code</label>
+                <input
+                  name="ifscCode"
+                  placeholder="e.g. SBIN0001234"
+                  value={form.ifscCode}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
           </section>
 

@@ -58,6 +58,16 @@ const hotelSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
+    paymentDetails: {
+      upiId: { type: String, trim: true },
+      accountName: { type: String, trim: true },
+      accountNumber: { type: String, trim: true },
+      ifscCode: { type: String, trim: true },
+    },
   },
   { timestamps: true }
 );

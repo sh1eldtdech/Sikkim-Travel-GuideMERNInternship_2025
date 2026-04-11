@@ -95,6 +95,12 @@
   gap: 1rem;
 }
 
+.grid3 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 1rem;
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -226,7 +232,7 @@
 }
 
 @media (max-width: 600px) {
-  .grid2 {
+  .grid2, .grid3 {
     grid-template-columns: 1fr;
   }
 
@@ -243,6 +249,6 @@
     padding: 1rem 1.2rem;
   }
 
-  .grid2 { grid-template-columns: 1fr; }
+  .grid2, .grid3 { grid-template-columns: 1fr; }
   .section { padding: 1.2rem; }
 }

@@ -84,7 +84,7 @@ export default function HotelDetails() {
       return;
     }
     navigate(
-      `/booking/${hotel._id}?room=${room._id}&type=${encodeURIComponent(room.roomType)}&price=${room.price}`
+      `/booking/${hotel._id}?room=${room._id}&type=${encodeURIComponent(room.roomType)}&price=${room.minPrice || room.price || 0}`
     );
   };
 
@@ -225,7 +225,7 @@ export default function HotelDetails() {
                   )}
                   <div className="hd-room-footer">
                     <div className="hd-room-price">
-                      <span className="hd-room-price-val">₹{room.price.toLocaleString()}</span>
+                      <span className="hd-room-price-val">₹{(room.minPrice || room.price || 0).toLocaleString()} {room.maxPrice > (room.minPrice || room.price || 0) ? `- ₹${room.maxPrice.toLocaleString()}` : ''}</span>
                       <span className="hd-room-price-night">/night</span>
                     </div>
                     <button

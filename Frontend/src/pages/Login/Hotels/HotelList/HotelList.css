@@ -232,14 +232,30 @@
   overflow: hidden;
 }
 
-.hl-card-img-wrap img {
+.hl-image-gallery {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hl-image-gallery::-webkit-scrollbar {
+  display: none;
+}
+
+.hl-gallery-img {
+  flex: 0 0 100%;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  scroll-snap-align: center;
   transition: transform 0.5s ease;
 }
 
-.hl-card:hover .hl-card-img-wrap img {
+.hl-card:hover .hl-gallery-img {
   transform: scale(1.07);
 }
 

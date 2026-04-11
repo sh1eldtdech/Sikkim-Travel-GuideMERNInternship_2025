@@ -74,4 +74,47 @@ router.get("/stats", protectAdmin, async (req, res) => {
   }
 });
 
+// ── GET /admin/hotels/pending ─────────────────────────────────────────
+router.get("/hotels/pending", protectAdmin, async (req, res) => {
+  try {
+    const hotels = await Hotel.find({ isApproved: false, isActive: true })
+      .populate("owner", "name email")
+      .sort({ createdAt: -1 });
+    res.json({ count: hotels.length, hotels });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ── PATCH /admin/hotels/:id/approve ──────────────────────────────────
+router.patch("/hotels/:id/approve", protectAdmin, async (req, res) => {
+  try {
+    const hotel = await Hotel.findById(req.params.id);
+    if (!hotel) return res.status(404).json({ message: "Hotel not found" });
+
+    hotel.isApproved = true;
+    await hotel.save();
+
+    res.json({ message: "Hotel approved successfully", hotel });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ── PATCH /admin/hotels/:id/reject ───────────────────────────────────
+router.patch("/hotels/:id/reject", protectAdmin, async (req, res) => {
+  try {
+    const hotel = await Hotel.findById(req.params.id);
+    if (!hotel) return res.status(404).json({ message: "Hotel not found" });
+
+    hotel.isActive = false;
+    hotel.isApproved = false;
+    await hotel.save();
+
+    res.json({ message: "Hotel rejected (soft deleted) successfully", hotel });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;

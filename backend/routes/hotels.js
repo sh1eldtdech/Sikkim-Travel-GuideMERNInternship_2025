@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     const { district, maxPrice, search } = req.query;
 
     // Build filter
-    const filter = { isActive: true };
+    const filter = { isActive: true, isApproved: true };
     if (district && typeof district === "string" && district !== "All") filter.district = district;
     if (search && typeof search === "string") {
       filter.$or = [
@@ -35,9 +35,12 @@ router.get("/", async (req, res) => {
       hotels.map(async (hotel) => {
         const rooms = await Room.find({ hotel: hotel._id, isActive: true });
 
-        // Starting price = lowest room price
+        // Starting price = lowest room minPrice
         const startingPrice =
-          rooms.length > 0 ? Math.min(...rooms.map((r) => r.price)) : 0;
+          rooms.length > 0 ? Math.min(...rooms.map((r) => r.minPrice || r.price || 0)) : 0;
+          
+        const highestPrice =
+          rooms.length > 0 ? Math.max(...rooms.map((r) => r.maxPrice || r.price || 0)) : 0;
 
         // Filter by maxPrice if provided
         if (maxPrice && startingPrice > Number(maxPrice)) return null;
@@ -46,6 +49,7 @@ router.get("/", async (req, res) => {
           ...hotel.toObject(),
           rooms,
           startingPrice,
+          highestPrice,
         };
       })
     );
@@ -63,8 +67,8 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id).populate("owner", "name email");
-    if (!hotel || !hotel.isActive) {
-      return res.status(404).json({ message: "Hotel not found" });
+    if (!hotel || !hotel.isActive || !hotel.isApproved) {
+      return res.status(404).json({ message: "Hotel not found or pending approval" });
     }
 
     const rooms = await Room.find({ hotel: hotel._id, isActive: true });
@@ -118,6 +122,13 @@ router.post(
         }
       }
 
+      let parsedPaymentDetails = {};
+      if (req.body.paymentDetails) {
+        try {
+          parsedPaymentDetails = JSON.parse(req.body.paymentDetails);
+        } catch {}
+      }
+
       const hotel = await Hotel.create({
         name,
         district,
@@ -126,6 +137,7 @@ router.post(
         images: imagePaths,
         amenities: parsedAmenities,
         policies: parsedPolicies,
+        paymentDetails: parsedPaymentDetails,
         owner: req.owner._id,
       });
 
@@ -165,6 +177,12 @@ router.put("/:id", protectOwner, uploadImages.array("images", 6), async (req, re
     if (policies) {
       try {
         hotel.policies = { ...hotel.policies, ...JSON.parse(policies) };
+      } catch {}
+    }
+
+    if (req.body.paymentDetails) {
+      try {
+        hotel.paymentDetails = { ...hotel.paymentDetails, ...JSON.parse(req.body.paymentDetails) };
       } catch {}
     }
 

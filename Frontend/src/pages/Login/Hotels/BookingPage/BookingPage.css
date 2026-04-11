@@ -139,6 +139,39 @@
   outline: none;
 }
 
+.bp-date-wrapper {
+  position: relative;
+}
+
+.bp-date-wrapper input[type="date"] {
+  padding-right: 44px; /* Space for the calendar icon */
+  cursor: pointer;
+}
+
+.bp-date-wrapper .bp-calendar-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Let clicks pass through */
+  color: var(--sikkim-mist);
+  width: 20px;
+  height: 20px;
+}
+
+/* Ensure the native indicator covers the svg so clicking it triggers the calendar native UI */
+.bp-date-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 48px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
 .bp-form-group input:focus,
 .bp-form-group select:focus,
 .bp-form-group textarea:focus {

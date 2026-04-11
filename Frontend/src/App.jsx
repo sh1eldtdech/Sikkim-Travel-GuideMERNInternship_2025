@@ -37,6 +37,9 @@ const HotelList = lazy(() => import("./pages/Login/Hotels/HotelList/HotelList"))
 const HotelDetails = lazy(() => import("./pages/Login/Hotels/HotelDetails/HotelDetails"));
 const BookingPage = lazy(() => import("./pages/Login/Hotels/BookingPage/BookingPage"));
 
+// Admin pages
+const AdminHotels = lazy(() => import("./pages/Admin/AdminHotels"));
+
 // Protected route wrapper for Hotel Owner pages
 const OwnerRoute = ({ children }) => {
   const { isAuthenticated } = useOwnerAuth();
@@ -81,6 +84,9 @@ function App() {
             <Route path="/owner/add-hotel" element={<OwnerRoute><AddHotel /></OwnerRoute>} />
             <Route path="/owner/my-hotels" element={<OwnerRoute><MyHotels /></OwnerRoute>} />
             <Route path="/owner/bookings" element={<OwnerRoute><OwnerBookings /></OwnerRoute>} />
+            
+            {/* Admin routes */}
+            <Route path="/admin/hotels" element={<AdminHotels />} />
           </Routes>
         </Suspense>
         <Footers />

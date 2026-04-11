@@ -12,9 +12,14 @@ const roomSchema = new mongoose.Schema(
       required: [true, "Room type is required"],
       trim: true,
     },
-    price: {
+    minPrice: {
       type: Number,
-      required: [true, "Price per night is required"],
+      required: [true, "Minimum price is required"],
+      min: 0,
+    },
+    maxPrice: {
+      type: Number,
+      required: [true, "Maximum price is required"],
       min: 0,
     },
     // Total physical rooms of this type in the hotel

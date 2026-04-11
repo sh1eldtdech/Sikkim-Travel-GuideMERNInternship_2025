@@ -42,7 +42,10 @@ export default function BookingPage() {
 
   const taxes = Math.round(pricePerNight * nights * 0.12);
   const total = pricePerNight * nights + taxes;
-  const today = new Date().toISOString().split("T")[0];
+
+  const todayObj = new Date();
+  const todayInfo = new Date(todayObj.getTime() - todayObj.getTimezoneOffset() * 60000);
+  const today = todayInfo.toISOString().split("T")[0];
 
   const loadRazorpay = () =>
     new Promise((resolve) => {
@@ -125,7 +128,12 @@ export default function BookingPage() {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
-      setError(err.message || "Something went wrong. Please try again.");
+      const msg = err.message || "Something went wrong. Please try again.";
+      if (msg.toLowerCase().includes("token") || msg.toLowerCase().includes("not authorized")) {
+        setError(`Authentication Failed: ${msg}. Please log out and log back in.`);
+      } else {
+        setError(msg);
+      }
       setLoading(false);
     }
   };
@@ -206,25 +214,35 @@ export default function BookingPage() {
             <div className="bp-form-row">
               <div className="bp-form-group">
                 <label>Check-in Date</label>
-                <input
-                  type="date"
-                  min={today}
-                  value={checkIn}
-                  onChange={(e) => {
-                    setCheckIn(e.target.value);
-                    setCheckOut("");
-                  }}
-                />
+                <div className="bp-date-wrapper">
+                  <input
+                    type="date"
+                    min={today}
+                    value={checkIn}
+                    onChange={(e) => {
+                      setCheckIn(e.target.value);
+                      setCheckOut("");
+                    }}
+                  />
+                  <svg className="bp-calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
               </div>
               <div className="bp-form-group">
                 <label>Check-out Date</label>
-                <input
-                  type="date"
-                  min={checkIn || today}
-                  value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
-                  disabled={!checkIn}
-                />
+                <div className="bp-date-wrapper">
+                  <input
+                    type="date"
+                    min={checkIn || today}
+                    value={checkOut}
+                    onChange={(e) => setCheckOut(e.target.value)}
+                    disabled={!checkIn}
+                  />
+                  <svg className="bp-calendar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
               </div>
             </div>
 

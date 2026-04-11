@@ -8,10 +8,10 @@ const router = express.Router();
 // ── POST /rooms/add ───────────────────────────────────────────────────
 router.post("/add", protectOwner, async (req, res) => {
   try {
-    const { hotelId, roomType, price, totalRooms, availableRooms, features } = req.body;
+    const { hotelId, roomType, minPrice, maxPrice, totalRooms, availableRooms, features } = req.body;
 
-    if (!hotelId || !roomType || !price || !totalRooms || availableRooms === undefined) {
-      return res.status(400).json({ message: "hotelId, roomType, price, totalRooms and availableRooms are required" });
+    if (!hotelId || !roomType || !minPrice || !maxPrice || !totalRooms || availableRooms === undefined) {
+      return res.status(400).json({ message: "hotelId, roomType, minPrice, maxPrice, totalRooms and availableRooms are required" });
     }
 
     // Verify the hotel belongs to this owner
@@ -33,7 +33,8 @@ router.post("/add", protectOwner, async (req, res) => {
     const room = await Room.create({
       hotel: hotelId,
       roomType,
-      price: Number(price),
+      minPrice: Number(minPrice),
+      maxPrice: Number(maxPrice),
       totalRooms: Number(totalRooms),
       availableRooms: Number(availableRooms),
       features: parsedFeatures,
@@ -57,9 +58,10 @@ router.put("/:roomId", protectOwner, async (req, res) => {
       return res.status(403).json({ message: "Not authorized to update this room" });
     }
 
-    const { price, availableRooms, totalRooms, roomType, features } = req.body;
+    const { minPrice, maxPrice, availableRooms, totalRooms, roomType, features } = req.body;
 
-    if (price !== undefined) room.price = Number(price);
+    if (minPrice !== undefined) room.minPrice = Number(minPrice);
+    if (maxPrice !== undefined) room.maxPrice = Number(maxPrice);
     if (availableRooms !== undefined) room.availableRooms = Number(availableRooms);
     if (totalRooms !== undefined) room.totalRooms = Number(totalRooms);
     if (roomType) room.roomType = roomType;
