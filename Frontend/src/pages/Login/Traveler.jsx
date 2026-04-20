@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./Traveler.module.css";
+import { loginUser, registerUser } from "./Hotels/api";
 
 const Traveler = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -67,25 +69,29 @@ const Traveler = () => {
     setLoading(true);
     
     try {
-      // TODO: Replace with actual API call
-      const endpoint = isLogin ? "/api/auth/login" : "/api/auth/signup";
-      const payload = isLogin 
-        ? { email: formData.email, password: formData.password }
-        : formData;
+      let resData;
+      if (isLogin) {
+        resData = await loginUser({ email: formData.email, password: formData.password });
+      } else {
+        resData = await registerUser({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.contact,
+        });
+      }
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      localStorage.setItem("token", resData.token);
+      localStorage.setItem("user", JSON.stringify(resData.user));
       
-      // Mock successful response
-      console.log(`${isLogin ? 'Login' : 'Signup'} successful:`, payload);
+      console.log(`${isLogin ? 'Login' : 'Signup'} successful:`, resData);
       
-      // TODO: Handle successful authentication
-      // Store token, update user state, redirect to dashboard
-      navigate("/traveler-dashboard");
+      const returnTo = location.state?.returnTo || "/";
+      navigate(returnTo);
       
     } catch (error) {
       console.error("Authentication error:", error);
-      setErrors({ general: "Authentication failed. Please try again." });
+      setErrors({ general: error.message || "Authentication failed. Please try again." });
     } finally {
       setLoading(false);
     }

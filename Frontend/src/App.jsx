@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Headers from "./components/Headers/Headers";
 import Footers from "./components/Footers/Footers";
 import { useOwnerAuth } from "./context/OwnerAuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Existing pages
 const Home = lazy(() => import("./pages/Home/Home"));
@@ -50,6 +52,7 @@ function App() {
   return (
     <Router>
       <div className="app">
+        <ToastContainer position="top-right" autoClose={3000} />
         <Headers />
         <Suspense fallback={<div style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>Loading...</div>}>
           <Routes>

@@ -269,6 +269,50 @@
 
 .deactivateBtn {
   width: 100%;
+  background: rgba(237, 137, 54, 0.12);
+  border: 1px solid rgba(237, 137, 54, 0.25);
+  color: #fbd38d;
+  border-radius: 10px;
+  padding: 0.55rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+
+.deactivateBtn:hover:not(:disabled) {
+  background: rgba(237, 137, 54, 0.2);
+}
+
+.deactivateBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.reactivateBtn {
+  width: 100%;
+  background: rgba(72, 187, 120, 0.12);
+  border: 1px solid rgba(72, 187, 120, 0.25);
+  color: #68d391;
+  border-radius: 10px;
+  padding: 0.55rem;
+  font-size: 0.88rem;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.2s;
+}
+
+.reactivateBtn:hover:not(:disabled) {
+  background: rgba(72, 187, 120, 0.2);
+}
+
+.reactivateBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.deleteBtn {
+  width: 100%;
   background: rgba(245, 101, 101, 0.12);
   border: 1px solid rgba(245, 101, 101, 0.25);
   color: #fc8181;
@@ -280,11 +324,12 @@
   transition: all 0.2s;
 }
 
-.deactivateBtn:hover:not(:disabled) {
+.deleteBtn:hover:not(:disabled) {
   background: rgba(245, 101, 101, 0.2);
+  color: #fff;
 }
 
-.deactivateBtn:disabled {
+.deleteBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }

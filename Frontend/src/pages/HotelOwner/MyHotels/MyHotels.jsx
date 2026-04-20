@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import API from "../../../utils/api";
 import styles from "./MyHotels.module.css";
 
@@ -25,17 +26,31 @@ const MyHotels = () => {
     fetchHotels();
   }, []);
 
-  const handleDeactivate = async (id) => {
-    if (!window.confirm("Are you sure you want to deactivate this hotel?"))
+  const handleToggleStatus = async (hotel) => {
+    setDeactivating(hotel._id);
+    try {
+      const newStatus = !hotel.isActive;
+      await API.patch(`/hotels/${hotel._id}/status`, { isActive: newStatus });
+      setHotels((prev) =>
+        prev.map((h) => (h._id === hotel._id ? { ...h, isActive: newStatus } : h))
+      );
+      toast.success(`Hotel successfully ${newStatus ? "reactivated" : "deactivated"}!`);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to update status.");
+    } finally {
+      setDeactivating(null);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this hotel permanently?"))
       return;
-    setDeactivating(id);
     try {
       await API.delete(`/hotels/${id}`);
       setHotels((prev) => prev.filter((h) => h._id !== id));
+      toast.success("Hotel deleted permanently.");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to deactivate.");
-    } finally {
-      setDeactivating(null);
+      toast.error(err.response?.data?.message || "Failed to delete hotel.");
     }
   };
 
@@ -135,15 +150,21 @@ const MyHotels = () => {
                   Edit Details
                 </button>
                 <button
-                  className={styles.deactivateBtn}
-                  onClick={() => handleDeactivate(hotel._id)}
-                  disabled={deactivating === hotel._id || !hotel.isActive}
+                  className={hotel.isActive ? styles.deactivateBtn : styles.reactivateBtn}
+                  onClick={() => handleToggleStatus(hotel)}
+                  disabled={deactivating === hotel._id}
                 >
                   {deactivating === hotel._id
                     ? "Processing..."
                     : hotel.isActive
                       ? "Deactivate"
-                      : "Deactivated"}
+                      : "Reactivate"}
+                </button>
+                <button
+                  className={styles.deleteBtn}
+                  onClick={() => handleDelete(hotel._id)}
+                >
+                  Delete
                 </button>
               </div>
             </div>

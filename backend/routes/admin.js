@@ -8,7 +8,7 @@ const router = express.Router();
 
 // All routes require admin secret header: x-admin-secret
 
-// ── GET /admin/owners ─────────────────────────────────────────────────
+// GET /admin/owners
 router.get("/owners", protectAdmin, async (req, res) => {
   try {
     const { status } = req.query;
@@ -20,7 +20,7 @@ router.get("/owners", protectAdmin, async (req, res) => {
   }
 });
 
-// ── PUT /admin/verify-owner/:id ───────────────────────────────────────
+// PUT /admin/verify-owner/:id
 router.put("/verify-owner/:id", protectAdmin, async (req, res) => {
   try {
     const { status, rejectionReason } = req.body;
@@ -47,7 +47,7 @@ router.put("/verify-owner/:id", protectAdmin, async (req, res) => {
   }
 });
 
-// ── GET /admin/stats ──────────────────────────────────────────────────
+// GET /admin/stats
 router.get("/stats", protectAdmin, async (req, res) => {
   try {
     const [totalOwners, pendingOwners, totalHotels, totalBookings] = await Promise.all([
@@ -74,7 +74,7 @@ router.get("/stats", protectAdmin, async (req, res) => {
   }
 });
 
-// ── GET /admin/hotels/pending ─────────────────────────────────────────
+// GET /admin/hotels/pending
 router.get("/hotels/pending", protectAdmin, async (req, res) => {
   try {
     const hotels = await Hotel.find({ isApproved: false, isActive: true })
@@ -86,7 +86,7 @@ router.get("/hotels/pending", protectAdmin, async (req, res) => {
   }
 });
 
-// ── PATCH /admin/hotels/:id/approve ──────────────────────────────────
+// PATCH /admin/hotels/:id/approve
 router.patch("/hotels/:id/approve", protectAdmin, async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
@@ -101,7 +101,7 @@ router.patch("/hotels/:id/approve", protectAdmin, async (req, res) => {
   }
 });
 
-// ── PATCH /admin/hotels/:id/reject ───────────────────────────────────
+// PATCH /admin/hotels/:id/reject
 router.patch("/hotels/:id/reject", protectAdmin, async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);

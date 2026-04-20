@@ -5,8 +5,10 @@ import "./HotelDetails.css";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
+const NO_IMAGE_PLACEHOLDER = "https://placehold.co/800x600/eeeeee/999999?text=No+Image+Available";
+
 const resolveImage = (img) => {
-  if (!img) return "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800";
+  if (!img) return NO_IMAGE_PLACEHOLDER;
   if (img.startsWith("http")) return img;
   return `${BASE_URL}${img}`;
 };
@@ -47,6 +49,17 @@ export default function HotelDetails() {
     load();
   }, [id]);
 
+  useEffect(() => {
+    const imgCount = hotel?.images?.length || 0;
+    if (imgCount <= 1) return;
+    
+    const interval = setInterval(() => {
+      setActiveImg((prev) => (prev === imgCount - 1 ? 0 : prev + 1));
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [hotel]);
+
   if (loading) {
     return (
       <div className="hd-loading">
@@ -75,12 +88,16 @@ export default function HotelDetails() {
 
   const images = hotel.images?.length > 0
     ? hotel.images
-    : ["https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800"];
+    : [NO_IMAGE_PLACEHOLDER];
 
   const handleBook = (room) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/login");
+      navigate("/traveler-login", {
+        state: {
+          returnTo: `/booking/${hotel._id}?room=${room._id}&type=${encodeURIComponent(room.roomType)}&price=${room.minPrice || room.price || 0}`
+        }
+      });
       return;
     }
     navigate(
@@ -97,7 +114,7 @@ export default function HotelDetails() {
             src={resolveImage(images[activeImg])}
             alt={hotel.name}
             onError={(e) => {
-              e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800";
+              e.target.src = NO_IMAGE_PLACEHOLDER;
             }}
           />
           <div className="hd-img-overlay" />
@@ -118,7 +135,7 @@ export default function HotelDetails() {
                 className={i === activeImg ? "active" : ""}
                 onClick={() => setActiveImg(i)}
                 onError={(e) => {
-                  e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800";
+                  e.target.src = NO_IMAGE_PLACEHOLDER;
                 }}
               />
             ))}

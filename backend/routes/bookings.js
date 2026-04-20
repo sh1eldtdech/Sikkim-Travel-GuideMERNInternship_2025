@@ -14,11 +14,8 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// ════════════════════════════════════════════════════════════
 // USER BOOKING ROUTES
-// ════════════════════════════════════════════════════════════
-
-// ── POST /bookings/create-order ───────────────────────────────────────
+// POST /bookings/create-order
 // Step 1: User selects room and dates → backend creates Razorpay order
 router.post("/create-order", protectUser, async (req, res) => {
   try {
@@ -51,7 +48,8 @@ router.post("/create-order", protectUser, async (req, res) => {
     }
 
     // Calculate pricing
-    const subtotal = room.price * nights;
+    const roomPrice = room.minPrice || room.price || 0;
+    const subtotal = roomPrice * nights;
     const taxes = Math.round(subtotal * 0.12); // 12% GST
     const totalAmount = subtotal + taxes;
 
@@ -79,7 +77,7 @@ router.post("/create-order", protectUser, async (req, res) => {
       nights,
       guests: guests || 1,
       specialRequests: specialRequests || "",
-      pricePerNight: room.price,
+      pricePerNight: roomPrice,
       subtotal,
       taxes,
       totalAmount,
@@ -99,14 +97,14 @@ router.post("/create-order", protectUser, async (req, res) => {
       currency: "INR",
       key: process.env.RAZORPAY_KEY_ID,
       bookingId: booking._id,
-      breakdown: { pricePerNight: room.price, nights, subtotal, taxes, totalAmount },
+      breakdown: { pricePerNight: roomPrice, nights, subtotal, taxes, totalAmount },
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// ── POST /bookings/verify-payment ────────────────────────────────────
+// POST /bookings/verify-payment
 // Step 2: After Razorpay payment, verify signature and confirm booking
 router.post("/verify-payment", protectUser, async (req, res) => {
   try {
@@ -159,7 +157,7 @@ router.post("/verify-payment", protectUser, async (req, res) => {
   }
 });
 
-// ── GET /bookings/my-bookings ─────────────────────────────────────────
+// GET /bookings/my-bookings
 router.get("/my-bookings", protectUser, async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.user._id })
@@ -173,7 +171,7 @@ router.get("/my-bookings", protectUser, async (req, res) => {
   }
 });
 
-// ── POST /bookings/:id/cancel ─────────────────────────────────────────
+// POST /bookings/:id/cancel
 router.post("/:id/cancel", protectUser, async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
@@ -202,11 +200,8 @@ router.post("/:id/cancel", protectUser, async (req, res) => {
 });
 
 
-// ════════════════════════════════════════════════════════════
 // OWNER ROUTES — View bookings for their hotels
-// ════════════════════════════════════════════════════════════
-
-// ── GET /bookings/owner/bookings ──────────────────────────────────────
+// GET /bookings/owner/bookings
 router.get("/owner/bookings", protectOwner, async (req, res) => {
   try {
     const Hotel = require("../models/Hotel");

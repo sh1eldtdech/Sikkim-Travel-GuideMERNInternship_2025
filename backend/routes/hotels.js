@@ -6,12 +6,7 @@ const { uploadImages } = require("../middleware/upload");
 
 const router = express.Router();
 
-// ════════════════════════════════════════════════════════════
-// PUBLIC ROUTES — Tourists can browse
-// ════════════════════════════════════════════════════════════
-
-// ── GET /hotels ──────────────────────────────────────────────────────
-// Query params: district, minPrice, maxPrice, search
+// GET /hotels 
 router.get("/", async (req, res) => {
   try {
     const { district, maxPrice, search } = req.query;
@@ -63,7 +58,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ── GET /hotels/:id ───────────────────────────────────────────────────
+// GET /hotels/:id
 router.get("/:id", async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id).populate("owner", "name email");
@@ -79,12 +74,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
-// ════════════════════════════════════════════════════════════
 // OWNER ROUTES — Protected, only approved owners
-// ════════════════════════════════════════════════════════════
-
-// ── POST /hotels/add ─────────────────────────────────────────────────
+// POST /hotels/add
 // Accepts multipart/form-data with hotel images
 router.post(
   "/add",
@@ -148,7 +139,7 @@ router.post(
   }
 );
 
-// ── PUT /hotels/:id ───────────────────────────────────────────────────
+// PUT /hotels/:id
 router.put("/:id", protectOwner, uploadImages.array("images", 6), async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
@@ -199,7 +190,7 @@ router.put("/:id", protectOwner, uploadImages.array("images", 6), async (req, re
   }
 });
 
-// ── DELETE /hotels/:id ────────────────────────────────────────────────
+// DELETE /hotels/:id
 router.delete("/:id", protectOwner, async (req, res) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
@@ -209,17 +200,38 @@ router.delete("/:id", protectOwner, async (req, res) => {
       return res.status(403).json({ message: "Not authorized" });
     }
 
-    // Soft delete — keeps data but hides from listings
-    hotel.isActive = false;
-    await hotel.save();
+    // Hard delete - completely remove from database, including rooms
+    await Room.deleteMany({ hotel: hotel._id });
+    await hotel.deleteOne();
 
-    res.json({ message: "Hotel removed from listings" });
+    res.json({ message: "Hotel permanently deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// ── GET /hotels/owner/my-hotels ───────────────────────────────────────
+// PATCH /hotels/:id/status
+router.patch("/:id/status", protectOwner, async (req, res) => {
+  try {
+    const hotel = await Hotel.findById(req.params.id);
+    if (!hotel) return res.status(404).json({ message: "Hotel not found" });
+
+    if (hotel.owner.toString() !== req.owner._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    if (req.body.isActive !== undefined) {
+      hotel.isActive = req.body.isActive;
+      await hotel.save();
+    }
+
+    res.json({ message: `Hotel ${hotel.isActive ? "reactivated" : "deactivated"} successfully`, hotel });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET /hotels/owner/my-hotels
 // Owner gets only their own hotels
 router.get("/owner/my-hotels", protectOwner, async (req, res) => {
   try {

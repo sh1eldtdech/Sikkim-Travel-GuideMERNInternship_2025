@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useOwnerAuth } from "../../../context/OwnerAuthContext";
 import API from "../../../utils/api";
 import styles from "./OwnerLogin.module.css";
@@ -11,27 +12,28 @@ const OwnerLogin = () => {
 
   // Login state
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
-  const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
 
   // Register state
   const [regForm, setRegForm] = useState({ name: "", email: "", password: "", phone: "" });
   const [documents, setDocuments] = useState([]);
-  const [regError, setRegError] = useState("");
-  const [regSuccess, setRegSuccess] = useState("");
   const [regLoading, setRegLoading] = useState(false);
 
   // Login submit
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoginError("");
     setLoginLoading(true);
     try {
       const { data } = await API.post("/owner/login", loginForm);
       login(data.token, data.owner);
+      toast.success("Welcome to Owner Dashboard");
       navigate("/owner/dashboard");
     } catch (err) {
-      setLoginError(err.response?.data?.message || "Login failed. Try again.");
+      let errorMsg = "Unable to connect to the server. Please try again later.";
+      if (err.response && err.response.status >= 400 && err.response.status < 500) {
+        errorMsg = err.response.data?.message || "Invalid email or password.";
+      }
+      toast.error(errorMsg);
     } finally {
       setLoginLoading(false);
     }
@@ -40,21 +42,24 @@ const OwnerLogin = () => {
   /* ─── Register submit ─── */
   const handleRegister = async (e) => {
     e.preventDefault();
-    setRegError("");
-    setRegSuccess("");
     setRegLoading(true);
     try {
       const fd = new FormData();
       Object.entries(regForm).forEach(([k, v]) => fd.append(k, v));
       documents.forEach((f) => fd.append("documents", f));
       await API.post("/owner/register", fd, { headers: { "Content-Type": "multipart/form-data" } });
-      setRegSuccess(
-        "Registration submitted! You will receive login access after admin verification (24–48 hours)."
-      );
+      
+      toast.success("Registration submitted! Admin will review your application within 24-48 hours.");
+      
       setRegForm({ name: "", email: "", password: "", phone: "" });
       setDocuments([]);
+      setActiveTab("login"); // Optionally redirect to login tab on success
     } catch (err) {
-      setRegError(err.response?.data?.message || "Registration failed. Try again.");
+      let errorMsg = "Unable to submit your registration. Please try again later.";
+      if (err.response && err.response.status >= 400 && err.response.status < 500) {
+        errorMsg = err.response.data?.message || "Registration failed. Try again.";
+      }
+      toast.error(errorMsg);
     } finally {
       setRegLoading(false);
     }
@@ -78,13 +83,13 @@ const OwnerLogin = () => {
         <div className={styles.tabs}>
           <button
             className={`${styles.tab} ${activeTab === "login" ? styles.activeTab : ""}`}
-            onClick={() => { setActiveTab("login"); setLoginError(""); }}
+            onClick={() => setActiveTab("login")}
           >
             Login
           </button>
           <button
             className={`${styles.tab} ${activeTab === "register" ? styles.activeTab : ""}`}
-            onClick={() => { setActiveTab("register"); setRegError(""); setRegSuccess(""); }}
+            onClick={() => setActiveTab("register")}
           >
             Register
           </button>
@@ -93,7 +98,6 @@ const OwnerLogin = () => {
         {/* Login Form */}
         {activeTab === "login" && (
           <form className={styles.form} onSubmit={handleLogin}>
-            {loginError && <div className={styles.errorBox}>{loginError}</div>}
             <div className={styles.fieldGroup}>
               <label>Email Address</label>
               <input
@@ -127,8 +131,6 @@ const OwnerLogin = () => {
         {/* Register Form */}
         {activeTab === "register" && (
           <form className={styles.form} onSubmit={handleRegister}>
-            {regError && <div className={styles.errorBox}>{regError}</div>}
-            {regSuccess && <div className={styles.successBox}>{regSuccess}</div>}
             <div className={styles.row}>
               <div className={styles.fieldGroup}>
                 <label>Full Name</label>
