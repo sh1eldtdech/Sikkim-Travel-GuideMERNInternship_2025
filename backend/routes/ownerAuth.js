@@ -9,7 +9,7 @@ const router = express.Router();
 const generateToken = (id) =>
   jwt.sign({ id, role: "owner" }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-// ── POST /owner/register ─────────────────────────────────────────────
+// POST /owner/register
 // Accepts multipart/form-data with document files
 router.post("/register", uploadDocs.array("documents", 5), async (req, res) => {
   try {
@@ -53,7 +53,7 @@ router.post("/register", uploadDocs.array("documents", 5), async (req, res) => {
   }
 });
 
-// ── POST /owner/login ────────────────────────────────────────────────
+// POST /owner/login
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -67,14 +67,6 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // BYPASSED ADMIN APPROVAL FOR TESTING
-    /*
-    if (owner.status === "pending") {
-      return res.status(403).json({
-        message: "Your account is pending admin approval. Please wait 24-48 hours.",
-      });
-    }
-    */
 
     if (owner.status === "rejected") {
       return res.status(403).json({
@@ -92,7 +84,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// ── GET /owner/me ────────────────────────────────────────────────────
+// GET /owner/me
 router.get("/me", protectOwner, async (req, res) => {
   res.json({ owner: req.owner });
 });

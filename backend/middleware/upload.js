@@ -54,4 +54,21 @@ const uploadImages = multer({
   limits: { fileSize: 8 * 1024 * 1024 },
 });
 
-module.exports = { uploadDocs, uploadImages };
+// ── Bike images upload — Cloudinary (max 4 images) ──
+const bikeCloudinaryStorage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => ({
+    folder: "sikkim_bikes",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    transformation: [{ width: 1200, height: 800, crop: "limit", quality: "auto" }],
+    public_id: `bike_${Date.now()}_${Math.round(Math.random() * 1e6)}`,
+  }),
+});
+
+const uploadBikeImages = multer({
+  storage: bikeCloudinaryStorage,
+  fileFilter: imagesFilter,
+  limits: { fileSize: 8 * 1024 * 1024 },
+});
+
+module.exports = { uploadDocs, uploadImages, uploadBikeImages };

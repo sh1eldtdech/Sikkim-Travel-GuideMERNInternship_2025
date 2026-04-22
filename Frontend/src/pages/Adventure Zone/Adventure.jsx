@@ -1,4 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   MapContainer,
   TileLayer,
@@ -94,6 +96,7 @@ const MapEvt = ({ setZ }) => {
 // ── COMPONENT ─────────────────────────────────────────────────────────────────
 
 const Adventure = () => {
+  const navigate = useNavigate();
   const [showVendors, setShowVendors] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
   const [activeLocation, setActiveLocation] = useState(null);
@@ -105,9 +108,44 @@ const Adventure = () => {
   const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef(null);
 
+  // Live bikes from database
+  const [liveBikes, setLiveBikes] = useState([]);
+  const [bikesLoading, setBikesLoading] = useState(false);
+
+  // Fetch live approved bikes when vendor modal opens
+  useEffect(() => {
+    if (!showVendors) return;
+    setBikesLoading(true);
+    fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"}/bikes`)
+      .then((r) => r.json())
+      .then((d) => setLiveBikes(d.bikes || []))
+      .catch(() => setLiveBikes([]))
+      .finally(() => setBikesLoading(false));
+  }, [showVendors]);
+
+  // Auth-aware Book Now handler
+  const handleBikeBookNow = (bikeId) => {
+    const userToken = localStorage.getItem("userToken");
+    const ownerToken = localStorage.getItem("ownerToken");
+    if (userToken || ownerToken) {
+      navigate(`/bikes/${bikeId}`);
+    } else {
+      // Not logged in — send to traveler login, come back after
+      navigate("/traveler-login", { state: { from: `/bikes/${bikeId}` } });
+    }
+  };
+
+  // Show all bikes list even if user taps the generic card
+  const handleViewAllBikes = () => navigate("/bikes");
+
+
   const diffColors = { Easy: "#16a34a", Moderate: "#d97706", Hard: "#dc2626", Extreme: "#9333ea" };
-  const filteredVendors = vendorFilter === "All" ? bikeVendors : bikeVendors.filter(v => v.location.toLowerCase().includes(vendorFilter.toLowerCase()));
-  const filteredAdv = activeFilter === "All" ? adventures : adventures.filter(a => a.cat === activeFilter);
+  // Vendor filter uses live bikes when available, falls back to static data
+  const displayBikes = liveBikes.length > 0 ? liveBikes : bikeVendors;
+  const filteredVendors = vendorFilter === "All"
+    ? displayBikes
+    : displayBikes.filter((v) => (v.location || "").toLowerCase().includes(vendorFilter.toLowerCase()));
+  const filteredAdv = activeFilter === "All" ? adventures : adventures.filter((a) => a.cat === activeFilter);
 
   const openLocation = (loc) => { setActiveLocation(loc); setShowDetailModal(true); };
   const togglePlay = () => { if (videoRef.current) { isPlaying ? videoRef.current.pause() : videoRef.current.play(); setIsPlaying(!isPlaying); } };
@@ -329,10 +367,10 @@ const Adventure = () => {
                 </div>
                 <h3 className={styles.advName}>{a.name}</h3>
                 <p className={styles.advDesc}>{a.desc}</p>
-                <button className={styles.advBtn} style={{ color: a.col }}
-                  onClick={(e) => { e.stopPropagation(); a.cat === "Biking" ? setShowVendors(true) : null; }}>
-                  {a.cat === "Biking" ? "View Vendors →" : ""}
-                </button>
+              <button className={styles.advBtn} style={{ color: a.col }}
+                onClick={(e) => { e.stopPropagation(); a.cat === "Biking" ? setShowVendors(true) : null; }}>
+                {a.cat === "Biking" ? "View Vendors →" : ""}
+              </button>
               </div>
             </div>
           ))}
@@ -419,7 +457,7 @@ const Adventure = () => {
             <div className={styles.vendorModalHead}>
               <div>
                 <h2>🏍️ Bike Rental Vendors</h2>
-                <p>{bikeVendors.length} vendors available across Sikkim</p>
+                <p>{bikesLoading ? "Loading..." : `${filteredVendors.length} vendor(s) available across Sikkim`}</p>
               </div>
               <button className={styles.modalClose} onClick={() => setShowVendors(false)}><X size={20} /></button>
             </div>
@@ -433,36 +471,53 @@ const Adventure = () => {
             </div>
 
             <div className={styles.vendorList}>
-              {filteredVendors.map((v, i) => (
-                <div key={v.id} className={styles.vendorCard} style={{ animationDelay: `${i * 0.05}s` }}>
+              {bikesLoading ? (
+                <div style={{ textAlign: "center", padding: "2rem", color: "#9ca3af" }}>Loading live bikes...</div>
+              ) : filteredVendors.map((v, i) => (
+                <div key={v._id || v.id} className={styles.vendorCard} style={{ animationDelay: `${i * 0.05}s` }}>
                   <div className={styles.vendorRank}>#{i + 1}</div>
-                  <div className={styles.vendorEmoji}>{v.img}</div>
+                  <div className={styles.vendorEmoji}>
+                    {v.images && v.images.length > 0 ? (
+                      <img
+                        src={v.images[0].startsWith("http") ? v.images[0] : `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"}${v.images[0]}`}
+                        alt={v.name}
+                        className={styles.vendorBikeImg}
+                      />
+                    ) : (
+                      v.img || "🏍️"
+                    )}
+                  </div>
                   <div className={styles.vendorBody}>
                     <div className={styles.vendorTop}>
                       <h3>{v.name}</h3>
-                      {v.verified && <span className={styles.verifiedBadge}><Check size={10} /> Verified</span>}
+                      {(v.verified || v.isApproved) && <span className={styles.verifiedBadge}><Check size={10} /> Verified</span>}
                     </div>
                     <div className={styles.vendorMeta}>
                       <span><MapPin size={12} /> {v.location}</span>
-                      <span><Clock size={12} /> {v.open}</span>
-                      <span><Phone size={12} /> {v.phone}</span>
+                      {v.open && <span><Clock size={12} /> {v.open}</span>}
+                      <span><Phone size={12} /> {v.phone || v.contactNumber}</span>
                     </div>
                     <div className={styles.vendorBikes}>
-                      {v.bikes.map(b => <span key={b} className={styles.vBikeChip}>{b}</span>)}
+                      {(v.bikes || (v.name ? [v.name] : [])).map((b) => <span key={b} className={styles.vBikeChip}>{b}</span>)}
                     </div>
                   </div>
                   <div className={styles.vendorRight}>
                     <div className={styles.vendorRating}>
                       <Star size={14} fill="#f59e0b" color="#f59e0b" />
-                      <strong>{v.rating}</strong>
-                      <span>({v.reviews})</span>
+                      <strong>{v.rating || "New"}</strong>
+                      {v.reviews && <span>({v.reviews})</span>}
                     </div>
                     <div className={styles.vendorPrice}>
                       <span className={styles.vendorFrom}>From</span>
-                      <span className={styles.vendorPriceNum}>₹{v.priceFrom}</span>
+                      <span className={styles.vendorPriceNum}>₹{v.priceFrom || v.dailyRate}</span>
                       <span className={styles.vendorPerDay}>/day</span>
                     </div>
-                    <button className={styles.vendorBookBtn}>Book Now</button>
+                    <button
+                      className={styles.vendorBookBtn}
+                      onClick={() => v._id ? handleBikeBookNow(v._id) : handleViewAllBikes()}
+                    >
+                      Book Now
+                    </button>
                   </div>
                 </div>
               ))}
