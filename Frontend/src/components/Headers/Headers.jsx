@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Headers.css";
 
 const scrollTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
@@ -15,6 +15,7 @@ const Headers = () => {
   const destTimer = useRef(null);
   const moreTimer = useRef(null);
   const navigate  = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const onScroll = () => {
@@ -52,7 +53,8 @@ const Headers = () => {
     setMoreOpen(false);
   };
 
-  const rootClass = ["sh-header", scrolled ? "sh-scrolled" : ""].filter(Boolean).join(" ");
+  const forceScrolled = pathname.startsWith("/owner") || pathname.startsWith("/bikes") || pathname.startsWith("/login");
+  const rootClass = ["sh-header", (scrolled || forceScrolled) ? "sh-scrolled" : ""].filter(Boolean).join(" ");
 
   return (
     <>

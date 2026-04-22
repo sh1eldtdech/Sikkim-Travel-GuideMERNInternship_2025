@@ -10,6 +10,9 @@ const OwnerDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // This dashboard is for HOTEL owners only.
+  // Bike rental owners have their own separate dashboard at /owner/bike-rental/dashboard
+
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -56,10 +59,10 @@ const OwnerDashboard = () => {
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <h1 className={styles.greeting}>
-            Welcome back, {owner?.name || "Owner"} 
+            🏨 Welcome back, {owner?.name || "Owner"}
           </h1>
           <p className={styles.subGreet}>
-            Here's your hotel portfolio overview
+            Here's your hotel portfolio overview  •  <strong>Hotel Business</strong>
           </p>
         </div>
         <button className={styles.logoutBtn} onClick={handleLogout}>

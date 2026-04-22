@@ -178,6 +178,114 @@
     color: rgba(120, 102, 77, 0.55);
 }
 
+/* ── Custom Select ──────────────────────────────────────────── */
+.selectWrapper {
+    position: relative;
+}
+
+.selectTrigger {
+    width: 100%;
+    background: #f5efe4;
+    border: 1px solid rgba(144, 118, 82, 0.18);
+    border-radius: 16px;
+    padding: 1rem 1rem;
+    color: #564a37;
+    font-size: 0.96rem;
+    font-family: "Poppins", sans-serif;
+    outline: none;
+    box-shadow:
+        inset 4px 4px 10px rgba(172, 147, 112, 0.12),
+        inset -4px -4px 10px rgba(255, 255, 255, 0.9);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.selectTrigger:hover,
+.selectOpen {
+    border-color: rgba(144, 118, 82, 0.35);
+    box-shadow:
+        inset 4px 4px 10px rgba(172, 147, 112, 0.2),
+        inset -4px -4px 10px rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px);
+}
+
+.selectPlaceholder {
+    color: rgba(120, 102, 77, 0.55);
+}
+
+.chevron {
+    font-size: 1.1rem;
+    transition: transform 0.25s ease;
+    display: inline-block;
+    color: #9b805b;
+    line-height: 1;
+}
+
+.chevronUp {
+    transform: rotate(-180deg);
+}
+
+.selectDropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fffbf4;
+    border: 1px solid rgba(144, 118, 82, 0.22);
+    border-radius: 16px;
+    box-shadow:
+        0 10px 32px rgba(100, 80, 45, 0.14),
+        0 2px 8px rgba(100, 80, 45, 0.08);
+    list-style: none;
+    margin: 0;
+    padding: 0.4rem;
+    z-index: 100;
+    overflow: hidden;
+    animation: dropIn 0.18s ease;
+}
+
+@keyframes dropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selectOption {
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #564a37;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: background 0.15s ease;
+}
+
+.selectOption:hover {
+    background: rgba(185, 155, 114, 0.12);
+    color: #3f3324;
+}
+
+.selectedOption {
+    background: rgba(185, 155, 114, 0.2);
+    color: #3f3324;
+    font-weight: 600;
+}
+
+.optionIcon {
+    font-size: 1.15rem;
+}
+
 .optional {
     color: rgba(120, 102, 77, 0.7);
     font-size: 0.82rem;
@@ -261,6 +369,17 @@
     color: #8c765b;
     cursor: pointer;
     text-decoration: underline;
+}
+
+/* Info note shown when a business type is selected */
+.infoNote {
+    background: rgba(185, 155, 114, 0.12);
+    border: 1px solid rgba(185, 155, 114, 0.28);
+    border-radius: 14px;
+    padding: 0.8rem 1rem;
+    color: #6b5840;
+    font-size: 0.85rem;
+    line-height: 1.55;
 }
 
 .errorBox {

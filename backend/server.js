@@ -7,10 +7,12 @@ const connectDB = require("./config/db");
 // Route imports
 const userAuthRoutes = require("./routes/userAuth");
 const ownerAuthRoutes = require("./routes/ownerAuth");
+const bikeOwnerAuthRoutes = require("./routes/bikeOwnerAuth");
 const hotelRoutes = require("./routes/hotels");
 const roomRoutes = require("./routes/rooms");
 const bookingRoutes = require("./routes/bookings");
 const adminRoutes = require("./routes/admin");
+const bikeRoutes = require("./routes/bikes");
 
 const app = express();
 
@@ -33,11 +35,22 @@ app.use("/uploads/hotels", express.static(path.join(__dirname, "uploads/hotels")
 
 // Routes
 app.use("/user", userAuthRoutes);        // POST /user/register, /user/login
-app.use("/owner", ownerAuthRoutes);      // POST /owner/register, /owner/login
+app.use("/owner", ownerAuthRoutes);      // POST /owner/register, /owner/login  (Hotel owners)
+app.use("/bike-owner", bikeOwnerAuthRoutes); // POST /bike-owner/register, /bike-owner/login (Bike rental owners)
 app.use("/hotels", hotelRoutes);         // GET /hotels, GET /hotels/:id, POST /hotels/add, etc.
 app.use("/rooms", roomRoutes);           // POST /rooms/add, PUT /rooms/:id
 app.use("/bookings", bookingRoutes);     // POST /create-order, /verify-payment, GET /my-bookings
 app.use("/admin", adminRoutes);          // Admin: verify owners, view stats
+app.use("/bikes", bikeRoutes);           // GET /bikes, POST /bikes/add, etc.
+
+// Root Route - Welcome Message
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to Sikkim Travel Guide API! A complete solution for your visit to Sikkim.",
+    status: "Active",
+    docs: "Please use the frontend client to interact with this API."
+  });
+});
 
 // Health check
 app.get("/health", (req, res) => {
