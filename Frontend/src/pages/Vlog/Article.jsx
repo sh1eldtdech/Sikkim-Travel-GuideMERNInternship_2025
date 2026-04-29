@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
 import styles from "./Article.module.css";
 import Gangtok from "../../assets/East Sikkim/Gangtok.jpg";
 import North from "../../assets/North Sikkim/Gurudongmar Lake.jpg";
-import Moasteries from "../../assets/North3.jpg"
+import Moasteries from "../../assets/North3.jpg";
 import Homestays from "../../assets/Homestays.jpg";
-import Sustainable from "../../assets/West Sikkim/Pelling.jpg"
+import Sustainable from "../../assets/West Sikkim/Pelling.jpg";
 
 const Article = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [expandedArticle, setExpandedArticle] = useState(null);
+
+  const sanitizeArticleHtml = (content) => DOMPurify.sanitize(content);
 
   const articles = [
     {
@@ -200,8 +203,7 @@ const Article = () => {
       author: "Travel Writer",
       date: "2024-02-20",
       readTime: "8 min read",
-      image:
-        Homestays,
+      image: Homestays,
       excerpt:
         "Experience authentic Sikkimese culture through homestay accommodations across the state.",
       content: `
@@ -508,8 +510,7 @@ const Article = () => {
       author: "Sustainability Expert",
       date: "2024-03-30",
       readTime: "8 min read",
-      image:
-      Sustainable,
+      image: Sustainable,
       excerpt:
         "Learn how to travel responsibly in Sikkim while supporting local communities and protecting the environment.",
       content: `
@@ -647,7 +648,9 @@ const Article = () => {
                     <div className={styles.expandedContent}>
                       <div
                         className={styles.articleBody}
-                        dangerouslySetInnerHTML={{ __html: article.content }}
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeArticleHtml(article.content),
+                        }}
                       />
                     </div>
                   )}

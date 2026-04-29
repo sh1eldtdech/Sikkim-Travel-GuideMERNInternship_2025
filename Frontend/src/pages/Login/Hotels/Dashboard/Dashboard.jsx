@@ -1,25 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchOwnerHotels, fetchOwnerBookings, addHotel, addRoom, updateRoom } from "./api";
+import {
+  fetchOwnerHotels,
+  fetchOwnerBookings,
+  addHotel,
+  addRoom,
+  updateRoom,
+  fetchOwnerMe,
+  logoutOwner,
+} from "./api";
 import "./Dashboard.css";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const statusConfig = {
   confirmed: { label: "Confirmed", color: "#2e7d32", bg: "#e8f5e9" },
-  upcoming:  { label: "Upcoming",  color: "#1565c0", bg: "#e3f2fd" },
-  completed: { label: "Completed", color: "#555",    bg: "#f5f5f5" },
+  upcoming: { label: "Upcoming", color: "#1565c0", bg: "#e3f2fd" },
+  completed: { label: "Completed", color: "#555", bg: "#f5f5f5" },
   cancelled: { label: "Cancelled", color: "#c62828", bg: "#fce4ec" },
 };
 
 const formatDate = (d) =>
   new Date(d).toLocaleDateString("en-IN", {
-    day: "numeric", month: "short", year: "numeric",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 
 export default function OwnerDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
+  const [ownerInfo, setOwnerInfo] = useState({});
 
   // Data states
   const [hotels, setHotels] = useState([]);
@@ -36,8 +47,13 @@ export default function OwnerDashboard() {
 
   // Add hotel form
   const [addHotelForm, setAddHotelForm] = useState({
-    name: "", district: "East", location: "", description: "",
-    amenities: "", checkIn: "2:00 PM", checkOut: "11:00 AM",
+    name: "",
+    district: "East",
+    location: "",
+    description: "",
+    amenities: "",
+    checkIn: "2:00 PM",
+    checkOut: "11:00 AM",
     cancellation: "Free cancellation up to 48 hours before check-in",
   });
   const [hotelImages, setHotelImages] = useState(null);
@@ -46,18 +62,19 @@ export default function OwnerDashboard() {
 
   // Add room form
   const [addRoomForm, setAddRoomForm] = useState({
-    hotelId: "", roomType: "", minPrice: "", maxPrice: "", totalRooms: "", availableRooms: "", features: "",
+    hotelId: "",
+    roomType: "",
+    minPrice: "",
+    maxPrice: "",
+    totalRooms: "",
+    availableRooms: "",
+    features: "",
   });
   const [addRoomLoading, setAddRoomLoading] = useState(false);
   const [addRoomMsg, setAddRoomMsg] = useState("");
 
   // Load data on mount
   useEffect(() => {
-    const token = localStorage.getItem("ownerToken");
-    if (!token) {
-      navigate("/owner/login");
-      return;
-    }
     loadAll();
   }, [navigate]);
 
@@ -65,14 +82,24 @@ export default function OwnerDashboard() {
     setLoading(true);
     setError("");
     try {
-      const [hotelsData, bookingsData] = await Promise.all([
+      const [ownerData, hotelsData, bookingsData] = await Promise.all([
+        fetchOwnerMe(),
         fetchOwnerHotels(),
         fetchOwnerBookings(),
       ]);
+      setOwnerInfo(ownerData.owner || {});
       setHotels(hotelsData.hotels || []);
       setBookings(bookingsData.bookings || []);
       setBookingStats(bookingsData.stats || {});
     } catch (err) {
+      const msg = err.message || "Failed to load dashboard data";
+      if (
+        msg.toLowerCase().includes("token") ||
+        msg.toLowerCase().includes("unauthorized")
+      ) {
+        navigate("/owner-login", { replace: true });
+        return;
+      }
       setError(err.message || "Failed to load dashboard data");
     } finally {
       setLoading(false);
@@ -82,7 +109,11 @@ export default function OwnerDashboard() {
   // ── Inline room edit ───────────────────────────────────────────────
   const handleRoomEdit = (room) => {
     setEditingRoom(room._id);
-    setEditValues({ minPrice: room.minPrice || room.price, maxPrice: room.maxPrice || room.price, availableRooms: room.availableRooms });
+    setEditValues({
+      minPrice: room.minPrice || room.price,
+      maxPrice: room.maxPrice || room.price,
+      availableRooms: room.availableRooms,
+    });
   };
 
   const handleRoomSave = async (roomId) => {
@@ -98,9 +129,9 @@ export default function OwnerDashboard() {
         prev.map((h) => ({
           ...h,
           rooms: h.rooms.map((r) =>
-            r._id === roomId ? { ...r, ...updated.room } : r
+            r._id === roomId ? { ...r, ...updated.room } : r,
           ),
-        }))
+        })),
       );
       setEditingRoom(null);
       setSaveSuccess(roomId);
@@ -138,7 +169,7 @@ export default function OwnerDashboard() {
           checkIn: addHotelForm.checkIn,
           checkOut: addHotelForm.checkOut,
           cancellation: addHotelForm.cancellation,
-        })
+        }),
       );
 
       if (hotelImages) {
@@ -146,12 +177,19 @@ export default function OwnerDashboard() {
       }
 
       const data = await addHotel(formData);
-      setAddHotelMsg("✅ Hotel added successfully! It is now live on the hotel listing.");
+      setAddHotelMsg(
+        "✅ Hotel added successfully! It is now live on the hotel listing.",
+      );
       // Add the new hotel to local state
       setHotels((prev) => [...prev, { ...data.hotel, rooms: [] }]);
       setAddHotelForm({
-        name: "", district: "East", location: "", description: "",
-        amenities: "", checkIn: "2:00 PM", checkOut: "11:00 AM",
+        name: "",
+        district: "East",
+        location: "",
+        description: "",
+        amenities: "",
+        checkIn: "2:00 PM",
+        checkOut: "11:00 AM",
         cancellation: "Free cancellation up to 48 hours before check-in",
       });
       setHotelImages(null);
@@ -184,17 +222,25 @@ export default function OwnerDashboard() {
         features: JSON.stringify(featuresArr),
       });
 
-      setAddRoomMsg("✅ Room added! It is now visible to tourists on the hotel page.");
+      setAddRoomMsg(
+        "✅ Room added! It is now visible to tourists on the hotel page.",
+      );
       // Update hotel in local state
       setHotels((prev) =>
         prev.map((h) =>
           h._id === addRoomForm.hotelId
             ? { ...h, rooms: [...h.rooms, data.room] }
-            : h
-        )
+            : h,
+        ),
       );
       setAddRoomForm({
-        hotelId: "", roomType: "", minPrice: "", maxPrice: "", totalRooms: "", availableRooms: "", features: "",
+        hotelId: "",
+        roomType: "",
+        minPrice: "",
+        maxPrice: "",
+        totalRooms: "",
+        availableRooms: "",
+        features: "",
       });
     } catch (err) {
       setAddRoomMsg("❌ " + (err.message || "Failed to add room"));
@@ -203,21 +249,22 @@ export default function OwnerDashboard() {
     }
   };
 
-  const ownerInfo = JSON.parse(localStorage.getItem("ownerInfo") || "{}");
-
   const totalRooms = hotels.reduce((s, h) => s + (h.rooms?.length || 0), 0);
 
   const tabs = [
-    { id: "overview", label: "Overview",   icon: "📊" },
-    { id: "hotels",   label: "My Hotels",  icon: "🏨" },
+    { id: "overview", label: "Overview", icon: "📊" },
+    { id: "hotels", label: "My Hotels", icon: "🏨" },
     { id: "add-hotel", label: "Add Hotel", icon: "➕" },
-    { id: "add-room",  label: "Add Room",  icon: "🛏️" },
-    { id: "bookings",  label: "Bookings",  icon: "📅" },
+    { id: "add-room", label: "Add Room", icon: "🛏️" },
+    { id: "bookings", label: "Bookings", icon: "📅" },
   ];
 
   if (loading) {
     return (
-      <div className="db-layout" style={{ alignItems: "center", justifyContent: "center" }}>
+      <div
+        className="db-layout"
+        style={{ alignItems: "center", justifyContent: "center" }}
+      >
         <div style={{ textAlign: "center", color: "#8a9ba8" }}>
           <div className="hd-spinner" style={{ margin: "0 auto 16px" }} />
           <p>Loading dashboard...</p>
@@ -254,10 +301,13 @@ export default function OwnerDashboard() {
         <div className="db-sidebar-footer">
           <button
             className="db-logout"
-            onClick={() => {
-              localStorage.removeItem("ownerToken");
-              localStorage.removeItem("ownerInfo");
-              navigate("/owner/login");
+            onClick={async () => {
+              try {
+                await logoutOwner();
+              } catch {
+                // Best-effort logout before redirecting to login.
+              }
+              navigate("/owner-login", { replace: true });
             }}
           >
             🚪 Logout
@@ -278,15 +328,29 @@ export default function OwnerDashboard() {
         </div>
 
         {error && (
-          <div style={{
-            margin: 24, padding: 16, background: "#fce4ec",
-            color: "#c62828", borderRadius: 12, fontSize: 14,
-          }}>
+          <div
+            style={{
+              margin: 24,
+              padding: 16,
+              background: "#fce4ec",
+              color: "#c62828",
+              borderRadius: 12,
+              fontSize: 14,
+            }}
+          >
             {error}{" "}
-            <button onClick={loadAll} style={{
-              marginLeft: 12, padding: "4px 12px", background: "#c62828",
-              color: "#fff", border: "none", borderRadius: 6, cursor: "pointer",
-            }}>
+            <button
+              onClick={loadAll}
+              style={{
+                marginLeft: 12,
+                padding: "4px 12px",
+                background: "#c62828",
+                color: "#fff",
+                border: "none",
+                borderRadius: 6,
+                cursor: "pointer",
+              }}
+            >
               Retry
             </button>
           </div>
@@ -308,7 +372,9 @@ export default function OwnerDashboard() {
               </div>
               <div className="db-stat-card">
                 <span className="db-stat-icon">📅</span>
-                <div className="db-stat-val">{bookingStats.totalBookings || 0}</div>
+                <div className="db-stat-val">
+                  {bookingStats.totalBookings || 0}
+                </div>
                 <div className="db-stat-lbl">Total Bookings</div>
               </div>
               <div className="db-stat-card gold">
@@ -323,8 +389,11 @@ export default function OwnerDashboard() {
             <h2 className="db-section-title">Recent Bookings</h2>
             <div className="db-table-wrap">
               {bookings.length === 0 ? (
-                <p style={{ padding: 32, color: "#8a9ba8", textAlign: "center" }}>
-                  No bookings yet. Add hotels and rooms to start receiving bookings.
+                <p
+                  style={{ padding: 32, color: "#8a9ba8", textAlign: "center" }}
+                >
+                  No bookings yet. Add hotels and rooms to start receiving
+                  bookings.
                 </p>
               ) : (
                 <table className="db-table">
@@ -341,19 +410,26 @@ export default function OwnerDashboard() {
                   </thead>
                   <tbody>
                     {bookings.slice(0, 8).map((b) => {
-                      const sc = statusConfig[b.status] || statusConfig.confirmed;
+                      const sc =
+                        statusConfig[b.status] || statusConfig.confirmed;
                       return (
                         <tr key={b._id}>
-                          <td className="db-mono">BKG{b._id.slice(-8).toUpperCase()}</td>
+                          <td className="db-mono">
+                            BKG{b._id.slice(-8).toUpperCase()}
+                          </td>
                           <td>{b.user?.name || "Guest"}</td>
                           <td>
                             <strong>{b.hotelName || b.hotel?.name}</strong>
                             <br />
-                            <span className="db-room-sub">{b.roomType || b.room?.roomType}</span>
+                            <span className="db-room-sub">
+                              {b.roomType || b.room?.roomType}
+                            </span>
                           </td>
                           <td>{formatDate(b.checkIn)}</td>
                           <td>{formatDate(b.checkOut)}</td>
-                          <td className="db-amount">₹{b.totalAmount.toLocaleString()}</td>
+                          <td className="db-amount">
+                            ₹{b.totalAmount.toLocaleString()}
+                          </td>
                           <td>
                             <span
                               className="db-status-badge"
@@ -376,14 +452,23 @@ export default function OwnerDashboard() {
         {activeTab === "hotels" && (
           <div className="db-hotels">
             {hotels.length === 0 ? (
-              <div style={{ textAlign: "center", padding: 60, color: "#8a9ba8" }}>
+              <div
+                style={{ textAlign: "center", padding: 60, color: "#8a9ba8" }}
+              >
                 <p style={{ fontSize: 48 }}>🏨</p>
-                <p style={{ marginTop: 16 }}>No hotels yet. Add your first hotel!</p>
+                <p style={{ marginTop: 16 }}>
+                  No hotels yet. Add your first hotel!
+                </p>
                 <button
                   onClick={() => setActiveTab("add-hotel")}
                   style={{
-                    marginTop: 16, padding: "12px 24px", background: "#1a1a2e",
-                    color: "#fff", border: "none", borderRadius: 10, cursor: "pointer",
+                    marginTop: 16,
+                    padding: "12px 24px",
+                    background: "#1a1a2e",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 10,
+                    cursor: "pointer",
                     fontWeight: 600,
                   }}
                 >
@@ -396,15 +481,24 @@ export default function OwnerDashboard() {
                   <div className="db-hotel-header">
                     <div>
                       <h3>{hotel.name}</h3>
-                      <p>📍 {hotel.location}, {hotel.district} Sikkim</p>
+                      <p>
+                        📍 {hotel.location}, {hotel.district} Sikkim
+                      </p>
                     </div>
                     <span className="db-room-count">
-                      {hotel.rooms?.length || 0} room type{hotel.rooms?.length !== 1 ? "s" : ""}
+                      {hotel.rooms?.length || 0} room type
+                      {hotel.rooms?.length !== 1 ? "s" : ""}
                     </span>
                   </div>
 
                   {hotel.rooms?.length === 0 ? (
-                    <p style={{ padding: "20px 24px", color: "#8a9ba8", fontSize: 14 }}>
+                    <p
+                      style={{
+                        padding: "20px 24px",
+                        color: "#8a9ba8",
+                        fontSize: 14,
+                      }}
+                    >
                       No rooms added yet.{" "}
                       <button
                         onClick={() => {
@@ -412,8 +506,12 @@ export default function OwnerDashboard() {
                           setActiveTab("add-room");
                         }}
                         style={{
-                          background: "none", border: "none", color: "#c9a84c",
-                          fontWeight: 600, cursor: "pointer", textDecoration: "underline",
+                          background: "none",
+                          border: "none",
+                          color: "#c9a84c",
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          textDecoration: "underline",
                         }}
                       >
                         Add a room
@@ -435,7 +533,9 @@ export default function OwnerDashboard() {
                         <tbody>
                           {hotel.rooms.map((room) => (
                             <tr key={room._id}>
-                              <td style={{ fontWeight: 600 }}>{room.roomType}</td>
+                              <td style={{ fontWeight: 600 }}>
+                                {room.roomType}
+                              </td>
                               <td>
                                 {editingRoom === room._id ? (
                                   <div style={{ display: "flex", gap: "4px" }}>
@@ -444,7 +544,10 @@ export default function OwnerDashboard() {
                                       value={editValues.minPrice}
                                       min={0}
                                       onChange={(e) =>
-                                        setEditValues((v) => ({ ...v, minPrice: e.target.value }))
+                                        setEditValues((v) => ({
+                                          ...v,
+                                          minPrice: e.target.value,
+                                        }))
                                       }
                                       className="db-inline-input"
                                     />
@@ -453,7 +556,10 @@ export default function OwnerDashboard() {
                                       value={editValues.maxPrice}
                                       min={0}
                                       onChange={(e) =>
-                                        setEditValues((v) => ({ ...v, maxPrice: e.target.value }))
+                                        setEditValues((v) => ({
+                                          ...v,
+                                          maxPrice: e.target.value,
+                                        }))
                                       }
                                       className="db-inline-input"
                                     />
@@ -483,8 +589,8 @@ export default function OwnerDashboard() {
                                       room.availableRooms === 0
                                         ? "none"
                                         : room.availableRooms <= 1
-                                        ? "low"
-                                        : ""
+                                          ? "low"
+                                          : ""
                                     }`}
                                   >
                                     {room.availableRooms}
@@ -499,7 +605,8 @@ export default function OwnerDashboard() {
                                     style={{
                                       width: `${
                                         room.totalRooms > 0
-                                          ? ((room.totalRooms - room.availableRooms) /
+                                          ? ((room.totalRooms -
+                                              room.availableRooms) /
                                               room.totalRooms) *
                                             100
                                           : 0
@@ -510,9 +617,10 @@ export default function OwnerDashboard() {
                                 <span className="db-occ-pct">
                                   {room.totalRooms > 0
                                     ? Math.round(
-                                        ((room.totalRooms - room.availableRooms) /
+                                        ((room.totalRooms -
+                                          room.availableRooms) /
                                           room.totalRooms) *
-                                          100
+                                          100,
                                       )
                                     : 0}
                                   %
@@ -540,7 +648,9 @@ export default function OwnerDashboard() {
                                     className="db-edit-btn"
                                     onClick={() => handleRoomEdit(room)}
                                   >
-                                    {saveSuccess === room._id ? "✓ Saved" : "Edit"}
+                                    {saveSuccess === room._id
+                                      ? "✓ Saved"
+                                      : "Edit"}
                                   </button>
                                 )}
                               </td>
@@ -560,11 +670,18 @@ export default function OwnerDashboard() {
         {activeTab === "add-hotel" && (
           <div className="db-form-panel">
             {addHotelMsg && (
-              <div style={{
-                padding: 16, marginBottom: 20, borderRadius: 12, fontSize: 14,
-                background: addHotelMsg.startsWith("✅") ? "#e8f5e9" : "#fce4ec",
-                color: addHotelMsg.startsWith("✅") ? "#2e7d32" : "#c62828",
-              }}>
+              <div
+                style={{
+                  padding: 16,
+                  marginBottom: 20,
+                  borderRadius: 12,
+                  fontSize: 14,
+                  background: addHotelMsg.startsWith("✅")
+                    ? "#e8f5e9"
+                    : "#fce4ec",
+                  color: addHotelMsg.startsWith("✅") ? "#2e7d32" : "#c62828",
+                }}
+              >
                 {addHotelMsg}
               </div>
             )}
@@ -575,7 +692,9 @@ export default function OwnerDashboard() {
                   required
                   placeholder="e.g. The Mountain Retreat"
                   value={addHotelForm.name}
-                  onChange={(e) => setAddHotelForm((p) => ({ ...p, name: e.target.value }))}
+                  onChange={(e) =>
+                    setAddHotelForm((p) => ({ ...p, name: e.target.value }))
+                  }
                 />
               </div>
               <div className="db-form-row">
@@ -583,7 +702,12 @@ export default function OwnerDashboard() {
                   <label>District *</label>
                   <select
                     value={addHotelForm.district}
-                    onChange={(e) => setAddHotelForm((p) => ({ ...p, district: e.target.value }))}
+                    onChange={(e) =>
+                      setAddHotelForm((p) => ({
+                        ...p,
+                        district: e.target.value,
+                      }))
+                    }
                   >
                     {["East", "West", "North", "South"].map((d) => (
                       <option key={d}>{d}</option>
@@ -596,7 +720,12 @@ export default function OwnerDashboard() {
                     required
                     placeholder="e.g. Gangtok"
                     value={addHotelForm.location}
-                    onChange={(e) => setAddHotelForm((p) => ({ ...p, location: e.target.value }))}
+                    onChange={(e) =>
+                      setAddHotelForm((p) => ({
+                        ...p,
+                        location: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -607,7 +736,12 @@ export default function OwnerDashboard() {
                   required
                   placeholder="Describe your hotel — surroundings, unique features, history..."
                   value={addHotelForm.description}
-                  onChange={(e) => setAddHotelForm((p) => ({ ...p, description: e.target.value }))}
+                  onChange={(e) =>
+                    setAddHotelForm((p) => ({
+                      ...p,
+                      description: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="db-form-group">
@@ -615,7 +749,12 @@ export default function OwnerDashboard() {
                 <input
                   placeholder="Free WiFi, Restaurant, Spa, Parking, Mountain View..."
                   value={addHotelForm.amenities}
-                  onChange={(e) => setAddHotelForm((p) => ({ ...p, amenities: e.target.value }))}
+                  onChange={(e) =>
+                    setAddHotelForm((p) => ({
+                      ...p,
+                      amenities: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="db-form-row">
@@ -624,7 +763,12 @@ export default function OwnerDashboard() {
                   <input
                     placeholder="2:00 PM"
                     value={addHotelForm.checkIn}
-                    onChange={(e) => setAddHotelForm((p) => ({ ...p, checkIn: e.target.value }))}
+                    onChange={(e) =>
+                      setAddHotelForm((p) => ({
+                        ...p,
+                        checkIn: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="db-form-group">
@@ -632,7 +776,12 @@ export default function OwnerDashboard() {
                   <input
                     placeholder="11:00 AM"
                     value={addHotelForm.checkOut}
-                    onChange={(e) => setAddHotelForm((p) => ({ ...p, checkOut: e.target.value }))}
+                    onChange={(e) =>
+                      setAddHotelForm((p) => ({
+                        ...p,
+                        checkOut: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -653,7 +802,11 @@ export default function OwnerDashboard() {
                   </label>
                 </div>
               </div>
-              <button type="submit" className="db-submit-btn" disabled={addHotelLoading}>
+              <button
+                type="submit"
+                className="db-submit-btn"
+                disabled={addHotelLoading}
+              >
                 {addHotelLoading ? "Adding Hotel..." : "➕ Add Hotel"}
               </button>
             </form>
@@ -664,11 +817,18 @@ export default function OwnerDashboard() {
         {activeTab === "add-room" && (
           <div className="db-form-panel">
             {addRoomMsg && (
-              <div style={{
-                padding: 16, marginBottom: 20, borderRadius: 12, fontSize: 14,
-                background: addRoomMsg.startsWith("✅") ? "#e8f5e9" : "#fce4ec",
-                color: addRoomMsg.startsWith("✅") ? "#2e7d32" : "#c62828",
-              }}>
+              <div
+                style={{
+                  padding: 16,
+                  marginBottom: 20,
+                  borderRadius: 12,
+                  fontSize: 14,
+                  background: addRoomMsg.startsWith("✅")
+                    ? "#e8f5e9"
+                    : "#fce4ec",
+                  color: addRoomMsg.startsWith("✅") ? "#2e7d32" : "#c62828",
+                }}
+              >
                 {addRoomMsg}
               </div>
             )}
@@ -678,7 +838,9 @@ export default function OwnerDashboard() {
                 <select
                   required
                   value={addRoomForm.hotelId}
-                  onChange={(e) => setAddRoomForm((p) => ({ ...p, hotelId: e.target.value }))}
+                  onChange={(e) =>
+                    setAddRoomForm((p) => ({ ...p, hotelId: e.target.value }))
+                  }
                 >
                   <option value="">-- Select your hotel --</option>
                   {hotels.map((h) => (
@@ -694,7 +856,9 @@ export default function OwnerDashboard() {
                   required
                   placeholder="e.g. Deluxe Suite, Standard Room, Mountain View Villa..."
                   value={addRoomForm.roomType}
-                  onChange={(e) => setAddRoomForm((p) => ({ ...p, roomType: e.target.value }))}
+                  onChange={(e) =>
+                    setAddRoomForm((p) => ({ ...p, roomType: e.target.value }))
+                  }
                 />
               </div>
               <div className="db-form-row">
@@ -706,7 +870,12 @@ export default function OwnerDashboard() {
                     min="0"
                     placeholder="e.g. 4500"
                     value={addRoomForm.minPrice}
-                    onChange={(e) => setAddRoomForm((p) => ({ ...p, minPrice: e.target.value }))}
+                    onChange={(e) =>
+                      setAddRoomForm((p) => ({
+                        ...p,
+                        minPrice: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="db-form-group">
@@ -717,7 +886,12 @@ export default function OwnerDashboard() {
                     min="0"
                     placeholder="e.g. 6000"
                     value={addRoomForm.maxPrice}
-                    onChange={(e) => setAddRoomForm((p) => ({ ...p, maxPrice: e.target.value }))}
+                    onChange={(e) =>
+                      setAddRoomForm((p) => ({
+                        ...p,
+                        maxPrice: e.target.value,
+                      }))
+                    }
                   />
                 </div>
               </div>
@@ -730,7 +904,12 @@ export default function OwnerDashboard() {
                     min="1"
                     placeholder="e.g. 5"
                     value={addRoomForm.totalRooms}
-                    onChange={(e) => setAddRoomForm((p) => ({ ...p, totalRooms: e.target.value }))}
+                    onChange={(e) =>
+                      setAddRoomForm((p) => ({
+                        ...p,
+                        totalRooms: e.target.value,
+                      }))
+                    }
                   />
                 </div>
                 <div className="db-form-group">
@@ -742,7 +921,10 @@ export default function OwnerDashboard() {
                     placeholder="e.g. 3"
                     value={addRoomForm.availableRooms}
                     onChange={(e) =>
-                      setAddRoomForm((p) => ({ ...p, availableRooms: e.target.value }))
+                      setAddRoomForm((p) => ({
+                        ...p,
+                        availableRooms: e.target.value,
+                      }))
                     }
                   />
                 </div>
@@ -752,10 +934,16 @@ export default function OwnerDashboard() {
                 <input
                   placeholder="Mountain View, King Bed, Private Balcony, Jacuzzi..."
                   value={addRoomForm.features}
-                  onChange={(e) => setAddRoomForm((p) => ({ ...p, features: e.target.value }))}
+                  onChange={(e) =>
+                    setAddRoomForm((p) => ({ ...p, features: e.target.value }))
+                  }
                 />
               </div>
-              <button type="submit" className="db-submit-btn" disabled={addRoomLoading}>
+              <button
+                type="submit"
+                className="db-submit-btn"
+                disabled={addRoomLoading}
+              >
                 {addRoomLoading ? "Adding Room..." : "🛏️ Add Room"}
               </button>
             </form>
@@ -768,12 +956,19 @@ export default function OwnerDashboard() {
             {/* Quick stats row */}
             <div className="db-stats-grid" style={{ marginBottom: 28 }}>
               {["confirmed", "upcoming", "completed", "cancelled"].map((s) => {
-                const icons = { confirmed: "✅", upcoming: "🔜", completed: "🏁", cancelled: "❌" };
+                const icons = {
+                  confirmed: "✅",
+                  upcoming: "🔜",
+                  completed: "🏁",
+                  cancelled: "❌",
+                };
                 return (
                   <div className="db-stat-card" key={s}>
                     <span className="db-stat-icon">{icons[s]}</span>
                     <div className="db-stat-val">{bookingStats[s] || 0}</div>
-                    <div className="db-stat-lbl">{s.charAt(0).toUpperCase() + s.slice(1)}</div>
+                    <div className="db-stat-lbl">
+                      {s.charAt(0).toUpperCase() + s.slice(1)}
+                    </div>
                   </div>
                 );
               })}
@@ -781,7 +976,9 @@ export default function OwnerDashboard() {
 
             <div className="db-table-wrap">
               {bookings.length === 0 ? (
-                <p style={{ padding: 32, color: "#8a9ba8", textAlign: "center" }}>
+                <p
+                  style={{ padding: 32, color: "#8a9ba8", textAlign: "center" }}
+                >
                   No bookings yet.
                 </p>
               ) : (
@@ -799,10 +996,13 @@ export default function OwnerDashboard() {
                   </thead>
                   <tbody>
                     {bookings.map((b) => {
-                      const sc = statusConfig[b.status] || statusConfig.confirmed;
+                      const sc =
+                        statusConfig[b.status] || statusConfig.confirmed;
                       return (
                         <tr key={b._id}>
-                          <td className="db-mono">BKG{b._id.slice(-8).toUpperCase()}</td>
+                          <td className="db-mono">
+                            BKG{b._id.slice(-8).toUpperCase()}
+                          </td>
                           <td>
                             <strong>{b.user?.name || "Guest"}</strong>
                             <br />
@@ -813,11 +1013,15 @@ export default function OwnerDashboard() {
                           <td>
                             <strong>{b.hotelName || b.hotel?.name}</strong>
                             <br />
-                            <span className="db-room-sub">{b.roomType || b.room?.roomType}</span>
+                            <span className="db-room-sub">
+                              {b.roomType || b.room?.roomType}
+                            </span>
                           </td>
                           <td>{formatDate(b.checkIn)}</td>
                           <td>{formatDate(b.checkOut)}</td>
-                          <td className="db-amount">₹{b.totalAmount.toLocaleString()}</td>
+                          <td className="db-amount">
+                            ₹{b.totalAmount.toLocaleString()}
+                          </td>
                           <td>
                             <span
                               className="db-status-badge"

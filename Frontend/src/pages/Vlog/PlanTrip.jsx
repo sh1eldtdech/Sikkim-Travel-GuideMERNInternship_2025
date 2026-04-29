@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Calendar, 
-  MapPin, 
-  Heart, 
-  Trash2, 
-  Plus, 
-  Minus, 
-  Star, 
-  Clock, 
-  Users, 
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Calendar,
+  MapPin,
+  Heart,
+  Trash2,
+  Plus,
+  Minus,
+  Star,
+  Clock,
+  Users,
   DollarSign,
   ArrowLeft,
   Check,
-  X
-} from 'lucide-react';
-import './PlanTrip.css';
+  X,
+} from "lucide-react";
+import "./PlanTrip.css";
 
 const PlanTrip = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [wishlist, setWishlist] = useState([]);
   const [selectedDates, setSelectedDates] = useState({
-    startDate: '',
-    endDate: ''
+    startDate: "",
+    endDate: "",
   });
   const [travelers, setTravelers] = useState(2);
   const [budget, setBudget] = useState(50000);
@@ -33,8 +33,9 @@ const PlanTrip = () => {
 
   // Load wishlist from props or localStorage
   useEffect(() => {
-    const initialWishlist = location.state?.wishlist || 
-                           JSON.parse(localStorage.getItem('travelWishlist') || '[]');
+    const initialWishlist =
+      location.state?.wishlist ||
+      JSON.parse(sessionStorage.getItem("travelWishlist") || "[]");
     setWishlist(initialWishlist);
   }, [location.state]);
 
@@ -50,16 +51,16 @@ const PlanTrip = () => {
   }, [selectedDates]);
 
   const removeFromWishlist = (id) => {
-    const updatedWishlist = wishlist.filter(item => item.id !== id);
+    const updatedWishlist = wishlist.filter((item) => item.id !== id);
     setWishlist(updatedWishlist);
-    localStorage.setItem('travelWishlist', JSON.stringify(updatedWishlist));
+    sessionStorage.setItem("travelWishlist", JSON.stringify(updatedWishlist));
   };
 
   const toggleDestinationSelection = (destination) => {
-    setSelectedDestinations(prev => {
-      const isSelected = prev.find(d => d.id === destination.id);
+    setSelectedDestinations((prev) => {
+      const isSelected = prev.find((d) => d.id === destination.id);
       if (isSelected) {
-        return prev.filter(d => d.id !== destination.id);
+        return prev.filter((d) => d.id !== destination.id);
       } else {
         return [...prev, destination];
       }
@@ -67,9 +68,9 @@ const PlanTrip = () => {
   };
 
   const handleDateChange = (type, value) => {
-    setSelectedDates(prev => ({
+    setSelectedDates((prev) => ({
       ...prev,
-      [type]: value
+      [type]: value,
     }));
   };
 
@@ -77,16 +78,18 @@ const PlanTrip = () => {
     const baseCostPerPerson = 3000;
     const destinationCost = selectedDestinations.length * 2000;
     const durationMultiplier = tripDuration > 0 ? tripDuration : 1;
-    return (baseCostPerPerson + destinationCost) * travelers * durationMultiplier;
+    return (
+      (baseCostPerPerson + destinationCost) * travelers * durationMultiplier
+    );
   };
 
   const handlePlanTrip = () => {
     if (selectedDestinations.length === 0) {
-      alert('Please select at least one destination for your trip!');
+      alert("Please select at least one destination for your trip!");
       return;
     }
     if (!selectedDates.startDate || !selectedDates.endDate) {
-      alert('Please select your travel dates!');
+      alert("Please select your travel dates!");
       return;
     }
     setShowConfirmation(true);
@@ -94,21 +97,23 @@ const PlanTrip = () => {
 
   const confirmBooking = () => {
     // Here you would typically send data to your backend
-    alert('Trip planned successfully! You will receive a confirmation email shortly.');
+    alert(
+      "Trip planned successfully! You will receive a confirmation email shortly.",
+    );
     setShowConfirmation(false);
-    navigate('/vlog');
+    navigate("/vlog");
   };
 
   const getTodayDate = () => {
     const today = new Date();
-    return today.toISOString().split('T')[0];
+    return today.toISOString().split("T")[0];
   };
 
   return (
     <div className="plan-trip-container">
       {/* Header */}
       <div className="plan-trip-header">
-        <button className="back-button" onClick={() => navigate('/')}>
+        <button className="back-button" onClick={() => navigate("/")}>
           <ArrowLeft className="back-icon" />
           Back to Vlogs
         </button>
@@ -125,7 +130,7 @@ const PlanTrip = () => {
         <div className="planning-section">
           <div className="form-card">
             <h2 className="section-title">Trip Details</h2>
-            
+
             {/* Date Selection */}
             <div className="form-group">
               <label className="form-label">
@@ -140,7 +145,9 @@ const PlanTrip = () => {
                     className="date-input"
                     value={selectedDates.startDate}
                     min={getTodayDate()}
-                    onChange={(e) => handleDateChange('startDate', e.target.value)}
+                    onChange={(e) =>
+                      handleDateChange("startDate", e.target.value)
+                    }
                   />
                 </div>
                 <div className="date-input-group">
@@ -150,14 +157,18 @@ const PlanTrip = () => {
                     className="date-input"
                     value={selectedDates.endDate}
                     min={selectedDates.startDate || getTodayDate()}
-                    onChange={(e) => handleDateChange('endDate', e.target.value)}
+                    onChange={(e) =>
+                      handleDateChange("endDate", e.target.value)
+                    }
                   />
                 </div>
               </div>
               {tripDuration > 0 && (
                 <div className="trip-duration">
                   <Clock className="duration-icon" />
-                  <span>{tripDuration} day{tripDuration > 1 ? 's' : ''} trip</span>
+                  <span>
+                    {tripDuration} day{tripDuration > 1 ? "s" : ""} trip
+                  </span>
                 </div>
               )}
             </div>
@@ -201,7 +212,7 @@ const PlanTrip = () => {
                 onChange={(e) => setBudget(parseInt(e.target.value))}
               />
               <div className="budget-display">
-                ₹{budget.toLocaleString('en-IN')}
+                ₹{budget.toLocaleString("en-IN")}
               </div>
             </div>
           </div>
@@ -215,8 +226,13 @@ const PlanTrip = () => {
                 <span>₹3,000</span>
               </div>
               <div className="cost-item">
-                <span>Selected destinations ({selectedDestinations.length})</span>
-                <span>₹{(selectedDestinations.length * 2000).toLocaleString('en-IN')}</span>
+                <span>
+                  Selected destinations ({selectedDestinations.length})
+                </span>
+                <span>
+                  ₹
+                  {(selectedDestinations.length * 2000).toLocaleString("en-IN")}
+                </span>
               </div>
               <div className="cost-item">
                 <span>Duration ({tripDuration} days)</span>
@@ -228,7 +244,7 @@ const PlanTrip = () => {
               </div>
               <div className="cost-total">
                 <span>Total Estimated Cost</span>
-                <span>₹{calculateEstimatedCost().toLocaleString('en-IN')}</span>
+                <span>₹{calculateEstimatedCost().toLocaleString("en-IN")}</span>
               </div>
             </div>
           </div>
@@ -245,8 +261,10 @@ const PlanTrip = () => {
             <div className="empty-wishlist">
               <Heart className="empty-icon" />
               <h3>No destinations in your wishlist</h3>
-              <p>Go back to vlogs and add some destinations to your wishlist!</p>
-              <button className="browse-button" onClick={() => navigate('/')}>
+              <p>
+                Go back to vlogs and add some destinations to your wishlist!
+              </p>
+              <button className="browse-button" onClick={() => navigate("/")}>
                 Browse Destinations
               </button>
             </div>
@@ -271,7 +289,7 @@ const PlanTrip = () => {
                       <MapPin className="location-icon" />
                       <span>{destination.location}</span>
                     </div>
-                    
+
                     <p className="destination-description">
                       {destination.description}
                     </p>
@@ -291,12 +309,17 @@ const PlanTrip = () => {
 
                     <button
                       className={`select-btn ${
-                        selectedDestinations.find(d => d.id === destination.id) 
-                          ? 'selected' : ''
+                        selectedDestinations.find(
+                          (d) => d.id === destination.id,
+                        )
+                          ? "selected"
+                          : ""
                       }`}
                       onClick={() => toggleDestinationSelection(destination)}
                     >
-                      {selectedDestinations.find(d => d.id === destination.id) ? (
+                      {selectedDestinations.find(
+                        (d) => d.id === destination.id,
+                      ) ? (
                         <>
                           <Check className="btn-icon" />
                           Selected
@@ -325,7 +348,9 @@ const PlanTrip = () => {
             >
               Plan My Trip
               {selectedDestinations.length > 0 && (
-                <span className="selected-count">({selectedDestinations.length})</span>
+                <span className="selected-count">
+                  ({selectedDestinations.length})
+                </span>
               )}
             </button>
           </div>
@@ -364,13 +389,15 @@ const PlanTrip = () => {
                 <div className="summary-item">
                   <span>Dates:</span>
                   <span>
-                    {new Date(selectedDates.startDate).toLocaleDateString()} - 
+                    {new Date(selectedDates.startDate).toLocaleDateString()} -
                     {new Date(selectedDates.endDate).toLocaleDateString()}
                   </span>
                 </div>
                 <div className="summary-total">
                   <span>Total Cost:</span>
-                  <span>₹{calculateEstimatedCost().toLocaleString('en-IN')}</span>
+                  <span>
+                    ₹{calculateEstimatedCost().toLocaleString("en-IN")}
+                  </span>
                 </div>
               </div>
 

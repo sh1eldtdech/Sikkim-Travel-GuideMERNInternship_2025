@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { createOrder, verifyPayment } from "../api";
+import { createOrder, verifyPayment, getCurrentUser } from "../api";
 import "./BookingPage.css";
 
 export default function BookingPage() {
@@ -24,13 +24,19 @@ export default function BookingPage() {
   const [breakdown, setBreakdown] = useState(null);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
-      navigate("/traveler-login", {
-        state: {
-          returnTo: `/booking/${hotelId}?room=${roomId}&type=${encodeURIComponent(roomType)}&price=${pricePerNight}`
-        }
-      });
-    }
+    const validateSession = async () => {
+      try {
+        await getCurrentUser();
+      } catch {
+        navigate("/traveler-login", {
+          state: {
+            returnTo: `/booking/${hotelId}?room=${roomId}&type=${encodeURIComponent(roomType)}&price=${pricePerNight}`,
+          },
+        });
+      }
+    };
+
+    validateSession();
   }, [navigate, hotelId, roomId, roomType, pricePerNight]);
 
   useEffect(() => {
@@ -316,7 +322,8 @@ export default function BookingPage() {
               </div>
 
               {nights > 0 && (
-                <div className="bp-nights-banner">{nights} night{nights > 1 ? "s" : ""} selected
+                <div className="bp-nights-banner">
+                  {nights} night{nights > 1 ? "s" : ""} selected
                 </div>
               )}
 
@@ -325,7 +332,9 @@ export default function BookingPage() {
                 onClick={() => {
                   setError("");
                   if (!checkIn || !checkOut || nights < 1) {
-                    setError("Please select valid check-in and check-out dates.");
+                    setError(
+                      "Please select valid check-in and check-out dates.",
+                    );
                     return;
                   }
                   setStep(2);
@@ -344,15 +353,31 @@ export default function BookingPage() {
                 <div className="bp-confirm-details">
                   <div className="bp-conf-row">
                     <span>Check-in:</span>
-                    <strong>{checkIn && new Date(checkIn).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</strong>
+                    <strong>
+                      {checkIn &&
+                        new Date(checkIn).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                    </strong>
                   </div>
                   <div className="bp-conf-row">
                     <span>Check-out:</span>
-                    <strong>{checkOut && new Date(checkOut).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</strong>
+                    <strong>
+                      {checkOut &&
+                        new Date(checkOut).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                    </strong>
                   </div>
                   <div className="bp-conf-row">
                     <span>Guests:</span>
-                    <strong>{guests} Guest{guests > 1 ? "s" : ""}</strong>
+                    <strong>
+                      {guests} Guest{guests > 1 ? "s" : ""}
+                    </strong>
                   </div>
                   <div className="bp-conf-row">
                     <span>Special Requests:</span>
@@ -378,8 +403,12 @@ export default function BookingPage() {
                     <span className="bp-btn-spinner" />
                   ) : (
                     <>
-                      <span>Pay ₹{nights > 0 ? total.toLocaleString() : ""}</span>
-                      <span className="bp-btn-sub">Secure Payment via Razorpay</span>
+                      <span>
+                        Pay ₹{nights > 0 ? total.toLocaleString() : ""}
+                      </span>
+                      <span className="bp-btn-sub">
+                        Secure Payment via Razorpay
+                      </span>
                     </>
                   )}
                 </button>

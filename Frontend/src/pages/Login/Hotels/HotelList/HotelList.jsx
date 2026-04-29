@@ -32,7 +32,7 @@ export default function HotelList() {
 
       const data = await fetchHotels(params);
       setHotels(data.hotels || []);
-    } catch (err) {
+    } catch {
       setError("Failed to load hotels. Please try again.");
     } finally {
       setLoading(false);

@@ -1,57 +1,112 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000",
-  withCredentials: false,
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
+  withCredentials: true,
 });
 
-/**
- * Token priority:
- *  - /bike-owner/* and /bikes/* (owner-write routes) → bikeOwnerToken
- *  - /owner/* and /hotels/* (owner-write routes)    → ownerToken
- *  - all other routes (traveler/user)               → userToken
- *
- * This ensures hotel owner tokens are NEVER sent to bike-owner endpoints
- * and vice versa.
- */
-API.interceptors.request.use((config) => {
-  const ownerToken    = localStorage.getItem("ownerToken");
-  const bikeOwnerToken = localStorage.getItem("bikeOwnerToken");
-  const userToken     = localStorage.getItem("userToken");
+const getRefreshEndpoint = (url = "", method = "get") => {
+  const lowerMethod = method.toLowerCase();
 
-  const url = config.url || "";
-
-  // Bike-owner protected routes
-  if (bikeOwnerToken && (url.startsWith("/bike-owner") || url.startsWith("/bikes/owner"))) {
-    config.headers.Authorization = `Bearer ${bikeOwnerToken}`;
-    return config;
+  if (url.startsWith("/admin") || url.startsWith("/admin-auth")) {
+    return "/admin-auth/refresh";
   }
 
-  // Hotel-owner protected routes
-  if (ownerToken && (url.startsWith("/owner") || url.startsWith("/hotels/owner") || url.startsWith("/rooms") || url.startsWith("/bookings/owner"))) {
-    config.headers.Authorization = `Bearer ${ownerToken}`;
-    return config;
+  if (
+    url.startsWith("/bike-owner") ||
+    url.startsWith("/bikes/owner") ||
+    (url.startsWith("/bikes/") && lowerMethod !== "get")
+  ) {
+    return "/bike-owner/refresh";
   }
 
-  // Write-routes for bikes (add/update/delete/status) need bikeOwnerToken
-  if (bikeOwnerToken && /^\/bikes\/(add|[a-f0-9]+)/.test(url) && config.method !== "get") {
-    config.headers.Authorization = `Bearer ${bikeOwnerToken}`;
-    return config;
+  if (
+    url.startsWith("/owner") ||
+    url.startsWith("/hotels/owner") ||
+    url.startsWith("/rooms") ||
+    url.startsWith("/bookings/owner")
+  ) {
+    return "/owner/refresh";
   }
 
-  // Fallback: user token for traveler routes (bookings, etc.)
-  if (userToken) {
-    config.headers.Authorization = `Bearer ${userToken}`;
-    return config;
-  }
+  return "/user/refresh";
+};
 
-  // Last resort: whichever token is available (covers edge cases)
-  const fallback = ownerToken || bikeOwnerToken;
-  if (fallback) {
-    config.headers.Authorization = `Bearer ${fallback}`;
-  }
+API.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    const status = error.response?.status;
+    const url = originalRequest?.url || "";
 
-  return config;
-});
+    const isRefreshRoute =
+      /\/(user|owner|bike-owner|admin-auth)\/refresh$/.test(url);
+    const isAuthRoute =
+      /\/(user|owner|bike-owner|admin-auth)\/(login|register|logout)$/.test(
+        url,
+      );
+
+    if (
+      status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !isRefreshRoute &&
+      !isAuthRoute
+    ) {
+      originalRequest._retry = true;
+
+      // Serialized refresh: avoid multiple concurrent refresh requests
+      if (!API._isRefreshing) API._isRefreshing = false;
+      if (!API._failedQueue) API._failedQueue = [];
+
+      const enqueue = () =>
+        new Promise((resolve, reject) => {
+          API._failedQueue.push({ resolve, reject });
+        });
+
+      const processQueue = (err) => {
+        API._failedQueue.forEach((p) => {
+          if (err) p.reject(err);
+          else p.resolve();
+        });
+        API._failedQueue = [];
+      };
+
+      const refreshEndpoint = getRefreshEndpoint(
+        url,
+        originalRequest.method || "get",
+      );
+
+      if (API._isRefreshing) {
+        try {
+          await enqueue();
+          return API(originalRequest);
+        } catch (e) {
+          return Promise.reject(e);
+        }
+      }
+
+      API._isRefreshing = true;
+
+      try {
+        // Use raw axios to call refresh without triggering this interceptor
+        await axios.post(
+          refreshEndpoint,
+          {},
+          { baseURL: API.defaults.baseURL, withCredentials: true },
+        );
+        processQueue(null);
+        return API(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError);
+        return Promise.reject(refreshError);
+      } finally {
+        API._isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export default API;

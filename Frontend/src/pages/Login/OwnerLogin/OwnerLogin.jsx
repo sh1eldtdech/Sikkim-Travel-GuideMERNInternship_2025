@@ -8,13 +8,26 @@ import styles from "./OwnerLogin.module.css";
 
 /* ── Business type definitions ─────────────────────────────────────── */
 const BUSINESS_TYPES = [
-  { value: "hotel",       label: "Hotel" },
+  { value: "hotel", label: "Hotel" },
   { value: "bike-rental", label: "Bike Rental" },
 ];
 
 /** Post-login dashboard route based on business type */
 const getDashboardRoute = (type) =>
-  type === "bike-rental" ? "/owner/bike-rental/dashboard" : "/owner/hotel/dashboard";
+  type === "bike-rental"
+    ? "/owner/bike-rental/dashboard"
+    : "/owner/hotel/dashboard";
+
+const logApiError = (label, err, endpoint) => {
+  console.error(`[OwnerLogin] ${label} failed`, {
+    endpoint,
+    baseURL: API.defaults.baseURL,
+    message: err?.message,
+    code: err?.code,
+    status: err?.response?.status,
+    response: err?.response?.data,
+  });
+};
 
 /* ── Custom Select Dropdown ─────────────────────────────────────────── */
 const BusinessTypeSelect = ({ value, onChange, required }) => {
@@ -41,7 +54,9 @@ const BusinessTypeSelect = ({ value, onChange, required }) => {
         aria-expanded={open}
       >
         <span>{selected ? selected.label : "Select Business Type"}</span>
-        <span className={`${styles.chevron} ${open ? styles.chevronUp : ""}`}>▾</span>
+        <span className={`${styles.chevron} ${open ? styles.chevronUp : ""}`}>
+          ▾
+        </span>
       </button>
 
       {open && (
@@ -52,7 +67,10 @@ const BusinessTypeSelect = ({ value, onChange, required }) => {
               role="option"
               aria-selected={value === b.value}
               className={`${styles.selectOption} ${value === b.value ? styles.selectedOption : ""}`}
-              onClick={() => { onChange(b.value); setOpen(false); }}
+              onClick={() => {
+                onChange(b.value);
+                setOpen(false);
+              }}
             >
               {b.label}
             </li>
@@ -64,13 +82,20 @@ const BusinessTypeSelect = ({ value, onChange, required }) => {
       <select
         tabIndex={-1}
         aria-hidden="true"
-        style={{ position: "absolute", opacity: 0, pointerEvents: "none", height: 0 }}
+        style={{
+          position: "absolute",
+          opacity: 0,
+          pointerEvents: "none",
+          height: 0,
+        }}
         value={value}
         onChange={() => {}}
         required={required}
       >
         <option value="" />
-        {BUSINESS_TYPES.map((b) => <option key={b.value} value={b.value} />)}
+        {BUSINESS_TYPES.map((b) => (
+          <option key={b.value} value={b.value} />
+        ))}
       </select>
     </div>
   );
@@ -87,12 +112,20 @@ const OwnerLogin = () => {
   const [activeTab, setActiveTab] = useState("login");
 
   /* Login state */
-  const [loginForm, setLoginForm] = useState({ email: "", password: "", businessType: "" });
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+    businessType: "",
+  });
   const [loginLoading, setLoginLoading] = useState(false);
 
   /* Register state */
   const [regForm, setRegForm] = useState({
-    name: "", email: "", password: "", phone: "", businessType: "",
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    businessType: "",
   });
   const [documents, setDocuments] = useState([]);
   const [regLoading, setRegLoading] = useState(false);
@@ -105,23 +138,21 @@ const OwnerLogin = () => {
       return;
     }
 
+    const isHotel = loginForm.businessType === "hotel";
+    // Each business type calls a DIFFERENT backend endpoint
+    const endpoint = isHotel ? "/owner/login" : "/bike-owner/login";
+
     setLoginLoading(true);
     try {
-      const isHotel = loginForm.businessType === "hotel";
-
-      // Each business type calls a DIFFERENT backend endpoint
-      const endpoint = isHotel ? "/owner/login" : "/bike-owner/login";
       const { data } = await API.post(endpoint, {
         email: loginForm.email,
         password: loginForm.password,
       });
 
       if (isHotel) {
-        // Store in hotel owner context (ownerToken)
-        hotelLogin(data.token, { ...data.owner, businessType: "hotel" });
+        hotelLogin({ ...data.owner, businessType: "hotel" });
       } else {
-        // Store in bike owner context (bikeOwnerToken)
-        bikeOwnerLogin(data.token, {
+        bikeOwnerLogin({
           ...data.bikeOwner,
           businessType: "bike-rental",
         });
@@ -135,6 +166,8 @@ const OwnerLogin = () => {
       }, 100);
     } catch (err) {
       let msg = "Unable to connect to the server. Please try again later.";
+      logApiError("login", err, endpoint);
+
       if (err.response?.status >= 400 && err.response?.status < 500) {
         msg = err.response.data?.message;
         if (msg === "Invalid email or password") {
@@ -142,6 +175,9 @@ const OwnerLogin = () => {
         } else {
           msg = msg || "account dosen't exists try signin";
         }
+      } else if (err.request) {
+        msg =
+          "Server is unreachable. Please ensure backend is running on the correct port and try again.";
       }
       toast.error(msg);
     } finally {
@@ -157,30 +193,43 @@ const OwnerLogin = () => {
       return;
     }
 
+    const isHotel = regForm.businessType === "hotel";
+    // Each business type registers at a DIFFERENT backend endpoint
+    const endpoint = isHotel ? "/owner/register" : "/bike-owner/register";
+
     setRegLoading(true);
     try {
-      const isHotel = regForm.businessType === "hotel";
-
-      // Each business type registers at a DIFFERENT backend endpoint
-      const endpoint = isHotel ? "/owner/register" : "/bike-owner/register";
-
       const fd = new FormData();
-      const { businessType, ...formFields } = regForm;
-      Object.entries(formFields).forEach(([k, v]) => fd.append(k, v));
+      Object.entries(regForm)
+        .filter(([key]) => key !== "businessType")
+        .forEach(([k, v]) => fd.append(k, v));
       documents.forEach((f) => fd.append("documents", f));
 
-      await API.post(endpoint, fd, { headers: { "Content-Type": "multipart/form-data" } });
+      await API.post(endpoint, fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       toast.success(
-        `${isHotel ? "Hotel" : "Bike Rental"} registration submitted! Admin will review your application within 24-48 hours.`
+        `${isHotel ? "Hotel" : "Bike Rental"} registration submitted! Admin will review your application within 24-48 hours.`,
       );
-      setRegForm({ name: "", email: "", password: "", phone: "", businessType: "" });
+      setRegForm({
+        name: "",
+        email: "",
+        password: "",
+        phone: "",
+        businessType: "",
+      });
       setDocuments([]);
       setActiveTab("login");
     } catch (err) {
       let msg = "Unable to submit your registration. Please try again later.";
+      logApiError("register", err, endpoint);
+
       if (err.response?.status >= 400 && err.response?.status < 500) {
         msg = err.response.data?.message || "Registration failed. Try again.";
+      } else if (err.request) {
+        msg =
+          "Server is unreachable. Please ensure backend is running on the correct port and try again.";
       }
       toast.error(msg);
     } finally {
@@ -199,7 +248,8 @@ const OwnerLogin = () => {
         <div className={styles.logoSection}>
           <h1 className={styles.title}>Business Portal</h1>
           <p className={styles.subtitle}>
-            {loginForm.businessType === "bike-rental" || regForm.businessType === "bike-rental"
+            {loginForm.businessType === "bike-rental" ||
+            regForm.businessType === "bike-rental"
               ? "Manage your bike rental fleet on Sikkim Travel Guide"
               : "Manage your business on Sikkim Travel Guide"}
           </p>
@@ -230,7 +280,9 @@ const OwnerLogin = () => {
                 type="email"
                 placeholder="owner@business.com"
                 value={loginForm.email}
-                onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, email: e.target.value })
+                }
                 required
               />
             </div>
@@ -240,7 +292,9 @@ const OwnerLogin = () => {
                 type="password"
                 placeholder="Enter your password"
                 value={loginForm.password}
-                onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, password: e.target.value })
+                }
                 required
               />
             </div>
@@ -248,18 +302,25 @@ const OwnerLogin = () => {
               <label>Select Business Type</label>
               <BusinessTypeSelect
                 value={loginForm.businessType}
-                onChange={(val) => setLoginForm({ ...loginForm, businessType: val })}
+                onChange={(val) =>
+                  setLoginForm({ ...loginForm, businessType: val })
+                }
                 required
               />
             </div>
 
-
-            <button type="submit" className={styles.submitBtn} disabled={loginLoading}>
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={loginLoading}
+            >
               {loginLoading ? "Logging in..." : "Login to Dashboard"}
             </button>
             <p className={styles.switchText}>
               Don't have an account?{" "}
-              <span onClick={() => setActiveTab("register")}>Register here</span>
+              <span onClick={() => setActiveTab("register")}>
+                Register here
+              </span>
             </p>
           </form>
         )}
@@ -274,7 +335,9 @@ const OwnerLogin = () => {
                   type="text"
                   placeholder="Your full name"
                   value={regForm.name}
-                  onChange={(e) => setRegForm({ ...regForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, name: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -284,7 +347,9 @@ const OwnerLogin = () => {
                   type="tel"
                   placeholder="+91 98765 43210"
                   value={regForm.phone}
-                  onChange={(e) => setRegForm({ ...regForm, phone: e.target.value })}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, phone: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -295,7 +360,9 @@ const OwnerLogin = () => {
                 type="email"
                 placeholder="owner@business.com"
                 value={regForm.email}
-                onChange={(e) => setRegForm({ ...regForm, email: e.target.value })}
+                onChange={(e) =>
+                  setRegForm({ ...regForm, email: e.target.value })
+                }
                 required
               />
             </div>
@@ -305,7 +372,9 @@ const OwnerLogin = () => {
                 type="password"
                 placeholder="Create a strong password"
                 value={regForm.password}
-                onChange={(e) => setRegForm({ ...regForm, password: e.target.value })}
+                onChange={(e) =>
+                  setRegForm({ ...regForm, password: e.target.value })
+                }
                 required
               />
             </div>
@@ -313,7 +382,9 @@ const OwnerLogin = () => {
               <label>Select Business Type</label>
               <BusinessTypeSelect
                 value={regForm.businessType}
-                onChange={(val) => setRegForm({ ...regForm, businessType: val })}
+                onChange={(val) =>
+                  setRegForm({ ...regForm, businessType: val })
+                }
                 required
               />
             </div>
@@ -329,7 +400,10 @@ const OwnerLogin = () => {
 
             <div className={styles.fieldGroup}>
               <label>
-                Business Documents <span className={styles.optional}>(optional - PDF/JPG/PNG)</span>
+                Business Documents{" "}
+                <span className={styles.optional}>
+                  (optional - PDF/JPG/PNG)
+                </span>
               </label>
               <div className={styles.fileDropZone}>
                 <input
@@ -348,7 +422,11 @@ const OwnerLogin = () => {
               </div>
             </div>
 
-            <button type="submit" className={styles.submitBtn} disabled={regLoading}>
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={regLoading}
+            >
               {regLoading ? "Submitting..." : "Submit Registration"}
             </button>
             <p className={styles.switchText}>

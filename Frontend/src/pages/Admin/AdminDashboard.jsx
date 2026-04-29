@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import API from "../../utils/api";
 
-const BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
-
-const api = (secret) => ({ headers: { "x-admin-secret": secret } });
 const fmt = (n) => (n ?? 0).toLocaleString("en-IN");
 
 /* ── Stat Card ──────────────────────────────────────────────── */
@@ -21,12 +18,14 @@ const StatCard = ({ label, value, sub, accent }) => (
 /* ── Badge ──────────────────────────────────────────────────── */
 const Badge = ({ children, color }) => {
   const map = {
-    pending:  "bg-amber-100 text-amber-700",
+    pending: "bg-amber-100 text-amber-700",
     approved: "bg-emerald-100 text-emerald-700",
     rejected: "bg-red-100 text-red-600",
   };
   return (
-    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${map[color] || map.pending}`}>
+    <span
+      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${map[color] || map.pending}`}
+    >
       {children}
     </span>
   );
@@ -38,8 +37,18 @@ const Confirm = ({ msg, onYes, onNo }) => (
     <div className="bg-white rounded-2xl shadow-2xl p-6 max-w-sm w-full space-y-4">
       <p className="text-gray-700 font-medium">{msg}</p>
       <div className="flex gap-3">
-        <button onClick={onNo}  className="flex-1 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm hover:bg-gray-50 transition">Cancel</button>
-        <button onClick={onYes} className="flex-1 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition">Confirm</button>
+        <button
+          onClick={onNo}
+          className="flex-1 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm hover:bg-gray-50 transition"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onYes}
+          className="flex-1 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 transition"
+        >
+          Confirm
+        </button>
       </div>
     </div>
   </div>
@@ -47,96 +56,146 @@ const Confirm = ({ msg, onYes, onNo }) => (
 
 /* ── Tabs config ────────────────────────────────────────────── */
 const TABS = [
-  { key: "overview",      label: "Overview" },
-  { key: "hotelOwners",   label: "Hotel Owners" },
-  { key: "hotels",        label: "Hotel Listings" },
-  { key: "bikeOwners",    label: "Bike Rental Owners" },
-  { key: "bikes",         label: "Bike Listings" },
+  { key: "overview", label: "Overview" },
+  { key: "hotelOwners", label: "Hotel Owners" },
+  { key: "hotels", label: "Hotel Listings" },
+  { key: "bikeOwners", label: "Bike Rental Owners" },
+  { key: "bikes", label: "Bike Listings" },
 ];
 
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
 ═══════════════════════════════════════════════════════════════ */
 const AdminDashboard = () => {
-  const [secret, setSecret]           = useState(localStorage.getItem("adminSecret") || "");
-  const [authed, setAuthed]           = useState(!!localStorage.getItem("adminSecret"));
-  const [tab, setTab]                 = useState("overview");
-  const [stats, setStats]             = useState(null);
-  const [hotels, setHotels]           = useState([]);
-  const [bikes, setBikes]             = useState([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [authLoading, setAuthLoading] = useState(true);
+  const [authSubmitting, setAuthSubmitting] = useState(false);
+  const [authed, setAuthed] = useState(false);
+  const [tab, setTab] = useState("overview");
+  const [stats, setStats] = useState(null);
+  const [hotels, setHotels] = useState([]);
+  const [bikes, setBikes] = useState([]);
   const [hotelOwners, setHotelOwners] = useState([]);
-  const [bikeOwners, setBikeOwners]   = useState([]);
-  const [loading, setLoading]         = useState(false);
-  const [error, setError]             = useState("");
-  const [confirm, setConfirm]         = useState(null);
-  const [toast, setToast]             = useState("");
+  const [bikeOwners, setBikeOwners] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [confirm, setConfirm] = useState(null);
+  const [toast, setToast] = useState("");
 
-  const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
-  const showError = (msg) => { setError(msg); setTimeout(() => setError(""), 5000); };
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 3000);
+  };
+  const showError = (msg) => {
+    setError(msg);
+    setTimeout(() => setError(""), 5000);
+  };
 
   /* ── fetch stats ── */
   const fetchStats = useCallback(async () => {
     try {
-      const { data } = await axios.get(`${BASE}/admin/stats`, api(secret));
+      const { data } = await API.get("/admin/stats");
       setStats(data);
     } catch (e) {
-      if (e.response?.status === 403) handleLogout();
+      if (e.response?.status === 401 || e.response?.status === 403) {
+        setAuthed(false);
+      }
     }
-  }, [secret]);
+  }, []);
 
   /* ── fetch data per tab ── */
-  const fetchTab = useCallback(async (t) => {
-    if (t === "overview") { fetchStats(); return; }
-    setLoading(true);
-    setError("");
-    try {
-      if (t === "hotels") {
-        const { data } = await axios.get(`${BASE}/admin/hotels/pending`, api(secret));
-        setHotels(data.hotels || []);
+  const fetchTab = useCallback(
+    async (t) => {
+      if (t === "overview") {
+        fetchStats();
+        return;
       }
-      if (t === "bikes") {
-        const { data } = await axios.get(`${BASE}/admin/bikes/pending`, api(secret));
-        setBikes(data.bikes || []);
+      setLoading(true);
+      setError("");
+      try {
+        if (t === "hotels") {
+          const { data } = await API.get("/admin/hotels/pending");
+          setHotels(data.hotels || []);
+        }
+        if (t === "bikes") {
+          const { data } = await API.get("/admin/bikes/pending");
+          setBikes(data.bikes || []);
+        }
+        if (t === "hotelOwners") {
+          const { data } = await API.get("/admin/owners?status=pending");
+          setHotelOwners(data.owners || []);
+        }
+        if (t === "bikeOwners") {
+          const { data } = await API.get("/admin/bike-owners?status=pending");
+          setBikeOwners(data.bikeOwners || []);
+        }
+      } catch (e) {
+        showError(e.response?.data?.message || "Failed to load data.");
+        if (e.response?.status === 401 || e.response?.status === 403) {
+          setAuthed(false);
+        }
+      } finally {
+        setLoading(false);
       }
-      if (t === "hotelOwners") {
-        const { data } = await axios.get(`${BASE}/admin/owners?status=pending`, api(secret));
-        setHotelOwners(data.owners || []);
-      }
-      if (t === "bikeOwners") {
-        const { data } = await axios.get(`${BASE}/admin/bike-owners?status=pending`, api(secret));
-        setBikeOwners(data.bikeOwners || []);
-      }
-    } catch (e) {
-      showError(e.response?.data?.message || "Failed to load data.");
-      if (e.response?.status === 403) handleLogout();
-    } finally {
-      setLoading(false);
-    }
-  }, [secret, fetchStats]);
+    },
+    [fetchStats],
+  );
 
-  useEffect(() => { if (authed) fetchTab(tab); }, [authed, tab]);
-  useEffect(() => { if (authed && tab === "overview") fetchStats(); }, [authed]);
+  const checkAdminSession = useCallback(async () => {
+    try {
+      await API.get("/admin/stats");
+      setAuthed(true);
+    } catch {
+      setAuthed(false);
+    } finally {
+      setAuthLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkAdminSession();
+  }, [checkAdminSession]);
+  useEffect(() => {
+    if (authed) fetchTab(tab);
+  }, [authed, tab]);
+  useEffect(() => {
+    if (authed && tab === "overview") fetchStats();
+  }, [authed]);
 
   /* ── auth ── */
-  const handleAuth = () => {
-    if (!secret.trim()) return;
-    localStorage.setItem("adminSecret", secret);
-    setAuthed(true);
+  const handleAuth = async () => {
+    if (!email.trim() || !password.trim()) return;
+    setAuthSubmitting(true);
+    try {
+      await API.post("/admin-auth/login", { email, password });
+      setAuthed(true);
+      setPassword("");
+    } catch (e) {
+      showError(e.response?.data?.message || "Admin login failed.");
+    } finally {
+      setAuthSubmitting(false);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminSecret");
+  const handleLogout = async () => {
+    try {
+      await API.post("/admin-auth/logout");
+    } catch {
+      // Ignore network/logout failures while clearing local UI state.
+    }
     setAuthed(false);
+    setPassword("");
   };
 
   /* ── approve/reject LISTING (hotels or bikes) ── */
   const doListingAction = async (entity, id, action) => {
     try {
-      await axios.patch(`${BASE}/admin/${entity}/${id}/${action}`, {}, api(secret));
+      await API.patch(`/admin/${entity}/${id}/${action}`, {});
       const label = entity === "hotels" ? "Hotel" : "Bike";
       showToast(`${label} ${action}d successfully!`);
       if (entity === "hotels") setHotels((p) => p.filter((h) => h._id !== id));
-      if (entity === "bikes")  setBikes((p) => p.filter((b) => b._id !== id));
+      if (entity === "bikes") setBikes((p) => p.filter((b) => b._id !== id));
       fetchStats();
     } catch (e) {
       showError(e.response?.data?.message || `Failed to ${action}.`);
@@ -146,14 +205,17 @@ const AdminDashboard = () => {
   /* ── approve/reject OWNER ACCOUNT ── */
   const doOwnerAction = async (ownerType, id, status, rejectionReason) => {
     try {
-      const endpoint = ownerType === "hotel"
-        ? `${BASE}/admin/verify-owner/${id}`
-        : `${BASE}/admin/verify-bike-owner/${id}`;
-      await axios.put(endpoint, { status, rejectionReason }, api(secret));
+      const endpoint =
+        ownerType === "hotel"
+          ? `/admin/verify-owner/${id}`
+          : `/admin/verify-bike-owner/${id}`;
+      await API.put(endpoint, { status, rejectionReason });
       const label = ownerType === "hotel" ? "Hotel owner" : "Bike rental owner";
       showToast(`${label} ${status} successfully!`);
-      if (ownerType === "hotel")  setHotelOwners((p) => p.filter((o) => o._id !== id));
-      if (ownerType === "bike")   setBikeOwners((p) => p.filter((o) => o._id !== id));
+      if (ownerType === "hotel")
+        setHotelOwners((p) => p.filter((o) => o._id !== id));
+      if (ownerType === "bike")
+        setBikeOwners((p) => p.filter((o) => o._id !== id));
       fetchStats();
     } catch (e) {
       showError(e.response?.data?.message || `Failed to update owner status.`);
@@ -165,32 +227,50 @@ const AdminDashboard = () => {
   /* ═══════════════════════════
      AUTH GATE
   ═══════════════════════════ */
-  if (!authed) return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4 font-[Poppins]">
-      <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 w-full max-w-md shadow-2xl space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-white">Admin Portal</h1>
-          <p className="text-slate-400 text-sm">Sikkim Travel Guide — Business Management</p>
-        </div>
-        <div className="space-y-3">
-          <input
-            type="password"
-            placeholder="Enter Admin Secret Key"
-            value={secret}
-            onChange={(e) => setSecret(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAuth()}
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 text-sm"
-          />
-          <button
-            onClick={handleAuth}
-            className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/30"
-          >
-            Access Dashboard
-          </button>
+  if (authLoading)
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4 font-[Poppins]">
+        <div className="text-white text-sm">Checking admin session...</div>
+      </div>
+    );
+
+  if (!authed)
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4 font-[Poppins]">
+        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 w-full max-w-md shadow-2xl space-y-6">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-bold text-white">Admin Portal</h1>
+            <p className="text-slate-400 text-sm">
+              Login with your admin account
+            </p>
+          </div>
+          <div className="space-y-3">
+            <input
+              type="email"
+              placeholder="Admin email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 text-sm"
+            />
+            <input
+              type="password"
+              placeholder="Admin password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAuth()}
+              className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 text-sm"
+            />
+            <button
+              onClick={handleAuth}
+              disabled={authSubmitting}
+              className="w-full py-3 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/30"
+            >
+              {authSubmitting ? "Signing in..." : "Access Dashboard"}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
   /* ═══════════════════════════
      DASHBOARD
@@ -208,7 +288,10 @@ const AdminDashboard = () => {
       {confirm && (
         <Confirm
           msg={confirm.msg}
-          onYes={() => { confirm.onYes(); setConfirm(null); }}
+          onYes={() => {
+            confirm.onYes();
+            setConfirm(null);
+          }}
           onNo={() => setConfirm(null)}
         />
       )}
@@ -217,8 +300,12 @@ const AdminDashboard = () => {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
           <div>
-            <h1 className="font-bold text-gray-800 leading-tight text-sm sm:text-base">Admin Dashboard</h1>
-            <p className="text-xs text-gray-400 hidden sm:block">Sikkim Travel Guide — All Businesses</p>
+            <h1 className="font-bold text-gray-800 leading-tight text-sm sm:text-base">
+              Admin Dashboard
+            </h1>
+            <p className="text-xs text-gray-400 hidden sm:block">
+              Sikkim Travel Guide — All Businesses
+            </p>
           </div>
           <button
             onClick={handleLogout}
@@ -242,21 +329,25 @@ const AdminDashboard = () => {
             >
               {t.label}
               {/* Pending count badges */}
-              {stats && t.key === "hotelOwners" && stats.pendingHotelOwners > 0 && (
-                <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {stats.pendingHotelOwners}
-                </span>
-              )}
+              {stats &&
+                t.key === "hotelOwners" &&
+                stats.pendingHotelOwners > 0 && (
+                  <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {stats.pendingHotelOwners}
+                  </span>
+                )}
               {stats && t.key === "hotels" && stats.pendingHotels > 0 && (
                 <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {stats.pendingHotels}
                 </span>
               )}
-              {stats && t.key === "bikeOwners" && stats.pendingBikeOwners > 0 && (
-                <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {stats.pendingBikeOwners}
-                </span>
-              )}
+              {stats &&
+                t.key === "bikeOwners" &&
+                stats.pendingBikeOwners > 0 && (
+                  <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {stats.pendingBikeOwners}
+                  </span>
+                )}
               {stats && t.key === "bikes" && stats.pendingBikes > 0 && (
                 <span className="bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {stats.pendingBikes}
@@ -278,41 +369,107 @@ const AdminDashboard = () => {
         {tab === "overview" && stats && (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-bold text-gray-800 mb-4">Platform Overview</h2>
+              <h2 className="text-lg font-bold text-gray-800 mb-4">
+                Platform Overview
+              </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                <StatCard label="Hotel Owners" value={stats.totalHotelOwners} sub={`${stats.pendingHotelOwners} pending approval`} accent="#6366f1" />
-                <StatCard label="Bike Rental Owners" value={stats.totalBikeOwners} sub={`${stats.pendingBikeOwners} pending approval`} accent="#f59e0b" />
-                <StatCard label="Hotel Listings" value={stats.totalHotels} sub={`${stats.pendingHotels} pending approval`} accent="#10b981" />
-                <StatCard label="Bike Listings" value={stats.totalBikes} sub={`${stats.pendingBikes} pending approval`} accent="#f97316" />
-                <StatCard label="Total Bookings" value={stats.totalBookings} accent="#8b5cf6" />
-                <StatCard label="Total Revenue" value={`₹${fmt(stats.totalRevenue)}`} accent="#14b8a6" />
-                <StatCard label="Pending Listings" value={stats.totalPendingListings} sub="Hotels + Bikes" accent="#ef4444" />
-                <StatCard label="Pending Accounts" value={stats.totalPendingOwners} sub="Owner accounts awaiting approval" accent="#ec4899" />
+                <StatCard
+                  label="Hotel Owners"
+                  value={stats.totalHotelOwners}
+                  sub={`${stats.pendingHotelOwners} pending approval`}
+                  accent="#6366f1"
+                />
+                <StatCard
+                  label="Bike Rental Owners"
+                  value={stats.totalBikeOwners}
+                  sub={`${stats.pendingBikeOwners} pending approval`}
+                  accent="#f59e0b"
+                />
+                <StatCard
+                  label="Hotel Listings"
+                  value={stats.totalHotels}
+                  sub={`${stats.pendingHotels} pending approval`}
+                  accent="#10b981"
+                />
+                <StatCard
+                  label="Bike Listings"
+                  value={stats.totalBikes}
+                  sub={`${stats.pendingBikes} pending approval`}
+                  accent="#f97316"
+                />
+                <StatCard
+                  label="Total Bookings"
+                  value={stats.totalBookings}
+                  accent="#8b5cf6"
+                />
+                <StatCard
+                  label="Total Revenue"
+                  value={`₹${fmt(stats.totalRevenue)}`}
+                  accent="#14b8a6"
+                />
+                <StatCard
+                  label="Pending Listings"
+                  value={stats.totalPendingListings}
+                  sub="Hotels + Bikes"
+                  accent="#ef4444"
+                />
+                <StatCard
+                  label="Pending Accounts"
+                  value={stats.totalPendingOwners}
+                  sub="Owner accounts awaiting approval"
+                  accent="#ec4899"
+                />
               </div>
             </div>
 
             {/* Quick action cards */}
             <div>
-              <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
+              <h2 className="text-lg font-bold text-gray-800 mb-4">
+                Quick Actions
+              </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                  { label: "Hotel Owner Accounts", key: "hotelOwners", count: stats.pendingHotelOwners },
-                  { label: "Hotel Listings", key: "hotels", count: stats.pendingHotels },
-                  { label: "Bike Owner Accounts", key: "bikeOwners", count: stats.pendingBikeOwners },
-                  { label: "Bike Listings", key: "bikes", count: stats.pendingBikes },
+                  {
+                    label: "Hotel Owner Accounts",
+                    key: "hotelOwners",
+                    count: stats.pendingHotelOwners,
+                  },
+                  {
+                    label: "Hotel Listings",
+                    key: "hotels",
+                    count: stats.pendingHotels,
+                  },
+                  {
+                    label: "Bike Owner Accounts",
+                    key: "bikeOwners",
+                    count: stats.pendingBikeOwners,
+                  },
+                  {
+                    label: "Bike Listings",
+                    key: "bikes",
+                    count: stats.pendingBikes,
+                  },
                 ].map((item) => (
                   <button
                     key={item.key}
                     onClick={() => setTab(item.key)}
                     className="text-left bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-0.5 transition-all"
                   >
-                    <div className="font-bold text-gray-800 text-sm">{item.label}</div>
-                    <div className="text-sm text-gray-400 mt-1">
-                      {item.count > 0
-                        ? <span className="text-amber-600 font-medium">{item.count} pending</span>
-                        : "No pending items"}
+                    <div className="font-bold text-gray-800 text-sm">
+                      {item.label}
                     </div>
-                    <span className="mt-2 inline-block text-xs text-indigo-600 font-medium">Review →</span>
+                    <div className="text-sm text-gray-400 mt-1">
+                      {item.count > 0 ? (
+                        <span className="text-amber-600 font-medium">
+                          {item.count} pending
+                        </span>
+                      ) : (
+                        "No pending items"
+                      )}
+                    </div>
+                    <span className="mt-2 inline-block text-xs text-indigo-600 font-medium">
+                      Review →
+                    </span>
                   </button>
                 ))}
               </div>
@@ -324,10 +481,19 @@ const AdminDashboard = () => {
         {tab === "hotelOwners" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-800">Pending Hotel Owner Accounts</h2>
-              <button onClick={() => fetchTab("hotelOwners")} className="text-sm text-indigo-600 hover:underline">Refresh</button>
+              <h2 className="text-lg font-bold text-gray-800">
+                Pending Hotel Owner Accounts
+              </h2>
+              <button
+                onClick={() => fetchTab("hotelOwners")}
+                className="text-sm text-indigo-600 hover:underline"
+              >
+                Refresh
+              </button>
             </div>
-            {loading ? <ListingLoader /> : hotelOwners.length === 0 ? (
+            {loading ? (
+              <ListingLoader />
+            ) : hotelOwners.length === 0 ? (
               <EmptyState msg="All hotel owner accounts are reviewed!" />
             ) : (
               <div className="space-y-3">
@@ -336,8 +502,21 @@ const AdminDashboard = () => {
                     key={owner._id}
                     owner={owner}
                     type="Hotel Owner"
-                    onApprove={() => ask("Approve this hotel owner account?", () => doOwnerAction("hotel", owner._id, "approved"))}
-                    onReject={() => ask("Reject this hotel owner account?", () => doOwnerAction("hotel", owner._id, "rejected", "Account rejected by admin"))}
+                    onApprove={() =>
+                      ask("Approve this hotel owner account?", () =>
+                        doOwnerAction("hotel", owner._id, "approved"),
+                      )
+                    }
+                    onReject={() =>
+                      ask("Reject this hotel owner account?", () =>
+                        doOwnerAction(
+                          "hotel",
+                          owner._id,
+                          "rejected",
+                          "Account rejected by admin",
+                        ),
+                      )
+                    }
                   />
                 ))}
               </div>
@@ -349,10 +528,19 @@ const AdminDashboard = () => {
         {tab === "hotels" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-800">Pending Hotel Listings</h2>
-              <button onClick={() => fetchTab("hotels")} className="text-sm text-indigo-600 hover:underline">Refresh</button>
+              <h2 className="text-lg font-bold text-gray-800">
+                Pending Hotel Listings
+              </h2>
+              <button
+                onClick={() => fetchTab("hotels")}
+                className="text-sm text-indigo-600 hover:underline"
+              >
+                Refresh
+              </button>
             </div>
-            {loading ? <ListingLoader /> : hotels.length === 0 ? (
+            {loading ? (
+              <ListingLoader />
+            ) : hotels.length === 0 ? (
               <EmptyState msg="All hotel listings are reviewed!" />
             ) : (
               <div className="space-y-4">
@@ -365,11 +553,21 @@ const AdminDashboard = () => {
                     owner={hotel.owner}
                     images={hotel.images}
                     meta={[
-                      hotel.paymentDetails?.upiId && `UPI: ${hotel.paymentDetails.upiId}`,
-                      hotel.amenities?.length && `${hotel.amenities.length} amenities`,
+                      hotel.paymentDetails?.upiId &&
+                        `UPI: ${hotel.paymentDetails.upiId}`,
+                      hotel.amenities?.length &&
+                        `${hotel.amenities.length} amenities`,
                     ].filter(Boolean)}
-                    onApprove={() => ask("Approve this hotel listing?", () => doListingAction("hotels", hotel._id, "approve"))}
-                    onReject={() => ask("Reject and remove this hotel?", () => doListingAction("hotels", hotel._id, "reject"))}
+                    onApprove={() =>
+                      ask("Approve this hotel listing?", () =>
+                        doListingAction("hotels", hotel._id, "approve"),
+                      )
+                    }
+                    onReject={() =>
+                      ask("Reject and remove this hotel?", () =>
+                        doListingAction("hotels", hotel._id, "reject"),
+                      )
+                    }
                   />
                 ))}
               </div>
@@ -381,10 +579,19 @@ const AdminDashboard = () => {
         {tab === "bikeOwners" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-800">Pending Bike Rental Owner Accounts</h2>
-              <button onClick={() => fetchTab("bikeOwners")} className="text-sm text-indigo-600 hover:underline">Refresh</button>
+              <h2 className="text-lg font-bold text-gray-800">
+                Pending Bike Rental Owner Accounts
+              </h2>
+              <button
+                onClick={() => fetchTab("bikeOwners")}
+                className="text-sm text-indigo-600 hover:underline"
+              >
+                Refresh
+              </button>
             </div>
-            {loading ? <ListingLoader /> : bikeOwners.length === 0 ? (
+            {loading ? (
+              <ListingLoader />
+            ) : bikeOwners.length === 0 ? (
               <EmptyState msg="All bike rental owner accounts are reviewed!" />
             ) : (
               <div className="space-y-3">
@@ -393,8 +600,21 @@ const AdminDashboard = () => {
                     key={owner._id}
                     owner={owner}
                     type="Bike Rental Owner"
-                    onApprove={() => ask("Approve this bike rental owner account?", () => doOwnerAction("bike", owner._id, "approved"))}
-                    onReject={() => ask("Reject this bike rental owner account?", () => doOwnerAction("bike", owner._id, "rejected", "Account rejected by admin"))}
+                    onApprove={() =>
+                      ask("Approve this bike rental owner account?", () =>
+                        doOwnerAction("bike", owner._id, "approved"),
+                      )
+                    }
+                    onReject={() =>
+                      ask("Reject this bike rental owner account?", () =>
+                        doOwnerAction(
+                          "bike",
+                          owner._id,
+                          "rejected",
+                          "Account rejected by admin",
+                        ),
+                      )
+                    }
                   />
                 ))}
               </div>
@@ -406,10 +626,19 @@ const AdminDashboard = () => {
         {tab === "bikes" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-800">Pending Bike Rental Listings</h2>
-              <button onClick={() => fetchTab("bikes")} className="text-sm text-indigo-600 hover:underline">Refresh</button>
+              <h2 className="text-lg font-bold text-gray-800">
+                Pending Bike Rental Listings
+              </h2>
+              <button
+                onClick={() => fetchTab("bikes")}
+                className="text-sm text-indigo-600 hover:underline"
+              >
+                Refresh
+              </button>
             </div>
-            {loading ? <ListingLoader /> : bikes.length === 0 ? (
+            {loading ? (
+              <ListingLoader />
+            ) : bikes.length === 0 ? (
               <EmptyState msg="All bike listings are reviewed!" />
             ) : (
               <div className="space-y-4">
@@ -426,8 +655,16 @@ const AdminDashboard = () => {
                       bike.dailyRate && `Rs.${bike.dailyRate}/day`,
                       bike.contactNumber,
                     ].filter(Boolean)}
-                    onApprove={() => ask("Approve this bike listing?", () => doListingAction("bikes", bike._id, "approve"))}
-                    onReject={() => ask("Reject and remove this bike?", () => doListingAction("bikes", bike._id, "reject"))}
+                    onApprove={() =>
+                      ask("Approve this bike listing?", () =>
+                        doListingAction("bikes", bike._id, "approve"),
+                      )
+                    }
+                    onReject={() =>
+                      ask("Reject and remove this bike?", () =>
+                        doListingAction("bikes", bike._id, "reject"),
+                      )
+                    }
                   />
                 ))}
               </div>
@@ -452,7 +689,14 @@ const OwnerCard = ({ owner, type, onApprove, onReject }) => (
           <div>Email: {owner.email}</div>
           <div>Phone: {owner.phone || "Not provided"}</div>
           <div>Type: {type}</div>
-          <div>Registered: {new Date(owner.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
+          <div>
+            Registered:{" "}
+            {new Date(owner.createdAt).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+          </div>
         </div>
       </div>
       <div className="flex gap-2 shrink-0">
@@ -474,17 +718,31 @@ const OwnerCard = ({ owner, type, onApprove, onReject }) => (
 );
 
 /* ─── Listing Card (Hotels & Bikes) ───────────────────────── */
-const ListingCard = ({ type, name, detail, owner, images, meta, onApprove, onReject }) => (
+const ListingCard = ({
+  type,
+  name,
+  detail,
+  owner,
+  images,
+  meta,
+  onApprove,
+  onReject,
+}) => (
   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
     <div className="flex flex-col sm:flex-row">
       {/* Image */}
       <div className="sm:w-48 h-36 sm:h-auto shrink-0 bg-gray-100 relative overflow-hidden">
-        {images?.length > 0
-          ? <img src={images[0]} alt={name} className="w-full h-full object-cover" />
-          : <div className="w-full h-full flex items-center justify-center text-sm text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200">
-              No Image
-            </div>
-        }
+        {images?.length > 0 ? (
+          <img
+            src={images[0]}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-sm text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200">
+            No Image
+          </div>
+        )}
         {images?.length > 1 && (
           <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full">
             +{images.length - 1} photos
@@ -509,18 +767,30 @@ const ListingCard = ({ type, name, detail, owner, images, meta, onApprove, onRej
             <span className="font-medium text-gray-700">{owner.name}</span>
             <span className="text-gray-400">|</span>
             <span>{owner.email}</span>
-            {owner.phone && <><span className="text-gray-400">|</span><span>{owner.phone}</span></>}
+            {owner.phone && (
+              <>
+                <span className="text-gray-400">|</span>
+                <span>{owner.phone}</span>
+              </>
+            )}
           </div>
         )}
         {!owner && (
-          <div className="text-sm text-gray-400 italic">Owner info not available</div>
+          <div className="text-sm text-gray-400 italic">
+            Owner info not available
+          </div>
         )}
 
         {/* Meta tags */}
         {meta?.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {meta.map((m, i) => (
-              <span key={i} className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">{m}</span>
+              <span
+                key={i}
+                className="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full"
+              >
+                {m}
+              </span>
             ))}
           </div>
         )}
@@ -555,7 +825,9 @@ const ListingLoader = () => (
 const EmptyState = ({ msg }) => (
   <div className="flex flex-col items-center justify-center py-20 gap-3 text-center">
     <h3 className="font-bold text-gray-600">{msg}</h3>
-    <p className="text-gray-400 text-sm">Check back later for new submissions.</p>
+    <p className="text-gray-400 text-sm">
+      Check back later for new submissions.
+    </p>
   </div>
 );
 

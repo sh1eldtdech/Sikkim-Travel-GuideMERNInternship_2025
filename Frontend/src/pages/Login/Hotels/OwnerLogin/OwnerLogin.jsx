@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { loginOwner, registerOwner } from "./api";
 import "./OwnerLogin.css";
 
-
 // OWNER LOGIN
 export function OwnerLogin() {
   const navigate = useNavigate();
@@ -17,9 +16,7 @@ export function OwnerLogin() {
     setError("");
 
     try {
-      const data = await loginOwner(form);
-      localStorage.setItem("ownerToken", data.token);
-      localStorage.setItem("ownerInfo", JSON.stringify(data.owner));
+      await loginOwner(form);
       navigate("/owner/dashboard");
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
@@ -36,7 +33,8 @@ export function OwnerLogin() {
             <div className="ol-brand">🏔️ Sikkim Tourism</div>
             <h2 className="ol-left-title">Manage Your Properties</h2>
             <p className="ol-left-sub">
-              Access your owner dashboard to manage hotels, rooms, and bookings in real time.
+              Access your owner dashboard to manage hotels, rooms, and bookings
+              in real time.
             </p>
             <div className="ol-features">
               <div className="ol-feature">✓ Real-time room availability</div>
@@ -59,7 +57,9 @@ export function OwnerLogin() {
                 required
                 placeholder="owner@hotel.com"
                 value={form.email}
-                onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, email: e.target.value }))
+                }
               />
             </div>
             <div className="ol-form-group">
@@ -69,22 +69,30 @@ export function OwnerLogin() {
                 required
                 placeholder="••••••••"
                 value={form.password}
-                onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, password: e.target.value }))
+                }
               />
             </div>
             <button type="submit" className="ol-submit" disabled={loading}>
-              {loading ? <span className="ol-spinner" /> : "Login to Dashboard →"}
+              {loading ? (
+                <span className="ol-spinner" />
+              ) : (
+                "Login to Dashboard →"
+              )}
             </button>
           </form>
 
           <p className="ol-footer-text">
             Not registered yet?{" "}
-            <Link to="/owner/register" className="ol-link">
+            <Link to="/owner-login" className="ol-link">
               Register as Hotel Owner
             </Link>
           </p>
           <p className="ol-footer-text">
-            <Link to="/" className="ol-link">← Back to Tourist View</Link>
+            <Link to="/" className="ol-link">
+              ← Back to Tourist View
+            </Link>
           </p>
         </div>
       </div>
@@ -140,8 +148,8 @@ export function OwnerRegister() {
           <div className="ol-success-icon">📋</div>
           <h2>Registration Submitted!</h2>
           <p>
-            Your application has been submitted for admin review. You will receive
-            login access once verified — typically within 24–48 hours.
+            Your application has been submitted for admin review. You will
+            receive login access once verified — typically within 24–48 hours.
           </p>
           <Link to="/owner/login" className="ol-success-btn">
             Go to Login
@@ -159,13 +167,22 @@ export function OwnerRegister() {
             <div className="ol-brand">🏔️ Sikkim Tourism</div>
             <h2 className="ol-left-title">Join as a Hotel Owner</h2>
             <p className="ol-left-sub">
-              List your property and reach thousands of tourists visiting Sikkim every year.
+              List your property and reach thousands of tourists visiting Sikkim
+              every year.
             </p>
             <div className="ol-steps-list">
-              <div className="ol-step"><span>1</span> Submit registration &amp; documents</div>
-              <div className="ol-step"><span>2</span> Admin reviews &amp; verifies</div>
-              <div className="ol-step"><span>3</span> Access your dashboard</div>
-              <div className="ol-step"><span>4</span> Start receiving bookings</div>
+              <div className="ol-step">
+                <span>1</span> Submit registration &amp; documents
+              </div>
+              <div className="ol-step">
+                <span>2</span> Admin reviews &amp; verifies
+              </div>
+              <div className="ol-step">
+                <span>3</span> Access your dashboard
+              </div>
+              <div className="ol-step">
+                <span>4</span> Start receiving bookings
+              </div>
             </div>
           </div>
         </div>
@@ -182,7 +199,9 @@ export function OwnerRegister() {
                 required
                 placeholder="Your full name"
                 value={form.name}
-                onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, name: e.target.value }))
+                }
               />
             </div>
             <div className="ol-form-group">
@@ -192,7 +211,9 @@ export function OwnerRegister() {
                 type="email"
                 placeholder="your@email.com"
                 value={form.email}
-                onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, email: e.target.value }))
+                }
               />
             </div>
             <div className="ol-form-group">
@@ -201,7 +222,9 @@ export function OwnerRegister() {
                 required
                 placeholder="+91 XXXXXXXXXX"
                 value={form.phone}
-                onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, phone: e.target.value }))
+                }
               />
             </div>
             <div className="ol-form-group">
@@ -212,7 +235,9 @@ export function OwnerRegister() {
                 minLength={6}
                 placeholder="Min. 6 characters"
                 value={form.password}
-                onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, password: e.target.value }))
+                }
               />
             </div>
             <div className="ol-form-group">
@@ -233,13 +258,19 @@ export function OwnerRegister() {
               </div>
             </div>
             <button type="submit" className="ol-submit" disabled={loading}>
-              {loading ? <span className="ol-spinner" /> : "Submit Application →"}
+              {loading ? (
+                <span className="ol-spinner" />
+              ) : (
+                "Submit Application →"
+              )}
             </button>
           </form>
 
           <p className="ol-footer-text">
             Already registered?{" "}
-            <Link to="/owner/login" className="ol-link">Login here</Link>
+            <Link to="/owner-login" className="ol-link">
+              Login here
+            </Link>
           </p>
         </div>
       </div>

@@ -28,6 +28,7 @@ const BikeList = () => {
     }
   };
 
+  useEffect(() => { window.scrollTo(0, 0); }, []);
   useEffect(() => { fetchBikes(); }, [district]);
 
   const handleSearch = (e) => {
@@ -127,7 +128,7 @@ const BikeList = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-2">No matches found</h3>
               <p className="text-gray-500 font-medium">We couldn't find any bikes matching your criteria. Try adjusting the search or district filter.</p>
               <button 
-                onClick={() => { setSearch(""); setDistrict("All"); }}
+                onClick={() => { setSearch(""); setDistrict("All"); fetchBikes(); }}
                 className="mt-6 px-6 py-2.5 rounded-xl bg-gray-900 text-white font-bold hover:bg-gray-800 transition-colors"
               >
                 Clear Filters
