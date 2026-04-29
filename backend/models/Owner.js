@@ -18,12 +18,14 @@ const ownerSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      minlength: 6,
+      minlength: 8,
     },
     phone: {
       type: String,
       required: [true, "Phone is required"],
       trim: true,
+      minlength: 10,
+      maxlength: 15,
     },
     // Document file paths/URLs uploaded at registration
     documents: [
@@ -42,7 +44,7 @@ const ownerSchema = new mongoose.Schema(
       default: "",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 ownerSchema.pre("save", async function (next) {

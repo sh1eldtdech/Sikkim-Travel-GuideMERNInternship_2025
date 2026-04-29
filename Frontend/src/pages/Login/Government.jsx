@@ -91,9 +91,6 @@ const Government = () => {
     setIsLoading(true);
     
     try {
-      // This is where you'll connect to your backend
-      const endpoint = isLogin ? "/api/government/login" : "/api/government/signup";
-      
       // Prepare data for backend
       const submitData = isLogin 
         ? {

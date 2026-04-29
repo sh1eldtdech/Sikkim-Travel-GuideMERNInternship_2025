@@ -83,7 +83,7 @@ const DESTINATIONS = [
 
 const EXPERIENCES = [
   { img:HomestayImage, title:"Homestays",      sub:"Live Like a Local",  desc:"Wake up to mountain views and share meals cooked over firewood with Sikkimese families.",   tag:"Accommodations", link:"/hotels" },
-  { img:BikeImage,     title:"Bike Rentals",   sub:"Ride the Himalayas", desc:"Conquer high-altitude passes on your own schedule — the open road through clouds awaits.",   tag:"Adventure",      link:"/adventure-zone" },
+  { img:BikeImage,     title:"Bike Rentals",   sub:"Ride the Himalayas", desc:"Conquer high-altitude passes on your own schedule — the open road through clouds awaits.",   tag:"Adventure",      link:"/bikes" },
   { img:PlacesImage,   title:"Curated Places", sub:"Expert Guides",      desc:"From hidden monasteries to glacial lakes — guides that take you beyond the tourist trail.",   tag:"Discovery",      link:"/places" },
 ];
 

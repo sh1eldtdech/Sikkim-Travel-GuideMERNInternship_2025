@@ -274,7 +274,9 @@ function useAlerts(){
           const res = await fetch(url, {signal: AbortSignal.timeout(8000)});
           const json = await res.json();
           if(json.items && json.items.length > 0){ items = json.items; break; }
-        }catch{}
+        } catch {
+          // Try the next proxy.
+        }
       }
       if(items.length > 0){
         const parsed = items.slice(0,5).map(item=>{

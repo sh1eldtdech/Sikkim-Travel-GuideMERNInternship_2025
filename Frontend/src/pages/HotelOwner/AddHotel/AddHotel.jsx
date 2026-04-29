@@ -37,8 +37,10 @@ const AddHotel = () => {
     cancellation: editData?.policies?.cancellation || "",
     children: editData?.policies?.children || "",
     roomType: editData?.rooms?.[0]?.roomType || "",
-    minPrice: editData?.rooms?.[0]?.minPrice || editData?.rooms?.[0]?.price || "",
-    maxPrice: editData?.rooms?.[0]?.maxPrice || editData?.rooms?.[0]?.price || "",
+    minPrice:
+      editData?.rooms?.[0]?.minPrice || editData?.rooms?.[0]?.price || "",
+    maxPrice:
+      editData?.rooms?.[0]?.maxPrice || editData?.rooms?.[0]?.price || "",
     totalRooms: editData?.rooms?.[0]?.totalRooms || "",
     availableRooms: editData?.rooms?.[0]?.availableRooms || "",
     upiId: editData?.paymentDetails?.upiId || "",
@@ -62,7 +64,23 @@ const AddHotel = () => {
     );
 
   const handleImages = (e) => {
-    const files = Array.from(e.target.files).slice(0, 6);
+    const selectedFiles = Array.from(e.target.files).slice(0, 6);
+    const allowedMimeTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/avif",
+    ];
+    const files = selectedFiles.filter((f) =>
+      allowedMimeTypes.includes(f.type),
+    );
+
+    if (files.length !== selectedFiles.length) {
+      setError(
+        "Some files were skipped. Please upload JPG, PNG, WebP, or AVIF images only.",
+      );
+    }
+
     setImages(files);
     setPreviews(files.map((f) => URL.createObjectURL(f)));
   };
@@ -95,7 +113,7 @@ const AddHotel = () => {
           accountName: form.accountName,
           accountNumber: form.accountNumber,
           ifscCode: form.ifscCode,
-        })
+        }),
       );
       images.forEach((img) => fd.append("images", img));
 
@@ -160,7 +178,9 @@ const AddHotel = () => {
           >
             Back to dashboard
           </button>
-          <h1 className={styles.pageTitle}>{editData ? "Edit Hotel Details" : "Add New Hotel"}</h1>
+          <h1 className={styles.pageTitle}>
+            {editData ? "Edit Hotel Details" : "Add New Hotel"}
+          </h1>
         </div>
 
         {error && <div className={styles.errorBox}>{error}</div>}
@@ -390,7 +410,7 @@ const AddHotel = () => {
                 type="file"
                 id="hotelImages"
                 multiple
-                accept="image/*"
+                accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
                 onChange={handleImages}
                 style={{ display: "none" }}
               />
@@ -398,7 +418,7 @@ const AddHotel = () => {
                 <span>
                   {images.length > 0
                     ? `${images.length} image(s) selected`
-                    : "Click to upload images (JPG, PNG, WebP)"}
+                    : "Click to upload images (JPG, PNG, WebP, AVIF)"}
                 </span>
               </label>
             </div>
@@ -417,7 +437,11 @@ const AddHotel = () => {
           </section>
 
           <button type="submit" className={styles.submitBtn} disabled={loading}>
-            {loading ? "Saving data..." : editData ? "Update hotel" : "List hotel"}
+            {loading
+              ? "Saving data..."
+              : editData
+                ? "Update hotel"
+                : "List hotel"}
           </button>
         </form>
       </div>

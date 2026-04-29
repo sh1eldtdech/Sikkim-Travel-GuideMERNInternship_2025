@@ -6,21 +6,24 @@ import "./MyBookings.css";
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const resolveImage = (img) => {
-  if (!img) return "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400";
+  if (!img)
+    return "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400";
   if (img.startsWith("http")) return img;
   return `${BASE_URL}${img}`;
 };
 
 const statusConfig = {
   confirmed: { label: "Confirmed", color: "#2e7d32", bg: "#e8f5e9" },
-  upcoming:  { label: "Upcoming",  color: "#1565c0", bg: "#e3f2fd" },
-  completed: { label: "Completed", color: "#555",    bg: "#f5f5f5" },
+  upcoming: { label: "Upcoming", color: "#1565c0", bg: "#e3f2fd" },
+  completed: { label: "Completed", color: "#555", bg: "#f5f5f5" },
   cancelled: { label: "Cancelled", color: "#c62828", bg: "#fce4ec" },
 };
 
 const formatDate = (d) =>
   new Date(d).toLocaleDateString("en-IN", {
-    day: "numeric", month: "short", year: "numeric",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 
 export default function MyBookings() {
@@ -31,17 +34,18 @@ export default function MyBookings() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
     const load = async () => {
       try {
         const data = await fetchMyBookings();
         setBookings(data.bookings || []);
       } catch (err) {
+        if (
+          (err.message || "").toLowerCase().includes("token") ||
+          (err.message || "").toLowerCase().includes("unauthorized")
+        ) {
+          navigate("/traveler-login", { replace: true });
+          return;
+        }
         setError(err.message || "Failed to load bookings");
       } finally {
         setLoading(false);
@@ -70,8 +74,13 @@ export default function MyBookings() {
         <button
           onClick={() => window.location.reload()}
           style={{
-            marginTop: 16, padding: "10px 22px", background: "#1a1a2e",
-            color: "#fff", border: "none", borderRadius: 8, cursor: "pointer",
+            marginTop: 16,
+            padding: "10px 22px",
+            background: "#1a1a2e",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+            cursor: "pointer",
           }}
         >
           Retry
@@ -149,10 +158,13 @@ export default function MyBookings() {
             {filtered.map((booking) => {
               const sc = statusConfig[booking.status] || statusConfig.confirmed;
               // Support both populated and snapshot fields
-              const hotelName = booking.hotelName || booking.hotel?.name || "Hotel";
-              const hotelLocation = booking.hotelLocation || booking.hotel?.location || "";
+              const hotelName =
+                booking.hotelName || booking.hotel?.name || "Hotel";
+              const hotelLocation =
+                booking.hotelLocation || booking.hotel?.location || "";
               const roomType = booking.roomType || booking.room?.roomType || "";
-              const image = booking.hotelImage || booking.hotel?.images?.[0] || "";
+              const image =
+                booking.hotelImage || booking.hotel?.images?.[0] || "";
 
               return (
                 <div className="mb-card" key={booking._id}>
@@ -161,7 +173,8 @@ export default function MyBookings() {
                       src={resolveImage(image)}
                       alt={hotelName}
                       onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400";
+                        e.target.src =
+                          "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400";
                       }}
                     />
                   </div>

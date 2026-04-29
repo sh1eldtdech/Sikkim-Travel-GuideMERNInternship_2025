@@ -27,8 +27,8 @@ const OwnerDashboard = () => {
     fetchStats();
   }, []);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/login");
   };
 
@@ -62,7 +62,8 @@ const OwnerDashboard = () => {
             🏨 Welcome back, {owner?.name || "Owner"}
           </h1>
           <p className={styles.subGreet}>
-            Here's your hotel portfolio overview  •  <strong>Hotel Business</strong>
+            Here's your hotel portfolio overview •{" "}
+            <strong>Hotel Business</strong>
           </p>
         </div>
         <button className={styles.logoutBtn} onClick={handleLogout}>

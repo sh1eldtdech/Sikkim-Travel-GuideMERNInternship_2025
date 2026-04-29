@@ -1,37 +1,45 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import API from "../utils/api";
 
 const OwnerAuthContext = createContext(null);
 
 export const OwnerAuthProvider = ({ children }) => {
   const [owner, setOwner] = useState(null);
-  const [ownerToken, setOwnerToken] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  // Load from localStorage on mount
   useEffect(() => {
-    const token = localStorage.getItem("ownerToken");
-    const ownerData = localStorage.getItem("ownerData");
-    if (token && ownerData) {
-      setOwnerToken(token);
-      setOwner(JSON.parse(ownerData));
-    }
+    const bootstrapOwnerSession = async () => {
+      try {
+        const { data } = await API.get("/owner/me");
+        setOwner(data.owner || null);
+      } catch {
+        setOwner(null);
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+
+    bootstrapOwnerSession();
   }, []);
 
-  const login = (token, ownerData) => {
-    localStorage.setItem("ownerToken", token);
-    localStorage.setItem("ownerData", JSON.stringify(ownerData));
-    setOwnerToken(token);
+  const login = (tokenOrOwnerData, maybeOwnerData) => {
+    const ownerData = maybeOwnerData || tokenOrOwnerData || null;
     setOwner(ownerData);
   };
 
-  const logout = () => {
-    localStorage.removeItem("ownerToken");
-    localStorage.removeItem("ownerData");
-    setOwnerToken(null);
+  const logout = async () => {
+    try {
+      await API.post("/owner/logout");
+    } catch {
+      // Cookie cleanup still happens on the client session state.
+    }
     setOwner(null);
   };
 
   return (
-    <OwnerAuthContext.Provider value={{ owner, ownerToken, login, logout, isAuthenticated: !!ownerToken }}>
+    <OwnerAuthContext.Provider
+      value={{ owner, login, logout, isAuthenticated: !!owner, authLoading }}
+    >
       {children}
     </OwnerAuthContext.Provider>
   );
@@ -39,7 +47,8 @@ export const OwnerAuthProvider = ({ children }) => {
 
 export const useOwnerAuth = () => {
   const ctx = useContext(OwnerAuthContext);
-  if (!ctx) throw new Error("useOwnerAuth must be used inside OwnerAuthProvider");
+  if (!ctx)
+    throw new Error("useOwnerAuth must be used inside OwnerAuthProvider");
   return ctx;
 };
 

@@ -73,7 +73,9 @@ router.get("/stats", protectAdmin, async (req, res) => {
 router.get("/owners", protectAdmin, async (req, res) => {
   try {
     const filter = req.query.status ? { status: req.query.status } : {};
-    const owners = await Owner.find(filter).select("-password").sort({ createdAt: -1 });
+    const owners = await Owner.find(filter)
+      .select("-password")
+      .sort({ createdAt: -1 });
     res.json({ count: owners.length, owners });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -85,19 +87,28 @@ router.put("/verify-owner/:id", protectAdmin, async (req, res) => {
   try {
     const { status, rejectionReason } = req.body;
     if (!["approved", "rejected"].includes(status)) {
-      return res.status(400).json({ message: "Status must be 'approved' or 'rejected'" });
+      return res
+        .status(400)
+        .json({ message: "Status must be 'approved' or 'rejected'" });
     }
     const owner = await Owner.findById(req.params.id);
-    if (!owner) return res.status(404).json({ message: "Hotel owner not found" });
+    if (!owner)
+      return res.status(404).json({ message: "Hotel owner not found" });
     owner.status = status;
-    if (status === "rejected" && rejectionReason) owner.rejectionReason = rejectionReason;
+    if (status === "rejected" && rejectionReason)
+      owner.rejectionReason = rejectionReason;
     await owner.save();
     res.json({
       message: `Hotel owner ${status} successfully`,
-      owner: { _id: owner._id, name: owner.name, email: owner.email, status: owner.status },
+      owner: {
+        _id: owner._id,
+        name: owner.name,
+        email: owner.email,
+        status: owner.status,
+      },
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 });
 
@@ -119,14 +130,19 @@ router.get("/hotels/pending", protectAdmin, async (req, res) => {
 router.get("/hotels", protectAdmin, async (req, res) => {
   try {
     const filter = {};
-    if (req.query.status === "pending") { filter.isApproved = false; filter.isActive = true; }
-    if (req.query.status === "approved") { filter.isApproved = true; }
+    if (req.query.status === "pending") {
+      filter.isApproved = false;
+      filter.isActive = true;
+    }
+    if (req.query.status === "approved") {
+      filter.isApproved = true;
+    }
     const hotels = await Hotel.find(filter)
       .populate("owner", "name email")
       .sort({ createdAt: -1 });
     res.json({ count: hotels.length, hotels });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 });
 
@@ -139,7 +155,7 @@ router.patch("/hotels/:id/approve", protectAdmin, async (req, res) => {
     await hotel.save();
     res.json({ message: "Hotel approved successfully", hotel });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 });
 
@@ -153,7 +169,7 @@ router.patch("/hotels/:id/reject", protectAdmin, async (req, res) => {
     await hotel.save();
     res.json({ message: "Hotel rejected successfully", hotel });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 });
 
@@ -163,7 +179,9 @@ router.patch("/hotels/:id/reject", protectAdmin, async (req, res) => {
 router.get("/bike-owners", protectAdmin, async (req, res) => {
   try {
     const filter = req.query.status ? { status: req.query.status } : {};
-    const bikeOwners = await BikeOwner.find(filter).select("-password").sort({ createdAt: -1 });
+    const bikeOwners = await BikeOwner.find(filter)
+      .select("-password")
+      .sort({ createdAt: -1 });
     res.json({ count: bikeOwners.length, bikeOwners });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -175,19 +193,28 @@ router.put("/verify-bike-owner/:id", protectAdmin, async (req, res) => {
   try {
     const { status, rejectionReason } = req.body;
     if (!["approved", "rejected"].includes(status)) {
-      return res.status(400).json({ message: "Status must be 'approved' or 'rejected'" });
+      return res
+        .status(400)
+        .json({ message: "Status must be 'approved' or 'rejected'" });
     }
     const bikeOwner = await BikeOwner.findById(req.params.id);
-    if (!bikeOwner) return res.status(404).json({ message: "Bike rental owner not found" });
+    if (!bikeOwner)
+      return res.status(404).json({ message: "Bike rental owner not found" });
     bikeOwner.status = status;
-    if (status === "rejected" && rejectionReason) bikeOwner.rejectionReason = rejectionReason;
+    if (status === "rejected" && rejectionReason)
+      bikeOwner.rejectionReason = rejectionReason;
     await bikeOwner.save();
     res.json({
       message: `Bike rental owner ${status} successfully`,
-      bikeOwner: { _id: bikeOwner._id, name: bikeOwner.name, email: bikeOwner.email, status: bikeOwner.status },
+      bikeOwner: {
+        _id: bikeOwner._id,
+        name: bikeOwner.name,
+        email: bikeOwner.email,
+        status: bikeOwner.status,
+      },
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 });
 
@@ -209,14 +236,19 @@ router.get("/bikes/pending", protectAdmin, async (req, res) => {
 router.get("/bikes", protectAdmin, async (req, res) => {
   try {
     const filter = {};
-    if (req.query.status === "pending") { filter.isApproved = false; filter.isActive = true; }
-    if (req.query.status === "approved") { filter.isApproved = true; }
+    if (req.query.status === "pending") {
+      filter.isApproved = false;
+      filter.isActive = true;
+    }
+    if (req.query.status === "approved") {
+      filter.isApproved = true;
+    }
     const bikes = await Bike.find(filter)
       .populate("owner", "name email")
       .sort({ createdAt: -1 });
     res.json({ count: bikes.length, bikes });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 });
 
@@ -229,7 +261,7 @@ router.patch("/bikes/:id/approve", protectAdmin, async (req, res) => {
     await bike.save();
     res.json({ message: "Bike approved successfully", bike });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "An error occurred. Please try again." });
   }
 });
 
@@ -246,7 +278,6 @@ router.patch("/bikes/:id/reject", protectAdmin, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 // TEMPLATE: Add new business type below following the same pattern
 // Example for a future "Trekking Guide" entity:

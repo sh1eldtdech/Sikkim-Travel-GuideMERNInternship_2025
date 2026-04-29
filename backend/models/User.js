@@ -18,14 +18,16 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      minlength: 6,
+      minlength: 8,
     },
     phone: {
       type: String,
       trim: true,
+      minlength: 10,
+      maxlength: 15,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Hash password before saving
