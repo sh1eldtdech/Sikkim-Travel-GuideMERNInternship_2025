@@ -16,6 +16,8 @@ const roomRoutes = require("./routes/rooms");
 const bookingRoutes = require("./routes/bookings");
 const adminRoutes = require("./routes/admin");
 const bikeRoutes = require("./routes/bikes");
+const govAuthRoutes = require("./routes/govAuth"); // Government official auth
+const noticeRoutes = require("./routes/notices"); // Notice board
 
 const app = express();
 
@@ -102,6 +104,8 @@ app.use("/rooms", roomRoutes); // POST /rooms/add, PUT /rooms/:id
 app.use("/bookings", bookingRoutes); // POST /create-order, /verify-payment, GET /my-bookings
 app.use("/admin", adminRoutes); // GET /admin/stats, PUT /admin/owners/:id/approve, etc. (requires JWT auth)
 app.use("/bikes", bikeRoutes); // GET /bikes, POST /bikes/add, etc.
+app.use("/gov", govAuthRoutes); // POST /gov/register, /gov/login, /gov/refresh, /gov/logout, GET /gov/me
+app.use("/notices", noticeRoutes); // POST /notices/upload, GET /notices/all, GET /notices/my, DELETE /notices/:id
 
 // Root Route - Welcome Message
 app.get("/", (req, res) => {

@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Owner = require("../models/Owner");
 const BikeOwner = require("../models/BikeOwner");
+const GovernmentOfficial = require("../models/GovernmentOfficial");
 const {
   client: redisClient,
   getKey,
@@ -176,6 +177,43 @@ const protectBikeOwner = async (req, res, next) => {
   }
 };
 
+// Protect Government Official routes (role must be "gov-official")
+const protectGovOfficial = async (req, res, next) => {
+  try {
+    const token = extractToken(req);
+    if (!token) {
+      return res.status(401).json({ message: "Not authorized — no token" });
+    }
+
+    // Check if token is revoked
+    const revoked = await isTokenRevoked(token);
+    if (revoked) {
+      return res
+        .status(401)
+        .json({ message: "Token has been revoked. Please login again." });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decoded.role !== "gov-official") {
+      return res
+        .status(403)
+        .json({ message: "Access denied — not a government official token" });
+    }
+
+    const official = await GovernmentOfficial.findById(decoded.id).select("-password");
+    if (!official) {
+      return res.status(401).json({ message: "Government official not found" });
+    }
+
+    req.govOfficial = official;
+    req.token = token;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
+  }
+};
+
 // Admin middleware - Now uses JWT instead of shared secret
 const protectAdmin = async (req, res, next) => {
   try {
@@ -238,6 +276,7 @@ module.exports = {
   protectUser,
   protectOwner,
   protectBikeOwner,
+  protectGovOfficial,
   protectAdmin,
   revokeToken,
   isTokenRevoked,

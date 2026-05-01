@@ -150,6 +150,26 @@ const STYLES = `
 .da-ping.a .da-ping-r{background:#fbbf24;} .da-ping.a .da-ping-c{background:#d97706;}
 @keyframes pingA { 75%,100%{transform:scale(2.2);opacity:0} }
 ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:9999px;}
+.da-notice-btn{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.4);color:#fff;font-weight:800;font-size:0.8rem;padding:0.5rem 1.1rem;border-radius:9999px;cursor:pointer;transition:all 0.2s;backdrop-filter:blur(8px);text-decoration:none;}
+.da-notice-btn:hover{background:rgba(255,255,255,0.28);transform:translateY(-1px);}
+.da-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:flex;justify-content:flex-end;}
+.da-panel{width:min(480px,96vw);height:100%;background:#fff;overflow-y:auto;display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,0.15);animation:slideIn 0.25s ease-out;}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.da-panel-head{background:linear-gradient(135deg,#1a5c38,#2d7a50);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;}
+.da-panel-title{color:#fff;font-size:1rem;font-weight:800;display:flex;align-items:center;gap:0.5rem;}
+.da-panel-close{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:background 0.2s;}
+.da-panel-close:hover{background:rgba(255,255,255,0.28);}
+.da-notice-card{padding:1.1rem 1.25rem;border-bottom:1px solid #f1f5f9;}
+.da-notice-card:last-child{border-bottom:none;}
+.da-notice-dept{font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:#1a5c38;margin-bottom:0.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.3rem;}
+.da-notice-date{font-size:0.65rem;font-weight:600;color:#94a3b8;}
+.da-notice-title{font-weight:800;font-size:0.9rem;color:#1e293b;margin-bottom:0.3rem;}
+.da-notice-body{font-size:0.8rem;color:#475569;line-height:1.55;margin-bottom:0.5rem;}
+.da-notice-meta{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;}
+.da-notice-cat{display:inline-flex;align-items:center;gap:0.25rem;background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;border-radius:9999px;font-size:0.65rem;font-weight:800;padding:0.18rem 0.55rem;}
+.da-notice-sev{display:inline-flex;align-items:center;background:#fef3c7;color:#92400e;border:1px solid #fde68a;border-radius:9999px;font-size:0.65rem;font-weight:800;padding:0.18rem 0.55rem;}
+.da-notice-area{font-size:0.68rem;color:#64748b;display:flex;align-items:center;gap:0.25rem;}
+.da-notice-empty{padding:3rem 1.5rem;text-align:center;color:#94a3b8;}
 `;
 
 const WEATHER_DISTRICTS = [
@@ -174,13 +194,13 @@ const DIR_META = {
   South:{label:'South Sikkim',bar:'#f97316'},
 };
 const ROAD_ROUTES = [
-  {id:'nh10',name:'NH-10 (Siliguri–Gangtok)',lat:27.1726,lon:88.5322,km:'148 km',from:'Siliguri',to:'Gangtok'},
-  {id:'nsh',name:'North Sikkim Hwy (Gangtok–Mangan)',lat:27.23,lon:88.5,km:'64 km',from:'Gangtok',to:'Mangan'},
+  {id:'nh10',name:'NH-10 (Siliguri-Gangtok)',lat:27.1726,lon:88.5322,km:'148 km',from:'Siliguri',to:'Gangtok'},
+  {id:'nsh',name:'North Sikkim Hwy (Gangtok-Mangan)',lat:27.23,lon:88.5,km:'64 km',from:'Gangtok',to:'Mangan'},
   {id:'namchi',name:'Gangtok to Namchi',lat:27.25,lon:88.45,km:'78 km',from:'Gangtok',to:'Namchi'},
   {id:'pelling',name:'Namchi to Gyalshing',lat:27.22,lon:88.3,km:'55 km',from:'Namchi',to:'Gyalshing'},
 ];
 const CONTACTS = [
-  {label:'State Disaster Management',number:'1070',sub:'24×7 Control Room',icon:'🏛️'},
+  {label:'State Disaster Management',number:'1070',sub:'24x7 Control Room',icon:'🏛️'},
   {label:'Police Control Room',number:'100',sub:'Gangtok HQ',icon:'🚔'},
   {label:'Fire & Emergency',number:'101',sub:'All Districts',icon:'🚒'},
   {label:'Ambulance / Medical',number:'108',sub:'STNM Hospital',icon:'🚑'},
@@ -199,6 +219,26 @@ function timeSince(dateStr){
     const h=Math.floor(m/60);if(h<24)return `${h}h ago`;
     return `${Math.floor(h/24)}d ago`;
   }catch{return'Recent';}
+}
+
+const DEPT_LABEL = {Tourism:'Tourism Dept.',Police:'Police Dept.',Disaster:'Disaster Mgmt.',Revenue:'Revenue Dept.',Health:'Health Dept.',PWD:'PWD (Roads)',Forest:'Forest Dept.'};
+const CAT_ICONS = {Landslide:'',Flood:'',Travel:'',Rainfall:'',Snowfall:'',Earthquake:'',Highway:'',General:''};
+const SEV_LABELS = {Low:'Low',Medium:'Medium',High:'High',Critical:'Critical'};
+
+// Fetch all active government notices
+function useNotices(){
+  const[notices,setNotices]=useState([]);const[loading,setLoading]=useState(false);
+  const load=useCallback(async()=>{
+    setLoading(true);
+    try{
+      const res=await fetch(`${import.meta.env.VITE_API_BASE_URL||'http://localhost:3000'}/notices/all`,{credentials:'include'});
+      const json=await res.json();
+      setNotices(json.notices||[]);
+    }catch{setNotices([]);}
+    finally{setLoading(false);}
+  },[]);
+  useEffect(()=>{load();},[load]);
+  return{notices,loading,reload:load};
 }
 
 // ✅ LIVE: Weather for all 13 Sikkim districts
@@ -465,6 +505,9 @@ export default function SikkimDisasterAlert(){
   const{data:roads,loading:rLoad,last:rLast,reload:rReload}=useRoads();
   const{alerts,loading:aLoad,err:aErr,last:aLast,reload:aReload}=useAlerts();
   const{items:news,loading:nLoad,last:nLast,reload:nReload}=useIncidents();
+  const{notices,loading:nNotLoad,reload:reloadNotices}=useNotices();
+  const[showNotices,setShowNotices]=useState(false);
+  const[previewUrl,setPreviewUrl]=useState(null);
 
   return(
     <>
@@ -483,10 +526,15 @@ export default function SikkimDisasterAlert(){
                 <span className="da-hero-badge"><Ping t="g"/> News Live</span>
               </div>
             </div>
-            <div className="da-hero-stats">
-              <div className="da-stat"><div className="da-stat-num">13</div><div className="da-stat-label">Districts</div></div>
-              <div className="da-stat"><div className="da-stat-num">4</div><div className="da-stat-label">Highways</div></div>
-              <div className="da-stat"><div className="da-stat-num" style={{color:'#86efac'}}>{alerts.length||'—'}</div><div className="da-stat-label">Live Alerts</div></div>
+            <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'1rem'}}>
+              <button className="da-notice-btn" onClick={()=>{setShowNotices(true);reloadNotices();}}>
+                View All Notices {notices.length>0&&`(${notices.length})`}
+              </button>
+              <div className="da-hero-stats">
+                <div className="da-stat"><div className="da-stat-num">13</div><div className="da-stat-label">Districts</div></div>
+                <div className="da-stat"><div className="da-stat-num">4</div><div className="da-stat-label">Highways</div></div>
+                <div className="da-stat"><div className="da-stat-num" style={{color:'#86efac'}}>{alerts.length||'—'}</div><div className="da-stat-label">Live Alerts</div></div>
+              </div>
             </div>
           </div>
         </div>
@@ -706,6 +754,74 @@ export default function SikkimDisasterAlert(){
           </div>
         </div>
       </div>
+
+      {/* Government Notices Panel */}
+      {showNotices&&(
+        <div className="da-panel-overlay" onClick={e=>{if(e.target===e.currentTarget)setShowNotices(false);}}>
+          <div className="da-panel">
+            <div className="da-panel-head">
+              <div className="da-panel-title">Official Government Notices</div>
+              <button className="da-panel-close" onClick={()=>setShowNotices(false)}>✕</button>
+            </div>
+            {nNotLoad?(
+              <div className="da-notice-empty">Loading notices...</div>
+            ):notices.length===0?(
+              <div className="da-notice-empty">
+                <p style={{fontWeight:700,color:'#475569',marginBottom:'0.25rem'}}>No Active Notices</p>
+                <p style={{fontSize:'0.8rem'}}>No government notices have been issued at this time.</p>
+              </div>
+            ):(
+              <div style={{overflowY:'auto',flex:1}}>
+                {notices.map(n=>(
+                  <div key={n._id} className="da-notice-card">
+                    <div className="da-notice-dept">
+                      <span>{DEPT_LABEL[n.department]||n.department}</span>
+                      <span className="da-notice-date">{new Date(n.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</span>
+                    </div>
+                    <div className="da-notice-title">{n.title}</div>
+                    {n.affectedAreas&&<div className="da-notice-area">{n.affectedAreas}</div>}
+                    <div className="da-notice-body">{n.content}</div>
+                    {n.attachmentUrl && (
+                      <div style={{ marginTop: '12px' }}>
+                        <button onClick={() => setPreviewUrl(n.attachmentUrl)}
+                           style={{ border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', backgroundColor: '#e2e8f0', color: '#1e293b', fontSize: '0.8rem', fontWeight: 600, padding: '6px 12px', borderRadius: '6px', textDecoration: 'none', transition: 'background-color 0.2s' }}
+                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#cbd5e1'}
+                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e2e8f0'}>
+                          <svg style={{ width: '14px', height: '14px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                          View Attachment
+                        </button>
+                      </div>
+                    )}
+                    <div className="da-notice-meta">
+                      <span className="da-notice-cat">{n.category}</span>
+                      <span className="da-notice-sev">{SEV_LABELS[n.severity]||n.severity}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Attachment Preview Modal */}
+      {previewUrl && (
+        <div className="da-panel-overlay" style={{ zIndex: 2000, justifyContent: 'center', alignItems: 'center', padding: '1rem' }} onClick={(e) => { if (e.target === e.currentTarget) setPreviewUrl(null); }}>
+          <div style={{ backgroundColor: '#fff', borderRadius: '8px', width: '100%', maxWidth: '800px', height: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}>
+            <div style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#f8fafc' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#1e293b', margin: 0 }}>Attachment Preview</h3>
+              <button onClick={() => setPreviewUrl(null)} style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>✕</button>
+            </div>
+            <div style={{ flex: 1, backgroundColor: '#f1f5f9', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+              {previewUrl.toLowerCase().match(/\.(jpg|jpeg|png|webp|avif)$/i) || previewUrl.toLowerCase().includes('image') ? (
+                <img src={previewUrl} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} alt="Notice Attachment" />
+              ) : (
+                <iframe src={previewUrl.includes('?') ? `${previewUrl}&fl_attachment=false` : `${previewUrl}?fl_attachment=false`} style={{ width: '100%', height: '100%', border: 'none' }} title="PDF Preview" />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

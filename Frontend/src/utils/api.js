@@ -29,6 +29,10 @@ const getRefreshEndpoint = (url = "", method = "get") => {
     return "/owner/refresh";
   }
 
+  if (url.startsWith("/gov") || url.startsWith("/notices")) {
+    return "/gov/refresh";
+  }
+
   return "/user/refresh";
 };
 
@@ -40,9 +44,9 @@ API.interceptors.response.use(
     const url = originalRequest?.url || "";
 
     const isRefreshRoute =
-      /\/(user|owner|bike-owner|admin-auth)\/refresh$/.test(url);
+      /\/(user|owner|bike-owner|admin-auth|gov)\/refresh$/.test(url);
     const isAuthRoute =
-      /\/(user|owner|bike-owner|admin-auth)\/(login|register|logout)$/.test(
+      /\/(user|owner|bike-owner|admin-auth|gov)\/(login|register|logout)$/.test(
         url,
       );
 

@@ -6,14 +6,16 @@ import './pages/BikeRental/Dashboard/BikeRentalDashboard.css'
 import App from './App.jsx'
 import { OwnerAuthProvider } from './context/OwnerAuthContext.jsx'
 import { BikeOwnerAuthProvider } from './context/BikeOwnerAuthContext.jsx'
+import { GovAuthProvider } from './context/GovAuthContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* Hotel owners and Bike rental owners are entirely separate auth contexts */}
-    <OwnerAuthProvider>
-      <BikeOwnerAuthProvider>
-        <App />
-      </BikeOwnerAuthProvider>
-    </OwnerAuthProvider>
+    <GovAuthProvider>
+      <OwnerAuthProvider>
+        <BikeOwnerAuthProvider>
+          <App />
+        </BikeOwnerAuthProvider>
+      </OwnerAuthProvider>
+    </GovAuthProvider>
   </StrictMode>,
 )

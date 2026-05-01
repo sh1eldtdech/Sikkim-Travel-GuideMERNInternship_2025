@@ -10,6 +10,7 @@ import Headers from "./components/Headers/Headers";
 import Footers from "./components/Footers/Footers";
 import { useOwnerAuth } from "./context/OwnerAuthContext";
 import { useBikeOwnerAuth } from "./context/BikeOwnerAuthContext";
+import { useGovAuth } from "./context/GovAuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -32,6 +33,9 @@ const Business = lazy(() => import("./pages/Login/Business"));
 const DisasterAlert = lazy(() => import("./pages/Disaster/DisasterAlert"));
 const SikkimTourDashboard = lazy(
   () => import("./pages/Login/Dashboard/Dashboard"),
+);
+const GovernmentDashboard = lazy(
+  () => import("./pages/Login/Dashboard/GovernmentDashboard"),
 );
 const Article = lazy(() => import("./pages/Vlog/Article"));
 const MyBookings = lazy(() => import("./pages/Login/Hotels/MyBookings/MyBookings"));
@@ -91,15 +95,22 @@ const BikeOwnerRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/owner-login" replace />;
 };
 
+// Protected route wrapper for Government Official pages
+const GovRoute = ({ children }) => {
+  const { isAuthenticated, authLoading } = useGovAuth();
+  if (authLoading) return null;
+  return isAuthenticated ? children : <Navigate to="/government-login" replace />;
+};
+
 function AppContent() {
   const { pathname } = useLocation();
   // Hide site header/footer on the admin dashboard (it has its own layout)
-  const isAdmin = pathname.startsWith("/admin");
+  const isDashboardLayout = pathname.startsWith("/admin") || pathname.startsWith("/government-dashboard");
 
   return (
     <div className="app">
       <ToastContainer position="top-right" autoClose={3000} />
-      {!isAdmin && <Headers />}
+      {!isDashboardLayout && <Headers />}
       <Suspense
         fallback={
           <div
@@ -135,7 +146,11 @@ function AppContent() {
           <Route path="/disaster-alerts" element={<DisasterAlert />} />
           <Route
             path="/government-dashboard"
-            element={<SikkimTourDashboard />}
+            element={
+              <GovRoute>
+                <GovernmentDashboard />
+              </GovRoute>
+            }
           />
           <Route path="/article" element={<Article />} />
 
@@ -245,7 +260,7 @@ function AppContent() {
           />
         </Routes>
       </Suspense>
-      {!isAdmin && <Footers />}
+      {!isDashboardLayout && <Footers />}
     </div>
   );
 }
