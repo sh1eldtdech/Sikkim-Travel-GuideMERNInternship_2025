@@ -170,6 +170,15 @@ const OwnerLogin = () => {
 
       if (err.response?.status >= 400 && err.response?.status < 500) {
         msg = err.response.data?.message || "Invalid credentials or account does not exist.";
+
+        // Improve error messages to be more specific and actionable
+        if (msg.includes("Invalid email or password")) {
+          msg = "Invalid email or password. Please check your credentials and try again.";
+        } else if (msg.includes("pending")) {
+          msg = "Your account is pending admin approval. Please check back in 24-48 hours.";
+        } else if (msg.includes("rejected")) {
+          msg = "Your account has been rejected. Please contact support for more information.";
+        }
       } else if (err.request) {
         msg =
           "Server is unreachable. Please ensure backend is running on the correct port and try again.";
@@ -222,6 +231,11 @@ const OwnerLogin = () => {
 
       if (err.response?.status >= 400 && err.response?.status < 500) {
         msg = err.response.data?.message || "Registration failed. Try again.";
+
+        // Improve error messages to be more specific and actionable
+        if (msg.includes("Email already registered")) {
+          msg = "This email is already registered. Please login or use a different email address.";
+        }
       } else if (err.request) {
         msg =
           "Server is unreachable. Please ensure backend is running on the correct port and try again.";

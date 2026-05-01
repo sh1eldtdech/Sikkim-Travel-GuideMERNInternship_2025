@@ -78,6 +78,7 @@ const Traveler = () => {
           email: formData.email,
           password: formData.password,
         });
+        toast.success("Welcome back! You're now logged in.");
       } else {
         resData = await registerUser({
           name: formData.name,
@@ -85,6 +86,7 @@ const Traveler = () => {
           password: formData.password,
           phone: formData.contact,
         });
+        toast.success("Account created successfully! Welcome to Sikkim Travel Guide.");
       }
 
       console.log(`${isLogin ? "Login" : "Signup"} successful:`, resData);
@@ -93,7 +95,17 @@ const Traveler = () => {
       navigate(returnTo);
     } catch (error) {
       console.error("Authentication error:", error);
-      const errMsg = error.response?.data?.message || error.message || "Authentication failed. Please try again.";
+      let errMsg = error.response?.data?.message || error.message || "Authentication failed. Please try again.";
+
+      // Improve error messages to be more specific and actionable
+      if (errMsg.includes("Invalid email or password")) {
+        errMsg = "Invalid email or password. Please check your credentials and try again.";
+      } else if (errMsg.includes("Email already registered")) {
+        errMsg = "This email is already registered. Please login or use a different email.";
+      } else if (errMsg.includes("An error occurred")) {
+        errMsg = "Unable to connect to the server. Please check your internet connection and try again.";
+      }
+
       toast.error(errMsg);
       setErrors({
         general: errMsg,

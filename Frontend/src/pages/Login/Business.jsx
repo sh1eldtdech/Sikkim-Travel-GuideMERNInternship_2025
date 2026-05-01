@@ -66,9 +66,22 @@ const Business = () => {
         password: loginData.password,
       });
       login({ ...response.data.owner, businessType: "hotel" });
+      toast.success("Welcome back! You're now logged in to your business dashboard.");
       navigate("/owner/dashboard");
     } catch (err) {
-      const msg = err.response?.data?.message || "Login failed. Please try again.";
+      let msg = err.response?.data?.message || "Login failed. Please try again.";
+
+      // Improve error messages to be more specific and actionable
+      if (msg.includes("Invalid email or password")) {
+        msg = "Invalid email or password. Please check your credentials and try again.";
+      } else if (msg.includes("pending")) {
+        msg = "Your account is pending admin approval. Please check back in 24-48 hours.";
+      } else if (msg.includes("rejected")) {
+        msg = "Your account has been rejected. Please contact support for more information.";
+      } else if (msg.includes("An error occurred")) {
+        msg = "Unable to connect to the server. Please check your internet connection and try again.";
+      }
+
       setErrorMsg(msg);
       toast.error(msg);
     } finally {
@@ -82,7 +95,10 @@ const Business = () => {
     setSuccessMsg("");
 
     if (signupData.password !== signupData.confirmPassword) {
-      return setErrorMsg("Passwords do not match.");
+      const msg = "Passwords do not match. Please ensure both passwords are identical.";
+      setErrorMsg(msg);
+      toast.error(msg);
+      return;
     }
 
     setLoading(true);
@@ -96,9 +112,10 @@ const Business = () => {
 
       await API.post("/owner/register", submitData);
 
-      setSuccessMsg(
-        "Registration successful! Admin will review your application before granting access.",
-      );
+      const successMessage = "Registration successful! Admin will review your application within 24-48 hours.";
+      setSuccessMsg(successMessage);
+      toast.success(successMessage);
+
       setSignupData({
         name: "",
         email: "",
@@ -113,7 +130,15 @@ const Business = () => {
         setSuccessMsg("");
       }, 5000);
     } catch (err) {
-      const msg = err.response?.data?.message || "Registration failed. Please try again.";
+      let msg = err.response?.data?.message || "Registration failed. Please try again.";
+
+      // Improve error messages to be more specific and actionable
+      if (msg.includes("Email already registered")) {
+        msg = "This email is already registered. Please login or use a different email address.";
+      } else if (msg.includes("An error occurred")) {
+        msg = "Unable to connect to the server. Please check your internet connection and try again.";
+      }
+
       setErrorMsg(msg);
       toast.error(msg);
     } finally {
@@ -205,20 +230,6 @@ const Business = () => {
           {isLogin ? (
             // Login Form
             <form className={styles.form} onSubmit={handleLoginSubmit}>
-              {successMsg && (
-                <div
-                  style={{
-                    color: "#68d391",
-                    background: "rgba(104,211,145,0.1)",
-                    padding: "10px",
-                    borderRadius: "8px",
-                    marginBottom: "15px",
-                  }}
-                >
-                  {successMsg}
-                </div>
-              )}
-
               <div className={styles.inputGroup}>
                 <label htmlFor="email" className={styles.label}>
                   Email Address
@@ -370,20 +381,6 @@ const Business = () => {
           ) : (
             // Signup Form
             <form className={styles.form} onSubmit={handleSignupSubmit}>
-              {successMsg && (
-                <div
-                  style={{
-                    color: "#68d391",
-                    background: "rgba(104,211,145,0.1)",
-                    padding: "10px",
-                    borderRadius: "8px",
-                    marginBottom: "15px",
-                  }}
-                >
-                  {successMsg}
-                </div>
-              )}
-
               <div className={styles.inputGroup}>
                 <label htmlFor="name" className={styles.label}>
                   Full Name

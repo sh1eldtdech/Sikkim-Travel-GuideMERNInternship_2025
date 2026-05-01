@@ -83,6 +83,7 @@ const Government = () => {
           password: formData.password,
         });
         login(data.official);
+        toast.success("Welcome back! You're now logged in to your government dashboard.");
         navigate("/government-dashboard");
       } else {
         const { data } = await API.post("/gov/register", {
@@ -95,10 +96,21 @@ const Government = () => {
           serviceNumber: formData.serviceNumber,
         });
         login(data.official);
+        toast.success("Account created successfully! Welcome to the government portal.");
         navigate("/government-dashboard");
       }
     } catch (error) {
-      const msg = error.response?.data?.message || "An error occurred. Please try again.";
+      let msg = error.response?.data?.message || "An error occurred. Please try again.";
+
+      // Improve error messages to be more specific and actionable
+      if (msg.includes("Invalid email or password")) {
+        msg = "Invalid email or password. Please check your credentials and try again.";
+      } else if (msg.includes("Email already registered")) {
+        msg = "This email is already registered. Please login or use a different email.";
+      } else if (msg.includes("An error occurred")) {
+        msg = "Unable to connect to the server. Please check your internet connection and try again.";
+      }
+
       setServerError(msg);
       toast.error(msg);
     } finally {
