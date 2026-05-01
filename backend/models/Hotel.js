@@ -72,4 +72,12 @@ const hotelSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Database indexes for performance optimization
+hotelSchema.index({ district: 1 });
+hotelSchema.index({ location: 1 });
+hotelSchema.index({ owner: 1 });
+hotelSchema.index({ isActive: 1, isApproved: 1 });
+hotelSchema.index({ createdAt: -1 });
+hotelSchema.index({ name: "text", location: "text" }); // For full-text search
+
 module.exports = mongoose.model("Hotel", hotelSchema);

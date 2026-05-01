@@ -84,4 +84,14 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Database indexes for performance optimization
+bookingSchema.index({ user: 1 });
+bookingSchema.index({ hotel: 1 });
+bookingSchema.index({ room: 1 });
+bookingSchema.index({ checkIn: 1, checkOut: 1 });
+bookingSchema.index({ status: 1 });
+bookingSchema.index({ paymentStatus: 1 });
+bookingSchema.index({ createdAt: -1 });
+bookingSchema.index({ user: 1, status: 1 }); // Composite index for user bookings
+
 module.exports = mongoose.model("Booking", bookingSchema);

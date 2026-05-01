@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const connectDB = require("./config/db");
@@ -31,6 +32,31 @@ app.use(
     contentSecurityPolicy: false,
   }),
 );
+
+// Compression middleware for response compression
+app.use(compression({
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  threshold: 1024, // Only compress responses larger than 1KB
+  level: 6, // Compression level (0-9, 6 is default)
+}));
+
+// Cache headers for static assets and API responses
+app.use((req, res, next) => {
+  // Cache static assets for 1 year
+  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|avif|css|js|woff|woff2|ttf|eot)$/i)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+  // Cache API responses for 5 minutes (except auth endpoints)
+  else if (!req.path.match(/\/(user|owner|bike-owner|admin-auth|gov)\/(register|login|refresh|logout)/)) {
+    res.setHeader('Cache-Control', 'public, max-age=300');
+  }
+  next();
+});
 
 const normalizeOrigin = (origin = "") =>
   origin.trim().replace(/\/$/, "").toLowerCase();

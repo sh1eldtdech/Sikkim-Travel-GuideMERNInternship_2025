@@ -63,4 +63,12 @@ const bikeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Database indexes for performance optimization
+bikeSchema.index({ district: 1 });
+bikeSchema.index({ location: 1 });
+bikeSchema.index({ owner: 1 });
+bikeSchema.index({ isActive: 1, isApproved: 1 });
+bikeSchema.index({ createdAt: -1 });
+bikeSchema.index({ name: "text", location: "text" }); // For full-text search
+
 module.exports = mongoose.model("Bike", bikeSchema);

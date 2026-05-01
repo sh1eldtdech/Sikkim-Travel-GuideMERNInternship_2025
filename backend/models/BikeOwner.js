@@ -57,4 +57,9 @@ bikeOwnerSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
+// Database indexes for performance optimization
+bikeOwnerSchema.index({ email: 1 }); // Already unique, but explicit index helps
+bikeOwnerSchema.index({ status: 1 });
+bikeOwnerSchema.index({ createdAt: -1 });
+
 module.exports = mongoose.model("BikeOwner", bikeOwnerSchema);
