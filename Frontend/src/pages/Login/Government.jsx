@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGovAuth } from "../../context/GovAuthContext";
 import API from "../../utils/api";
+import { toast } from "react-toastify";
 import styles from "./Government.module.css";
 
 const Government = () => {
@@ -99,6 +100,7 @@ const Government = () => {
     } catch (error) {
       const msg = error.response?.data?.message || "An error occurred. Please try again.";
       setServerError(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -167,12 +169,8 @@ const Government = () => {
         {/* Form Container */}
         <div className={styles.formContainer}>
           <div className={styles.formHeader}>
-            <h2>{isLogin ? "Sign In" : "Sign Up"}</h2>
+            <h2>{isLogin ? "Login" : "Sign Up"}</h2>
           </div>
-
-          {serverError && (
-            <div className={styles.serverError}>{serverError}</div>
-          )}
 
           <form onSubmit={handleSubmit} className={styles.form}>
             {isLogin ? (
@@ -342,7 +340,7 @@ const Government = () => {
             )}
 
             <button type="submit" className={styles.submitButton} disabled={isLoading}>
-              {isLoading ? "Processing..." : isLogin ? "Sign In" : "Sign Up"}
+              {isLoading ? "Processing..." : isLogin ? "Login" : "Sign Up"}
             </button>
           </form>
 
@@ -351,7 +349,7 @@ const Government = () => {
             <p>
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button type="button" onClick={toggleForm}>
-                {isLogin ? "Sign Up" : "Sign In"}
+                {isLogin ? "Sign Up" : "Login"}
               </button>
             </p>
           </div>

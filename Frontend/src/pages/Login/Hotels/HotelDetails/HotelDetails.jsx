@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchHotelById, getCurrentUser } from "../api";
+import {
+  FaWifi,
+  FaUtensils,
+  FaSpa,
+  FaLeaf,
+  FaConciergeBell,
+  FaParking,
+  FaMonument,
+  FaMountain,
+  FaSwimmingPool,
+  FaDumbbell,
+  FaKey,
+  FaHelicopter,
+  FaHiking,
+  FaHotTub
+} from "react-icons/fa";
+import { MdLocationOn } from "react-icons/md";
 import "./HotelDetails.css";
 
 const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -15,23 +32,23 @@ const resolveImage = (img) => {
 };
 
 const amenityIcons = {
-  "Free WiFi": "📶",
-  Restaurant: "🍽️",
-  Spa: "💆",
-  Garden: "🌿",
-  "Room Service": "🛎️",
-  Parking: "🅿️",
-  "Heritage Tours": "🏛️",
-  "Mountain View": "🏔️",
-  "Infinity Pool": "🏊",
-  Gym: "💪",
-  Concierge: "🔑",
-  Helipad: "🚁",
-  "Adventure Desk": "🧗",
-  Pool: "🏊",
-  Jacuzzi: "🛁",
-  "World-class Spa": "💆",
-  "Multi-cuisine Restaurant": "🍜",
+  "Free WiFi": <FaWifi />,
+  "Restaurant": <FaUtensils />,
+  "Spa": <FaSpa />,
+  "Garden": <FaLeaf />,
+  "Room Service": <FaConciergeBell />,
+  "Parking": <FaParking />,
+  "Heritage Tours": <FaMonument />,
+  "Mountain View": <FaMountain />,
+  "Infinity Pool": <FaSwimmingPool />,
+  "Gym": <FaDumbbell />,
+  "Concierge": <FaKey />,
+  "Helipad": <FaHelicopter />,
+  "Adventure Desk": <FaHiking />,
+  "Pool": <FaSwimmingPool />,
+  "Jacuzzi": <FaHotTub />,
+  "World-class Spa": <FaSpa />,
+  "Multi-cuisine Restaurant": <FaUtensils />,
 };
 
 export default function HotelDetails() {
@@ -255,13 +272,12 @@ export default function HotelDetails() {
                   <div className="hd-room-top">
                     <h3>{room.roomType}</h3>
                     <span
-                      className={`hd-avail ${
-                        room.availableRooms === 0
+                      className={`hd-avail ${room.availableRooms === 0
                           ? "none"
                           : room.availableRooms <= 2
                             ? "low"
                             : ""
-                      }`}
+                        }`}
                     >
                       {room.availableRooms === 0
                         ? "Sold Out"

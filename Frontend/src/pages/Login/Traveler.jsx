@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./Traveler.module.css";
 import { loginUser, registerUser } from "./Hotels/api";
+import { toast } from "react-toastify";
 
 const Traveler = () => {
   const navigate = useNavigate();
@@ -92,8 +93,10 @@ const Traveler = () => {
       navigate(returnTo);
     } catch (error) {
       console.error("Authentication error:", error);
+      const errMsg = error.response?.data?.message || error.message || "Authentication failed. Please try again.";
+      toast.error(errMsg);
       setErrors({
-        general: error.message || "Authentication failed. Please try again.",
+        general: errMsg,
       });
     } finally {
       setLoading(false);
@@ -202,10 +205,6 @@ const Traveler = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className={styles.form}>
-            {/* General Error */}
-            {errors.general && (
-              <div className={styles.errorMessage}>{errors.general}</div>
-            )}
 
             {/* Name Field (Sign Up Only) */}
             {!isLogin && (

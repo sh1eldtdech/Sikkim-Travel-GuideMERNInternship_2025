@@ -169,12 +169,7 @@ const OwnerLogin = () => {
       logApiError("login", err, endpoint);
 
       if (err.response?.status >= 400 && err.response?.status < 500) {
-        msg = err.response.data?.message;
-        if (msg === "Invalid email or password") {
-          msg = "account dosen't exist try signin";
-        } else {
-          msg = msg || "account dosen't exists try signin";
-        }
+        msg = err.response.data?.message || "Invalid credentials or account does not exist.";
       } else if (err.request) {
         msg =
           "Server is unreachable. Please ensure backend is running on the correct port and try again.";

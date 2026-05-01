@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../utils/api";
 import { useOwnerAuth } from "../../context/OwnerAuthContext";
+import { toast } from "react-toastify";
 import styles from "./Business.module.css";
 
 const Business = () => {
@@ -67,9 +68,9 @@ const Business = () => {
       login({ ...response.data.owner, businessType: "hotel" });
       navigate("/owner/dashboard");
     } catch (err) {
-      setErrorMsg(
-        err.response?.data?.message || "Login failed. Please try again.",
-      );
+      const msg = err.response?.data?.message || "Login failed. Please try again.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -112,9 +113,9 @@ const Business = () => {
         setSuccessMsg("");
       }, 5000);
     } catch (err) {
-      setErrorMsg(
-        err.response?.data?.message || "Registration failed. Please try again.",
-      );
+      const msg = err.response?.data?.message || "Registration failed. Please try again.";
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -204,19 +205,6 @@ const Business = () => {
           {isLogin ? (
             // Login Form
             <form className={styles.form} onSubmit={handleLoginSubmit}>
-              {errorMsg && (
-                <div
-                  style={{
-                    color: "#fc8181",
-                    background: "rgba(252,129,129,0.1)",
-                    padding: "10px",
-                    borderRadius: "8px",
-                    marginBottom: "15px",
-                  }}
-                >
-                  {errorMsg}
-                </div>
-              )}
               {successMsg && (
                 <div
                   style={{
@@ -382,19 +370,6 @@ const Business = () => {
           ) : (
             // Signup Form
             <form className={styles.form} onSubmit={handleSignupSubmit}>
-              {errorMsg && (
-                <div
-                  style={{
-                    color: "#fc8181",
-                    background: "rgba(252,129,129,0.1)",
-                    padding: "10px",
-                    borderRadius: "8px",
-                    marginBottom: "15px",
-                  }}
-                >
-                  {errorMsg}
-                </div>
-              )}
               {successMsg && (
                 <div
                   style={{
