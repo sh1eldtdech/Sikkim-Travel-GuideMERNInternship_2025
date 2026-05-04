@@ -10,8 +10,7 @@ let _errorLogged = false; // prevent log spam when Redis is down
 
 const REDIS_URL =
   process.env.REDIS_URL ||
-  `redis://${process.env.REDIS_HOST || "127.0.0.1"}:${
-    process.env.REDIS_PORT || 6379
+  `redis://${process.env.REDIS_HOST || "127.0.0.1"}:${process.env.REDIS_PORT || 6379
   }`;
 
 // Only attempt to connect if a Redis URL is explicitly configured OR we're in
@@ -32,8 +31,8 @@ if (shouldConnect) {
         // After first retry fails, stop reconnecting
         if (!_errorLogged) {
           console.warn(
-            "⚠  Redis unavailable — token revocation is disabled. " +
-              "Start Redis to enable it."
+            "Redis unavailable - token revocation is disabled. " +
+            "Start Redis to enable it."
           );
           _errorLogged = true;
         }
@@ -47,7 +46,7 @@ if (shouldConnect) {
   redisClient.on("ready", () => {
     redisClient.connected = true;
     _errorLogged = false;
-    console.log("✓ Redis connected — token revocation enabled");
+    console.log("Redis connected - token revocation enabled");
   });
 
   redisClient.on("end", () => {
@@ -60,7 +59,7 @@ if (shouldConnect) {
   });
 
   // Initiate connection (non-blocking — errors handled above)
-  redisClient.connect().catch(() => {});
+  redisClient.connect().catch(() => { });
 } else {
   console.log(
     "ℹ  Redis not configured — token revocation disabled (development mode)"

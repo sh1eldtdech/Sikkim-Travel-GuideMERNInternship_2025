@@ -7,6 +7,8 @@ node_modules/
 .env.production
 Backend/.env
 Frontend/.env
+Backend/.env.local
+Frontend/.env.local
 
 # Build output
 dist/
@@ -43,4 +45,3 @@ Thumbs.db
 
 # Uploads (optional - uncomment if you don't want to track uploads)
 uploads/
-CLAUDE.md

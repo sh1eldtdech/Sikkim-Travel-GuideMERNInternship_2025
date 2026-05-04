@@ -3,24 +3,28 @@ const path = require("path");
 const cloudinary = require("../config/cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-// ── Documents upload — Cloudinary (store as raw files where supported) ──
+// ── Documents upload — Cloudinary (store as auto-detected resource type) ──
 const docsCloudinaryStorage = new CloudinaryStorage({
   cloudinary,
   params: (req, file) => ({
     folder: "sikkim_docs",
-    resource_type: "raw",
-    allowed_formats: ["pdf", "jpg", "jpeg", "png"],
+    resource_type: "auto",
+    allowed_formats: ["pdf", "jpg", "jpeg", "png", "webp"],
     public_id: `doc_${Date.now()}_${Math.round(Math.random() * 1e6)}`,
+    // Add transformation to ensure inline viewing for PDFs
+    transformation: [
+      { flags: "attachment:false" }
+    ],
   }),
 });
 
 const docsFilter = (req, file, cb) => {
-  const allowed = [".pdf", ".jpg", ".jpeg", ".png"];
+  const allowed = [".pdf", ".jpg", ".jpeg", ".png", ".webp"];
   const ext = path.extname(file.originalname).toLowerCase();
   if (allowed.includes(ext)) cb(null, true);
   else
     cb(
-      new Error("Only PDF, JPG, JPEG, PNG files are allowed for documents"),
+      new Error("Only PDF and image files are allowed for documents"),
       false,
     );
 };
@@ -32,8 +36,14 @@ const hotelCloudinaryStorage = new CloudinaryStorage({
     folder: "sikkim_hotels",
     allowed_formats: ["jpg", "jpeg", "png", "webp", "avif"],
     transformation: [
-      { width: 1200, height: 800, crop: "limit", quality: "auto" },
+      { width: 1200, height: 800, crop: "limit", quality: "auto:good", fetch_format: "auto" },
+      { quality: "auto:good" }
     ],
+    eager: [
+      { width: 800, height: 600, crop: "limit", quality: "auto:good", fetch_format: "auto" },
+      { width: 400, height: 300, crop: "limit", quality: "auto:good", fetch_format: "auto" }
+    ],
+    eager_async: true,
     public_id: `hotel_${Date.now()}_${Math.round(Math.random() * 1e6)}`,
   }),
 });
@@ -49,13 +59,13 @@ const imagesFilter = (req, file, cb) => {
 const uploadDocs = multer({
   storage: docsCloudinaryStorage,
   fileFilter: docsFilter,
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: 5 * 1024 * 1024 }, // Reduced to 5MB for documents
 });
 
 const uploadImages = multer({
   storage: hotelCloudinaryStorage,
   fileFilter: imagesFilter,
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: 5 * 1024 * 1024 }, // Reduced to 5MB for images
 });
 
 // ── Bike images upload — Cloudinary (max 4 images) ──
@@ -65,8 +75,14 @@ const bikeCloudinaryStorage = new CloudinaryStorage({
     folder: "sikkim_bikes",
     allowed_formats: ["jpg", "jpeg", "png", "webp", "avif"],
     transformation: [
-      { width: 1200, height: 800, crop: "limit", quality: "auto" },
+      { width: 1200, height: 800, crop: "limit", quality: "auto:good", fetch_format: "auto" },
+      { quality: "auto:good" }
     ],
+    eager: [
+      { width: 800, height: 600, crop: "limit", quality: "auto:good", fetch_format: "auto" },
+      { width: 400, height: 300, crop: "limit", quality: "auto:good", fetch_format: "auto" }
+    ],
+    eager_async: true,
     public_id: `bike_${Date.now()}_${Math.round(Math.random() * 1e6)}`,
   }),
 });
@@ -74,7 +90,7 @@ const bikeCloudinaryStorage = new CloudinaryStorage({
 const uploadBikeImages = multer({
   storage: bikeCloudinaryStorage,
   fileFilter: imagesFilter,
-  limits: { fileSize: 8 * 1024 * 1024 },
+  limits: { fileSize: 5 * 1024 * 1024 }, // Reduced to 5MB for images
 });
 
 module.exports = { uploadDocs, uploadImages, uploadBikeImages };

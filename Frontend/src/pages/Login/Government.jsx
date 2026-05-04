@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGovAuth } from "../../context/GovAuthContext";
 import API from "../../utils/api";
+import { toast } from "react-toastify";
 import styles from "./Government.module.css";
 
 const Government = () => {
@@ -82,6 +83,7 @@ const Government = () => {
           password: formData.password,
         });
         login(data.official);
+        toast.success("Welcome back! You're now logged in to your government dashboard.");
         navigate("/government-dashboard");
       } else {
         const { data } = await API.post("/gov/register", {
@@ -94,11 +96,23 @@ const Government = () => {
           serviceNumber: formData.serviceNumber,
         });
         login(data.official);
+        toast.success("Account created successfully! Welcome to the government portal.");
         navigate("/government-dashboard");
       }
     } catch (error) {
-      const msg = error.response?.data?.message || "An error occurred. Please try again.";
+      let msg = error.response?.data?.message || "An error occurred. Please try again.";
+
+      // Improve error messages to be more specific and actionable
+      if (msg.includes("Invalid email or password")) {
+        msg = "Invalid email or password. Please check your credentials and try again.";
+      } else if (msg.includes("Email already registered")) {
+        msg = "This email is already registered. Please login or use a different email.";
+      } else if (msg.includes("An error occurred")) {
+        msg = "Unable to connect to the server. Please check your internet connection and try again.";
+      }
+
       setServerError(msg);
+      toast.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -167,12 +181,8 @@ const Government = () => {
         {/* Form Container */}
         <div className={styles.formContainer}>
           <div className={styles.formHeader}>
-            <h2>{isLogin ? "Sign In" : "Sign Up"}</h2>
+            <h2>{isLogin ? "Login" : "Sign Up"}</h2>
           </div>
-
-          {serverError && (
-            <div className={styles.serverError}>{serverError}</div>
-          )}
 
           <form onSubmit={handleSubmit} className={styles.form}>
             {isLogin ? (
@@ -342,7 +352,7 @@ const Government = () => {
             )}
 
             <button type="submit" className={styles.submitButton} disabled={isLoading}>
-              {isLoading ? "Processing..." : isLogin ? "Sign In" : "Sign Up"}
+              {isLoading ? "Processing..." : isLogin ? "Login" : "Sign Up"}
             </button>
           </form>
 
@@ -351,7 +361,7 @@ const Government = () => {
             <p>
               {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
               <button type="button" onClick={toggleForm}>
-                {isLogin ? "Sign Up" : "Sign In"}
+                {isLogin ? "Sign Up" : "Login"}
               </button>
             </p>
           </div>

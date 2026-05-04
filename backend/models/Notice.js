@@ -31,6 +31,14 @@ const noticeSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    attachmentType: {
+      type: String,
+      default: null,
+    },
+    attachmentName: {
+      type: String,
+      default: null,
+    },
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "GovernmentOfficial",
@@ -54,6 +62,14 @@ const noticeSchema = new mongoose.Schema(
 
 // MongoDB TTL index — auto-delete documents 30 days after upload
 noticeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
+// Additional database indexes for performance optimization
+noticeSchema.index({ uploadedBy: 1 });
+noticeSchema.index({ category: 1 });
+noticeSchema.index({ severity: 1 });
+noticeSchema.index({ createdAt: -1 });
+noticeSchema.index({ expiresAt: 1 }); // For filtering active notices
+noticeSchema.index({ category: 1, severity: 1 }); // Composite index for filtering
 
 // Virtual for days remaining
 noticeSchema.virtual("daysRemaining").get(function () {

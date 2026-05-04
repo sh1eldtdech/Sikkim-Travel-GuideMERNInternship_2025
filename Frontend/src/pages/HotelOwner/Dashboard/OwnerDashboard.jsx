@@ -11,7 +11,6 @@ const OwnerDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   // This dashboard is for HOTEL owners only.
-  // Bike rental owners have their own separate dashboard at /owner/bike-rental/dashboard
 
   useEffect(() => {
     const fetchStats = async () => {

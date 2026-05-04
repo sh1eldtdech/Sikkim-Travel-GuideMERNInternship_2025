@@ -55,4 +55,9 @@ roomSchema.pre("save", function (next) {
   next();
 });
 
+// Database indexes for performance optimization
+roomSchema.index({ hotel: 1 });
+roomSchema.index({ isActive: 1 });
+roomSchema.index({ hotel: 1, isActive: 1 }); // Composite index for active rooms by hotel
+
 module.exports = mongoose.model("Room", roomSchema);

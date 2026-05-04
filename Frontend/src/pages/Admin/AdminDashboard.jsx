@@ -224,9 +224,8 @@ const AdminDashboard = () => {
 
   const ask = (msg, onYes) => setConfirm({ msg, onYes });
 
-  /* ═══════════════════════════
-     AUTH GATE
-  ═══════════════════════════ */
+  //  AUTH GATE
+
   if (authLoading)
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 flex items-center justify-center p-4 font-[Poppins]">
@@ -272,9 +271,7 @@ const AdminDashboard = () => {
       </div>
     );
 
-  /* ═══════════════════════════
-     DASHBOARD
-  ═══════════════════════════ */
+  //  DASHBOARD
   return (
     <div className="min-h-screen bg-gray-50 font-[Poppins]">
       {/* Toast */}
@@ -365,7 +362,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* ══ OVERVIEW TAB ══ */}
+        {/* OVERVIEW TAB */}
         {tab === "overview" && stats && (
           <div className="space-y-6">
             <div>
@@ -477,7 +474,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* ══ HOTEL OWNERS TAB ══ */}
+        {/* HOTEL OWNERS TAB */}
         {tab === "hotelOwners" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -575,7 +572,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* ══ BIKE OWNERS TAB ══ */}
+        {/* BIKE OWNERS TAB */}
         {tab === "bikeOwners" && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -676,7 +673,7 @@ const AdminDashboard = () => {
   );
 };
 
-/* ─── Owner Account Card ──────────────────────────────────── */
+/* Owner Account Card */
 const OwnerCard = ({ owner, type, onApprove, onReject }) => (
   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -717,7 +714,7 @@ const OwnerCard = ({ owner, type, onApprove, onReject }) => (
   </div>
 );
 
-/* ─── Listing Card (Hotels & Bikes) ───────────────────────── */
+/* Listing Card (Hotels & Bikes) */
 const ListingCard = ({
   type,
   name,

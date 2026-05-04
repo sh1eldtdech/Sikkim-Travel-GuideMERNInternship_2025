@@ -55,20 +55,58 @@ const bookingSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    // Razorpay payment details
-    razorpayOrderId: {
-      type: String,
-    },
-    razorpayPaymentId: {
-      type: String,
-    },
-    razorpaySignature: {
-      type: String,
+    // Enhanced Razorpay payment details
+    paymentDetails: {
+      razorpayOrderId: {
+        type: String,
+      },
+      razorpayPaymentId: {
+        type: String,
+      },
+      razorpaySignature: {
+        type: String,
+      },
+      amount: {
+        type: Number,
+        required: true,
+      },
+      currency: {
+        type: String,
+        default: "INR",
+      },
+      status: {
+        type: String,
+        enum: ["pending", "completed", "failed", "refunded"],
+        default: "pending",
+      },
+      paidAt: {
+        type: Date,
+      },
     },
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed", "refunded"],
       default: "pending",
+    },
+    // Payout tracking details
+    payoutDetails: {
+      razorpayPayoutId: {
+        type: String,
+      },
+      amount: {
+        type: Number,
+      },
+      status: {
+        type: String,
+        enum: ["pending", "processing", "completed", "failed"],
+        default: "pending",
+      },
+      processedAt: {
+        type: Date,
+      },
+      failureReason: {
+        type: String,
+      },
     },
     status: {
       type: String,
@@ -83,5 +121,17 @@ const bookingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Database indexes for performance optimization
+bookingSchema.index({ user: 1 });
+bookingSchema.index({ hotel: 1 });
+bookingSchema.index({ room: 1 });
+bookingSchema.index({ checkIn: 1, checkOut: 1 });
+bookingSchema.index({ status: 1 });
+bookingSchema.index({ paymentStatus: 1 });
+bookingSchema.index({ createdAt: -1 });
+bookingSchema.index({ user: 1, status: 1 }); // Composite index for user bookings
+bookingSchema.index({ "paymentDetails.status": 1 }); // Index for payment status queries
+bookingSchema.index({ "payoutDetails.status": 1 }); // Index for payout status queries
 
 module.exports = mongoose.model("Booking", bookingSchema);
