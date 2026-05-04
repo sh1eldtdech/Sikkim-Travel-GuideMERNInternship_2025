@@ -3,24 +3,28 @@ const path = require("path");
 const cloudinary = require("../config/cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-// ── Documents upload — Cloudinary (store as raw files where supported) ──
+// ── Documents upload — Cloudinary (store as auto-detected resource type) ──
 const docsCloudinaryStorage = new CloudinaryStorage({
   cloudinary,
   params: (req, file) => ({
     folder: "sikkim_docs",
-    resource_type: "raw",
-    allowed_formats: ["pdf", "jpg", "jpeg", "png"],
+    resource_type: "auto",
+    allowed_formats: ["pdf", "jpg", "jpeg", "png", "webp"],
     public_id: `doc_${Date.now()}_${Math.round(Math.random() * 1e6)}`,
+    // Add transformation to ensure inline viewing for PDFs
+    transformation: [
+      { flags: "attachment:false" }
+    ],
   }),
 });
 
 const docsFilter = (req, file, cb) => {
-  const allowed = [".pdf", ".jpg", ".jpeg", ".png"];
+  const allowed = [".pdf", ".jpg", ".jpeg", ".png", ".webp"];
   const ext = path.extname(file.originalname).toLowerCase();
   if (allowed.includes(ext)) cb(null, true);
   else
     cb(
-      new Error("Only PDF, JPG, JPEG, PNG files are allowed for documents"),
+      new Error("Only PDF and image files are allowed for documents"),
       false,
     );
 };

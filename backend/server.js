@@ -10,11 +10,13 @@ const connectDB = require("./config/db");
 // Route imports
 const userAuthRoutes = require("./routes/userAuth");
 const ownerAuthRoutes = require("./routes/ownerAuth");
+const ownerRoutes = require("./routes/owner"); // Owner management routes
 const bikeOwnerAuthRoutes = require("./routes/bikeOwnerAuth");
-const adminAuthRoutes = require("./routes/adminAuth"); // Phase 2: Admin JWT auth (replaces x-admin-secret)
+const adminAuthRoutes = require("./routes/adminAuth"); // Admin JWT auth (replaces x-admin-secret)
 const hotelRoutes = require("./routes/hotels");
 const roomRoutes = require("./routes/rooms");
 const bookingRoutes = require("./routes/bookings");
+const paymentRoutes = require("./routes/payment"); // Payment and payout routes
 const adminRoutes = require("./routes/admin");
 const bikeRoutes = require("./routes/bikes");
 const govAuthRoutes = require("./routes/govAuth"); // Government official auth
@@ -123,11 +125,13 @@ app.use(cookieParser());
 // Routes with rate limiting (Phase 2.4)
 app.use("/user", userAuthRoutes); // POST /user/register, /user/login, /user/refresh, /user/logout
 app.use("/owner", ownerAuthRoutes); // POST /owner/register, /owner/login, /owner/refresh, /owner/logout (Hotel owners)
+app.use("/owner", ownerRoutes); // GET /owner/upi-id, PUT /owner/upi-id, GET /owner/payouts, etc.
 app.use("/bike-owner", bikeOwnerAuthRoutes); // POST /bike-owner/register, /bike-owner/login, /bike-owner/refresh, /bike-owner/logout (Bike rental owners)
 app.use("/admin-auth", adminAuthRoutes); // Phase 2: POST /admin-auth/login, /admin-auth/refresh, /admin-auth/logout
 app.use("/hotels", hotelRoutes); // GET /hotels, GET /hotels/:id, POST /hotels/add, etc.
 app.use("/rooms", roomRoutes); // POST /rooms/add, PUT /rooms/:id
 app.use("/bookings", bookingRoutes); // POST /create-order, /verify-payment, GET /my-bookings
+app.use("/payment", paymentRoutes); // POST /payment/create-order, /payment/verify, /payment/webhook, etc.
 app.use("/admin", adminRoutes); // GET /admin/stats, PUT /admin/owners/:id/approve, etc. (requires JWT auth)
 app.use("/bikes", bikeRoutes); // GET /bikes, POST /bikes/add, etc.
 app.use("/gov", govAuthRoutes); // POST /gov/register, /gov/login, /gov/refresh, /gov/logout, GET /gov/me

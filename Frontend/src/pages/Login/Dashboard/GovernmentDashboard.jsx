@@ -114,9 +114,14 @@ export default function GovernmentDashboard() {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(selectedFile.type)) {
+        alert("Only PDF and image files (JPG, PNG, WebP) are allowed.");
+        return;
+      }
       const url = URL.createObjectURL(selectedFile);
       setFilePreview(url);
-      setFileType(selectedFile.type.includes("image") ? "image" : "pdf");
+      setFileType(selectedFile.type.startsWith('image/') ? 'image' : 'pdf');
       setFile(selectedFile);
     }
   };
@@ -317,8 +322,8 @@ export default function GovernmentDashboard() {
                     {uploading ? "Uploading..." : "Publish Notice"}
                   </button>
                   <label className="cursor-pointer border border-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-xl hover:bg-gray-50 transition-all ml-auto mr-2">
-                     PDF/Image
-                    <input type="file" accept="application/pdf, image/*" className="hidden" onChange={handleFileChange} />
+                     PDF or Image
+                    <input type="file" accept=".pdf,image/*" className="hidden" onChange={handleFileChange} />
                   </label>
                   <button type="button" onClick={() => { setUploadForm({ title: "", content: "", category: "General", severity: "Medium", affectedAreas: "" }); setFilePreview(null); setFileType(null); setFile(null); }}
                     className="border border-gray-300 text-gray-700 font-semibold px-6 py-3 rounded-xl hover:bg-gray-50 transition-all">
@@ -331,11 +336,11 @@ export default function GovernmentDashboard() {
             {/* Preview Panel */}
             <div className="hidden lg:flex lg:flex-col">
               <h2 className="text-2xl font-bold text-gray-900 mb-1">File Preview</h2>
-              <p className="text-gray-500 text-sm mb-6">Preview of your selected PDF or Image.</p>
+              <p className="text-gray-500 text-sm mb-6">Preview of your selected file.</p>
               <div className="bg-white border border-gray-200 rounded-xl shadow-sm flex-1 min-h-[500px] flex items-center justify-center overflow-hidden relative">
                 {filePreview ? (
-                  fileType === "image" ? (
-                    <img src={filePreview} alt="Preview" className="w-full h-full object-contain p-2" />
+                  fileType === 'image' ? (
+                    <img src={filePreview} className="max-w-full max-h-full object-contain" alt="File Preview" />
                   ) : (
                     <iframe src={`${filePreview}#toolbar=0`} className="w-full h-full border-none" title="PDF Preview" />
                   )
@@ -343,7 +348,7 @@ export default function GovernmentDashboard() {
                   <div className="text-center text-gray-400 p-8">
                     <div className="text-6xl mb-4">📄</div>
                     <p className="font-medium text-gray-500 mb-1">No file selected</p>
-                    <p className="text-sm">Upload a PDF or Image to preview it here.</p>
+                    <p className="text-sm">Upload a PDF or image to preview it here.</p>
                   </div>
                 )}
               </div>
@@ -469,13 +474,27 @@ export default function GovernmentDashboard() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
               <h3 className="text-lg font-bold text-gray-900">Attachment Preview</h3>
-              <button onClick={() => setViewAttachmentUrl(null)} className="text-gray-500 hover:text-gray-700 font-bold text-xl">✕</button>
+              <div className="flex items-center gap-2">
+                <a
+                  href={viewAttachmentUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-[#1a5c38] hover:text-[#2d7a50] hover:underline"
+                >
+                  Open in New Tab
+                </a>
+                <button onClick={() => setViewAttachmentUrl(null)} className="text-gray-500 hover:text-gray-700 font-bold text-xl ml-2">✕</button>
+              </div>
             </div>
             <div className="flex-1 bg-gray-100 flex items-center justify-center p-4 overflow-hidden">
               {viewAttachmentUrl.toLowerCase().match(/\.(jpg|jpeg|png|webp|avif)$/i) || viewAttachmentUrl.toLowerCase().includes('image') ? (
                 <img src={viewAttachmentUrl} className="max-w-full max-h-full object-contain" alt="Notice Attachment" />
               ) : (
-                <iframe src={viewAttachmentUrl.includes('?') ? `${viewAttachmentUrl}&fl_attachment=false` : `${viewAttachmentUrl}?fl_attachment=false`} className="w-full h-full border-none rounded-lg bg-white" title="PDF Preview" />
+                <iframe
+                  src={viewAttachmentUrl}
+                  className="w-full h-full border-none rounded-lg bg-white"
+                  title="PDF Preview"
+                />
               )}
             </div>
           </div>

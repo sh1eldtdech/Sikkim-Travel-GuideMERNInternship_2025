@@ -22,6 +22,8 @@ router.post("/upload", protectGovOfficial, uploadDocs.single("file"), validateBo
     const { title, content, category, severity, affectedAreas } = req.body;
     const official = req.govOfficial;
     const attachmentUrl = req.file ? req.file.path : null;
+    const attachmentType = req.file ? req.file.mimetype : null;
+    const attachmentName = req.file ? req.file.originalname : null;
 
     const notice = await Notice.create({
       title,
@@ -30,6 +32,8 @@ router.post("/upload", protectGovOfficial, uploadDocs.single("file"), validateBo
       severity: severity || "Medium",
       affectedAreas: affectedAreas || "",
       attachmentUrl,
+      attachmentType,
+      attachmentName,
       uploadedBy: official._id,
       department: official.department,
       officialName: official.name,
@@ -61,7 +65,7 @@ router.get("/all", async (req, res) => {
     const now = new Date();
     const notices = await Notice.find({ expiresAt: { $gt: now } })
       .sort({ createdAt: -1 })
-      .select("title content category severity affectedAreas department officialName attachmentUrl createdAt expiresAt");
+      .select("title content category severity affectedAreas department officialName attachmentUrl attachmentType attachmentName createdAt expiresAt");
     res.json({ notices });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch notices." });

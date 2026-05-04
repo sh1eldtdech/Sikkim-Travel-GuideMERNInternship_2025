@@ -31,6 +31,14 @@ const noticeSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    attachmentType: {
+      type: String,
+      default: null,
+    },
+    attachmentName: {
+      type: String,
+      default: null,
+    },
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "GovernmentOfficial",
