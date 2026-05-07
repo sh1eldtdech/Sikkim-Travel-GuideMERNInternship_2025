@@ -96,9 +96,9 @@ export default function BookingPage() {
           try {
             // Step 4: Verify payment with backend
             const result = await verifyPayment({
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
               bookingId: orderData.bookingId,
             });
 

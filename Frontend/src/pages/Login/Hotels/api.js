@@ -57,7 +57,7 @@ export const createOrder = (data) =>
   });
 
 export const verifyPayment = (data) =>
-  apiFetch("/bookings/verify-payment", {
+  apiFetch("/api/payment/verify", {
     method: "POST",
     body: JSON.stringify(data),
   });

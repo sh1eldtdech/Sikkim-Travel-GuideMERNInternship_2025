@@ -146,6 +146,8 @@ function useNavTop() {
   };
 }
 
+import SEO from "../../components/SEO/SEO";
+
 export default function Home() {
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -182,6 +184,10 @@ export default function Home() {
 
   return (
     <div className="hm">
+      <SEO 
+        title="Home" 
+        description="Welcome to Sikkim Travel Guide or Sikkim Pal. Discover the best places, hotels, and bikes in Sikkim. Real-time alerts, curated experiences, and more."
+      />
 
       {/* ══════ HERO — video only, your text shows in video ══════ */}
       <div className="hm-hero">

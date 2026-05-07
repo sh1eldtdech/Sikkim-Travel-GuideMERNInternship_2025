@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Places.css";
+import SEO from "../../components/SEO/SEO";
 
 // North Sikkim images
 import northImg1 from "../../assets/North Sikkim/Zero Point.jpg";
@@ -85,6 +86,10 @@ const ImageCarousel = ({ images, alt }) => {
 const Places = () => {
   return (
     <div className="places-page">
+      <SEO 
+        title="Destinations & Places" 
+        description="Explore the best places to visit in Sikkim. Discover North, East, West, and South Sikkim's hidden gems, ancient monasteries, and majestic landscapes."
+      />
       {/* Hero Section */}
       <section className="places-hero">
         <div className="places-hero-overlay"></div>
