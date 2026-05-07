@@ -28,17 +28,16 @@ export const isRazorpayLoaded = () => {
  * Create Razorpay order
  * @param {string} bookingId - Booking ID
  * @param {number} amount - Amount in rupees
- * @param {string} token - Auth token
  * @returns {Promise<object>} - Order details
  */
-export const createRazorpayOrder = async (bookingId, amount, token) => {
+export const createRazorpayOrder = async (bookingId, amount) => {
   try {
     const response = await fetch("/api/payment/create-order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
+      credentials: "include",
       body: JSON.stringify({
         bookingId,
         amount,
@@ -60,17 +59,16 @@ export const createRazorpayOrder = async (bookingId, amount, token) => {
 /**
  * Verify Razorpay payment
  * @param {object} paymentDetails - Payment details from Razorpay
- * @param {string} token - Auth token
  * @returns {Promise<object>} - Verification result
  */
-export const verifyRazorpayPayment = async (paymentDetails, token) => {
+export const verifyRazorpayPayment = async (paymentDetails) => {
   try {
     const response = await fetch("/api/payment/verify", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
+      credentials: "include",
       body: JSON.stringify(paymentDetails),
     });
 
@@ -89,16 +87,13 @@ export const verifyRazorpayPayment = async (paymentDetails, token) => {
 /**
  * Get payment status for booking
  * @param {string} bookingId - Booking ID
- * @param {string} token - Auth token
  * @returns {Promise<object>} - Payment status
  */
-export const getPaymentStatus = async (bookingId, token) => {
+export const getPaymentStatus = async (bookingId) => {
   try {
     const response = await fetch(`/api/payment/status/${bookingId}`, {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -116,16 +111,13 @@ export const getPaymentStatus = async (bookingId, token) => {
 /**
  * Cancel payment for booking
  * @param {string} bookingId - Booking ID
- * @param {string} token - Auth token
  * @returns {Promise<object>} - Cancellation result
  */
-export const cancelPayment = async (bookingId, token) => {
+export const cancelPayment = async (bookingId) => {
   try {
     const response = await fetch(`/api/payment/cancel/${bookingId}`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      credentials: "include",
     });
 
     if (!response.ok) {

@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Block private/auth-only sections from being indexed
+Disallow: /admin
+Disallow: /government-dashboard
+Disallow: /owner/
+Disallow: /my-bookings
+Disallow: /booking/
+Disallow: /traveler-login
+Disallow: /government-login
+Disallow: /business-login
+Disallow: /owner-login
+
+Sitemap: https://sikkimpal.in/sitemap.xml

@@ -7,15 +7,18 @@ import App from './App.jsx'
 import { OwnerAuthProvider } from './context/OwnerAuthContext.jsx'
 import { BikeOwnerAuthProvider } from './context/BikeOwnerAuthContext.jsx'
 import { GovAuthProvider } from './context/GovAuthContext.jsx'
+import { UserAuthProvider } from './context/UserAuthContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <GovAuthProvider>
-      <OwnerAuthProvider>
-        <BikeOwnerAuthProvider>
-          <App />
-        </BikeOwnerAuthProvider>
-      </OwnerAuthProvider>
-    </GovAuthProvider>
+    <UserAuthProvider>
+      <GovAuthProvider>
+        <OwnerAuthProvider>
+          <BikeOwnerAuthProvider>
+            <App />
+          </BikeOwnerAuthProvider>
+        </OwnerAuthProvider>
+      </GovAuthProvider>
+    </UserAuthProvider>
   </StrictMode>,
 )

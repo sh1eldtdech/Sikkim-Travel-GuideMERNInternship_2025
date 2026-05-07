@@ -15,17 +15,10 @@ const PaymentForm = ({ booking, onSuccess, onError, onCancel }) => {
         await loadRazorpayScript();
       }
 
-      // Get user token
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Please login to continue");
-      }
-
-      // Create Razorpay order
+      // Create Razorpay order (authentication is handled via cookies)
       const orderResponse = await createRazorpayOrder(
         booking._id,
-        booking.totalAmount,
-        token
+        booking.totalAmount
       );
 
       const { orderId, amount, keyId } = orderResponse;
@@ -42,15 +35,14 @@ const PaymentForm = ({ booking, onSuccess, onError, onCancel }) => {
           try {
             setLoading(true);
 
-            // Verify payment
+            // Verify payment (authentication is handled via cookies)
             const verifyResponse = await verifyRazorpayPayment(
               {
                 razorpayOrderId: response.razorpay_order_id,
                 razorpayPaymentId: response.razorpay_payment_id,
                 razorpaySignature: response.razorpay_signature,
                 bookingId: booking._id,
-              },
-              token
+              }
             );
 
             if (verifyResponse.success) {

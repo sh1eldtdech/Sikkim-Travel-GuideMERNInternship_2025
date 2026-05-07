@@ -68,7 +68,6 @@ const bookingSchema = new mongoose.Schema(
       },
       amount: {
         type: Number,
-        required: true,
       },
       currency: {
         type: String,

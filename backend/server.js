@@ -36,55 +36,68 @@ app.use(
 );
 
 // Compression middleware for response compression
-app.use(compression({
-  filter: (req, res) => {
-    if (req.headers['x-no-compression']) {
-      return false;
-    }
-    return compression.filter(req, res);
-  },
-  threshold: 1024, // Only compress responses larger than 1KB
-  level: 6, // Compression level (0-9, 6 is default)
-}));
+app.use(
+  compression({
+    filter: (req, res) => {
+      if (req.headers["x-no-compression"]) {
+        return false;
+      }
+      return compression.filter(req, res);
+    },
+    threshold: 1024, // Only compress responses larger than 1KB
+    level: 6, // Compression level (0-9, 6 is default)
+  }),
+);
 
 // Cache headers for static assets and API responses
 app.use((req, res, next) => {
   // Cache static assets for 1 year
-  if (req.path.match(/\.(jpg|jpeg|png|gif|webp|avif|css|js|woff|woff2|ttf|eot)$/i)) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  if (
+    req.path.match(/\.(jpg|jpeg|png|gif|webp|avif|css|js|woff|woff2|ttf|eot)$/i)
+  ) {
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
   }
   // Cache API responses for 5 minutes (except auth endpoints)
-  else if (!req.path.match(/\/(user|owner|bike-owner|admin-auth|gov)\/(register|login|refresh|logout)/)) {
-    res.setHeader('Cache-Control', 'public, max-age=300');
+  else if (
+    !req.path.match(
+      /\/(user|owner|bike-owner|admin-auth|gov)\/(register|login|refresh|logout)/,
+    )
+  ) {
+    res.setHeader("Cache-Control", "public, max-age=300");
   }
   next();
 });
 
 const normalizeOrigin = (origin = "") =>
-  origin.trim().replace(/\/$/, "").toLowerCase();
+  origin.trim().replace(/\/+$/, "").toLowerCase();
+
 const allowedOrigins = (process.env.CLIENT_URL || "")
   .split(",")
-  .filter(Boolean)
-  .map(normalizeOrigin);
+  .map(normalizeOrigin)
+  .filter(Boolean);
+
 const isLoopbackOrigin = (origin = "") =>
   /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\]|0\.0\.0\.0):\d+$/.test(
     normalizeOrigin(origin),
   );
 
+const isAllowedOrigin = (origin = "") => {
+  const normalizedOrigin = normalizeOrigin(origin);
+
+  return (
+    !origin ||
+    allowedOrigins.includes(normalizedOrigin) ||
+    isLoopbackOrigin(normalizedOrigin)
+  );
+};
+
 const corsOptions = {
   origin(origin, callback) {
-    const normalizedOrigin = normalizeOrigin(origin || "");
-    if (
-      !origin ||
-      allowedOrigins.includes(normalizedOrigin) ||
-      isLoopbackOrigin(normalizedOrigin)
-    ) {
+    if (isAllowedOrigin(origin)) {
       return callback(null, true);
     }
 
-    return callback(
-      new Error(`CORS blocked origin: ${normalizedOrigin || "unknown"}`),
-    );
+    return callback(new Error(`CORS blocked origin: ${origin || "unknown"}`));
   },
   credentials: true,
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
@@ -97,19 +110,6 @@ const corsOptions = {
   ],
   optionsSuccessStatus: 204,
   maxAge: 86400,
-};
-
-const CORS_METHODS = "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS";
-const CORS_ALLOWED_HEADERS =
-  "Content-Type,Authorization,X-Requested-With,Accept,Origin";
-
-const isAllowedOrigin = (origin = "") => {
-  const normalizedOrigin = normalizeOrigin(origin || "");
-  return (
-    !origin ||
-    allowedOrigins.includes(normalizedOrigin) ||
-    isLoopbackOrigin(normalizedOrigin)
-  );
 };
 
 app.use(cors(corsOptions));

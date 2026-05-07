@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { createOrder, verifyPayment, getCurrentUser } from "../api";
+import { createOrder, verifyPayment } from "../api";
+import { useUserAuth } from "../../../../context/UserAuthContext";
 import "./BookingPage.css";
 
 export default function BookingPage() {
   const { hotelId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user } = useUserAuth();
 
   const roomId = searchParams.get("room");
   const roomType = searchParams.get("type") || "Deluxe Room";
@@ -22,22 +24,6 @@ export default function BookingPage() {
   const [bookingRef, setBookingRef] = useState(null);
   const [error, setError] = useState("");
   const [breakdown, setBreakdown] = useState(null);
-
-  useEffect(() => {
-    const validateSession = async () => {
-      try {
-        await getCurrentUser();
-      } catch {
-        navigate("/traveler-login", {
-          state: {
-            returnTo: `/booking/${hotelId}?room=${roomId}&type=${encodeURIComponent(roomType)}&price=${pricePerNight}`,
-          },
-        });
-      }
-    };
-
-    validateSession();
-  }, [navigate, hotelId, roomId, roomType, pricePerNight]);
 
   useEffect(() => {
     if (checkIn && checkOut) {
@@ -125,9 +111,9 @@ export default function BookingPage() {
           }
         },
         prefill: {
-          name: "Guest",
-          email: "",
-          contact: "",
+          name: user?.name || "Guest",
+          email: user?.email || "",
+          contact: user?.phone || "",
         },
         theme: { color: "#1a1a2e" },
         modal: {

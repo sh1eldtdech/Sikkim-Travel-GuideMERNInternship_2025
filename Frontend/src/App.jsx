@@ -11,6 +11,7 @@ import Footers from "./components/Footers/Footers";
 import { useOwnerAuth } from "./context/OwnerAuthContext";
 import { useBikeOwnerAuth } from "./context/BikeOwnerAuthContext";
 import { useGovAuth } from "./context/GovAuthContext";
+import { useUserAuth } from "./context/UserAuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -102,6 +103,22 @@ const GovRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/government-login" replace />;
 };
 
+// Protected route wrapper for regular users (tourists)
+const UserRoute = ({ children }) => {
+  const { isAuthenticated, authLoading } = useUserAuth();
+  const location = useLocation();
+  if (authLoading) return null;
+  return isAuthenticated ? (
+    children
+  ) : (
+    <Navigate
+      to="/traveler-login"
+      state={{ returnTo: location.pathname + location.search }}
+      replace
+    />
+  );
+};
+
 function AppContent() {
   const { pathname } = useLocation();
   // Hide site header/footer on the admin dashboard (it has its own layout)
@@ -157,8 +174,22 @@ function AppContent() {
           {/* Tourist Hotel routes */}
           <Route path="/hotels" element={<HotelList />} />
           <Route path="/hotel/:id" element={<HotelDetails />} />
-          <Route path="/booking/:hotelId" element={<BookingPage />} />
-          <Route path="/my-bookings" element={<MyBookings />} />
+          <Route
+            path="/booking/:hotelId"
+            element={
+              <UserRoute>
+                <BookingPage />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/my-bookings"
+            element={
+              <UserRoute>
+                <MyBookings />
+              </UserRoute>
+            }
+          />
 
           {/* Business Owner routes */}
           <Route path="/owner-login" element={<OwnerLogin />} />

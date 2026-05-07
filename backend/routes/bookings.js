@@ -118,7 +118,12 @@ router.post(
         subtotal,
         taxes,
         totalAmount,
-        razorpayOrderId: razorpayOrder.id,
+        paymentDetails: {
+          razorpayOrderId: razorpayOrder.id,
+          amount: totalAmount,
+          currency: "INR",
+          status: "pending",
+        },
         paymentStatus: "pending",
         status: "upcoming",
         // Snapshot
@@ -143,7 +148,8 @@ router.post(
         },
       });
     } catch (err) {
-      res.status(500).json({ message: "An error occurred. Please try again." });
+      console.error("Create order error:", err);
+      res.status(500).json({ message: err.message || "An error occurred. Please try again." });
     }
   },
 );
@@ -192,15 +198,17 @@ router.post(
         return res.status(404).json({ message: "Booking not found" });
 
       // Check idempotency: prevent double-confirmation
-      if (booking.razorpayPaymentId) {
+      if (booking.paymentDetails?.razorpayPaymentId) {
         return res.status(400).json({
           message:
             "Booking already confirmed. Please contact support if you were charged multiple times.",
         });
       }
 
-      booking.razorpayPaymentId = razorpay_payment_id;
-      booking.razorpaySignature = razorpay_signature;
+      booking.paymentDetails.razorpayPaymentId = razorpay_payment_id;
+      booking.paymentDetails.razorpaySignature = razorpay_signature;
+      booking.paymentDetails.status = "completed";
+      booking.paymentDetails.paidAt = new Date();
       booking.paymentStatus = "paid";
       booking.status = "confirmed";
       await booking.save();
@@ -216,7 +224,8 @@ router.post(
         bookingRef: `BKG${booking._id.toString().slice(-8).toUpperCase()}`,
       });
     } catch (err) {
-      res.status(500).json({ message: "An error occurred. Please try again." });
+      console.error("Verify payment error:", err);
+      res.status(500).json({ message: err.message || "An error occurred. Please try again." });
     }
   },
 );

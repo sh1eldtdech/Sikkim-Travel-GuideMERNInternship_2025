@@ -62,7 +62,7 @@ const Headers = () => {
         <div className="sh-bar">
 
           {/* Logo */}
-          <span className="sh-logo" onClick={() => goTo("/")} style={{cursor:"pointer"}}>SH1ELD Tech</span>
+          <span className="sh-logo" onClick={() => goTo("/")} style={{cursor:"pointer"}}>SikkimPal</span>
 
           {/* Desktop Nav */}
           <nav className="sh-nav">
