@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import './components/PageContainer/PageContainer.css'
 import './pages/BikeRental/Dashboard/BikeRentalDashboard.css'
@@ -11,14 +12,16 @@ import { UserAuthProvider } from './context/UserAuthContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <UserAuthProvider>
-      <GovAuthProvider>
-        <OwnerAuthProvider>
-          <BikeOwnerAuthProvider>
-            <App />
-          </BikeOwnerAuthProvider>
-        </OwnerAuthProvider>
-      </GovAuthProvider>
-    </UserAuthProvider>
+    <HelmetProvider>
+      <UserAuthProvider>
+        <GovAuthProvider>
+          <OwnerAuthProvider>
+            <BikeOwnerAuthProvider>
+              <App />
+            </BikeOwnerAuthProvider>
+          </OwnerAuthProvider>
+        </GovAuthProvider>
+      </UserAuthProvider>
+    </HelmetProvider>
   </StrictMode>,
 )
