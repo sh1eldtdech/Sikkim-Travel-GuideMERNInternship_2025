@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router-dom";
 import HomestayImage from "../../assets/Homestays.jpg";
 import BikeImage     from "../../assets/BikeRents.jpg";
 import PlacesImage   from "../../assets/Places.jpg";
-import HeroVideo     from "../../assets/HeroVideo.mp4";
 import CtaBg         from "../../assets/North Sikkim/Gurudongmar Lake.jpg";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -192,8 +191,17 @@ export default function Home() {
       {/* ══════ HERO — video only, your text shows in video ══════ */}
       <div className="hm-hero">
         {/* Main video */}
-        <video ref={videoRef} autoPlay loop muted playsInline className="hm-video">
-          <source src={HeroVideo} type="video/mp4" />
+        <video 
+          ref={videoRef} 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="auto"
+          className="hm-video"
+          poster="https://res.cloudinary.com/dncj0cmt4/video/upload/so_0,w_1280,q_auto,f_auto/v1778424161/HeroVideo_fetolx.jpg"
+        >
+          <source src="https://res.cloudinary.com/dncj0cmt4/video/upload/w_1280,q_auto:eco,f_auto/v1778424161/HeroVideo_fetolx.mp4" type="video/mp4" />
         </video>
         <div className="hm-hero-shade" />
 

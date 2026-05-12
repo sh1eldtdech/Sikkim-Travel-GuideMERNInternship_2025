@@ -1,357 +1,148 @@
 import React from 'react';
-import styles from './SikkimRegion.module.css';
-import Pelling1 from "../../assets/West Sikkim/Pelling.jpg";
-import Yuksom from "../../assets/West Sikkim/Yuksom.webp";
-import VideoHero from "../../components/VideoHero";
+import RegionPage from './RegionPage';
+import Pelling1 from '../../assets/West Sikkim/Pelling.jpg';
+import Yuksom from '../../assets/West Sikkim/Yuksom.webp';
 
-const WestSikkim = () => {
-  const destinations = [
-    {
-      id: 1,
-      name: "Pelling",
-      description: "Pelling, a scenic hill town in West Sikkim, is renowned for its stunning views of Mount Kanchenjunga. This tranquil destination blends natural beauty, rich history, and thrilling adventure. Visitors flock to explore its picturesque landscapes, ancient monasteries, cascading waterfalls, and enjoy activities like trekking and paragliding.",
-      image1: Pelling1,
-      image2: "https://glacialtravels.com/Travel/westsikkim/pelling%20(1).png",
-      highlights1: [
-        "Spectacular views of Mount Kanchenjunga",
-        "Ancient monasteries with rich history",
-        "Perfect base for trekking adventures",
-        "Cascading waterfalls nearby",
-        "Paragliding opportunities available"
-      ],
-      highlights2: [
-        "Peaceful hill station atmosphere",
-        "Photography paradise for nature lovers",
-        "Traditional Sikkimese culture experience",
-        "Cool mountain climate year-round",
-        "Easy access to multiple attractions"
-      ]
-    },
-    {
-      id: 2,
-      name: "Yuksum",
-      description: "Yuksom is known as the \"Gateway to Kanchenjunga\", as it is the starting point for the famous Goecha La Trek. It was also the first capital of Sikkim and has deep historical significance. The Coronation Throne of Norbugang, where the first Chogyal (King) of Sikkim was crowned, is an important historical site.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/Yuksum2.png",
-      image2: Yuksom,
-      highlights1: [
-        "Gateway to Kanchenjunga trek",
-        "First capital of Sikkim",
-        "Historic Coronation Throne site",
-        "Starting point for Goecha La Trek",
-        "Rich royal heritage and culture"
-      ],
-      highlights2: [
-        "Sacred lakes and monasteries nearby",
-        "Traditional Sikkimese architecture",
-        "Trekking equipment and guides available",
-        "Peaceful village atmosphere",
-        "Ancient chortens and prayer wheels"
-      ]
-    },
-    {
-      id: 3,
-      name: "Singhshore Bridge",
-      description: "Singhshore Bridge is one of the highest suspension bridges in Sikkim, offering stunning views of deep valleys, waterfalls, and forests. Located near Uttarey, this bridge is around 200 meters long and is a great spot for adventure lovers and photographers. Walking on the bridge while enjoying the cool mountain air is an unforgettable experience.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/Singshore2.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/Singshore.jpg",
-      highlights1: [
-        "One of highest suspension bridges",
-        "200 meters long engineering marvel",
-        "Spectacular valley views below",
-        "Adventure thrill for bridge walkers",
-        "Perfect for photography enthusiasts"
-      ],
-      highlights2: [
-        "Cool mountain breeze while crossing",
-        "Waterfalls visible from bridge",
-        "Dense forest canopy surroundings",
-        "Safe walkway with protective railings",
-        "Accessible from Uttarey village"
-      ]
-    },
-    {
-      id: 4,
-      name: "Robdentse Ruins",
-      description: "Rabdentse was the second capital of Sikkim (1670–1814) and now stands as a historic ruin surrounded by lush greenery. It offers a glimpse into the royal past of Sikkim, with stone chortens, palace remains, and meditation spots. To reach the site, visitors have to walk through a forested trail, making the journey peaceful and scenic.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/Rabdents2.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/Rabdents.jpg",
-      highlights1: [
-        "Second capital of Sikkim ruins",
-        "Stone chortens and palace remains",
-        "Meditation spots among ruins",
-        "Forest trail leads to site",
-        "Peaceful and scenic journey"
-      ],
-      highlights2: [
-        "Royal history from 1670-1814",
-        "Lush greenery surrounds ruins",
-        "Archaeological significance preserved",
-        "Quiet contemplation atmosphere",
-        "Heritage site with cultural value"
-      ]
-    },
-    {
-      id: 5,
-      name: "Kanchanjunga Falls",
-      description: "One of the most famous waterfalls in Sikkim, Kanchenjunga Falls is a massive, multi-tiered waterfall surrounded by dense forests. The water originates from the glaciers of Mount Kanchenjunga, which gives it a powerful and mesmerizing flow. Located near Pelling, it is a popular tourist spot where visitors can take photos, enjoy the sound of cascading water, and even dip their feet in the cold mountain stream.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/KanchanFalls2.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/KanchanFalls.jpg",
-      highlights1: [
-        "Massive multi-tiered waterfall",
-        "Water from Kanchenjunga glaciers",
-        "Powerful and mesmerizing flow",
-        "Dense forest surroundings",
-        "Popular photography destination"
-      ],
-      highlights2: [
-        "Cold mountain stream for dipping",
-        "Cascading water sounds soothing",
-        "Accessible from Pelling town",
-        "Mist creates refreshing atmosphere",
-        "Ideal picnic spot for families"
-      ]
-    },
-    {
-      id: 6,
-      name: "Chenrezig Statue",
-      description: "The Chenrezig Statue is one of the largest statues of Chenrezig (Avalokiteshvara), the Buddha of Compassion. It stands atop a hill in Pelling, offering panoramic views of the mountains. The glass Sky Walk, built alongside the statue, is the first of its kind in India.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/ChenzStatue.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/ChenzStatue2.jpg",
-      highlights1: [
-        "Largest Chenrezig statue in region",
-        "Buddha of Compassion representation",
-        "Panoramic mountain views from top",
-        "First glass Sky Walk in India",
-        "Spiritual significance for Buddhists"
-      ],
-      highlights2: [
-        "Golden statue gleams in sunlight",
-        "Hilltop location offers 360° views",
-        "Modern engineering with tradition",
-        "Popular meditation and prayer site",
-        "Architectural marvel worth visiting"
-      ]
-    },
-    {
-      id: 7,
-      name: "Varsey Rhododendron Sanctuary",
-      description: "This sanctuary is a paradise for nature lovers, famous for its colorful rhododendron forests. During spring (March–May), the entire region turns into a vibrant mix of red, pink, and white rhododendron flowers. It is also home to Red Pandas, Himalayan Black Bears, and exotic bird species. Trekkers and photographers love this place for its serene atmosphere and breathtaking views of the Kanchenjunga range.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/RhodePark.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/RhodePark2.jpg",
-      highlights1: [
-        "Colorful rhododendron forests",
-        "Spring blooms in red, pink, white",
-        "Home to Red Pandas",
-        "Himalayan Black Bears habitat",
-        "Exotic bird species sanctuary"
-      ],
-      highlights2: [
-        "Trekking paradise for nature lovers",
-        "Photography opportunities abundant",
-        "Serene and peaceful atmosphere",
-        "Kanchenjunga range views",
-        "Biodiversity conservation area"
-      ]
-    },
-    {
-      id: 8,
-      name: "Pamayangtse Gompa",
-      description: "One of the oldest and most important monasteries in Sikkim, Pemayangtse Gompa was founded in the 17th century and belongs to the Nyingma sect of Tibetan Buddhism. The monastery is beautifully decorated with ancient Buddhist murals, sculptures, and thangkas. A major attraction inside is the seven-tiered wooden structure called \"Zangdok Palri,\" which depicts Guru Padmasambhava's heavenly palace.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/PemagystaGompa.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/PemagystaGompa2.jpg",
-      highlights1: [
-        "Oldest monastery in Sikkim",
-        "Founded in 17th century",
-        "Nyingma sect of Tibetan Buddhism",
-        "Ancient Buddhist murals and sculptures",
-        "Beautiful thangkas collection"
-      ],
-      highlights2: [
-        "Seven-tiered Zangdok Palri structure",
-        "Guru Padmasambhava's palace depiction",
-        "Active monastery with monks",
-        "Spiritual ceremonies and rituals",
-        "Architectural heritage preservation"
-      ]
-    },
-    {
-      id: 9,
-      name: "Sky Walk",
-      description: "The Sky Walk in Pelling is the first glass skywalk in India. Built near the Chenrezig Statue, this attraction offers an exciting experience of walking on a transparent floor while enjoying stunning views of the mountains and valleys below. Tourists love taking photos here, as the backdrop includes snow-capped peaks and a giant golden Buddha statue. It's a must-visit for adventure seekers and photographers",
-      image1: "https://glacialtravels.com/Travel/westsikkim/SkyWalk2.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/Sky%20walk.jpg",
-      highlights1: [
-        "First glass skywalk in India",
-        "Transparent floor walking experience",
-        "Stunning mountain and valley views",
-        "Near giant golden Buddha statue",
-        "Adventure thrill for visitors"
-      ],
-      highlights2: [
-        "Perfect photography backdrop",
-        "Snow-capped peaks visible",
-        "Safe glass construction",
-        "Must-visit for thrill seekers",
-        "Unique perspective of landscape"
-      ]
-    },
-    {
-      id: 10,
-      name: "Dzongri La",
-      description: "Dzongri La is a high-altitude mountain pass and a dream destination for trekkers and adventure lovers. Located at around 4,200 meters above sea level, it offers breathtaking views of Mount Kanchenjunga and other Himalayan peaks. The trek to Dzongri is challenging but rewarding, passing through lush forests, rhododendron trails, and alpine meadows.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/Dzongri.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/Dzongri2.jpg",
-      highlights1: [
-        "High-altitude mountain pass at 4,200m",
-        "Dream destination for trekkers",
-        "Breathtaking Kanchenjunga views",
-        "Multiple Himalayan peaks visible",
-        "Challenging but rewarding trek"
-      ],
-      highlights2: [
-        "Lush forests along trek route",
-        "Rhododendron trails in spring",
-        "Alpine meadows with wildflowers",
-        "Adventure lovers paradise",
-        "Spectacular sunrise and sunset views"
-      ]
-    },
-    {
-      id: 11,
-      name: "Kirateshwar Mahadev Temple",
-      description: "This is a sacred Hindu temple dedicated to Lord Shiva, located on the banks of the Rangit River. The temple is believed to be a powerful spiritual site, attracting devotees from across Sikkim and nearby regions. It is especially crowded during the Shivratri festival. The peaceful riverside location makes it a great place for prayers and meditation.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/Mahadev%20temple.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/Mahadev%20temple.png",
-      highlights1: [
-        "Sacred Hindu temple to Lord Shiva",
-        "Located on Rangit River banks",
-        "Powerful spiritual site",
-        "Devotees from across region visit",
-        "Crowded during Shivratri festival"
-      ],
-      highlights2: [
-        "Peaceful riverside location",
-        "Ideal for prayers and meditation",
-        "Holy river adds spiritual ambiance",
-        "Traditional temple architecture",
-        "Religious ceremonies held regularly"
-      ]
-    },
-    {
-      id: 12,
-      name: "Yangthang Farms",
-      description: "Yangthang Farms is a quiet countryside retreat where visitors can experience organic farming and traditional Sikkimese village life. The farm is known for its fresh dairy products, fruits, and vegetables. Tourists can take a relaxing walk, learn about organic farming, and taste homemade Sikkimese food. It's a great spot for nature lovers and those looking for a peaceful rural experience.",
-      image1: "https://glacialtravels.com/Travel/westsikkim/Yangthang.jpg",
-      image2: "https://glacialtravels.com/Travel/westsikkim/Yangthang2.jpg",
-      highlights1: [
-        "Quiet countryside retreat",
-        "Organic farming experience",
-        "Traditional Sikkimese village life",
-        "Fresh dairy products available",
-        "Organic fruits and vegetables"
-      ],
-      highlights2: [
-        "Relaxing walks through farm",
-        "Learn organic farming techniques",
-        "Taste homemade Sikkimese food",
-        "Perfect for nature lovers",
-        "Peaceful rural experience"
-      ]
-    }
-  ];
+const destinations = [
+  {
+    id: 1,
+    name: 'Pelling',
+    description:
+      'Pelling is a scenic hill station in West Sikkim at 2,150 m, renowned for its spectacular close-up views of Mount Kanchenjunga (8,586 m). This tranquil destination blends natural beauty, rich history, and modern adventure from ancient monasteries and cascading waterfalls to paragliding and the first glass skywalk in India.',
+    image1: Pelling1,
+    image2: 'https://glacialtravels.com/Travel/westsikkim/pelling%20(1).png',
+    highlights1: ['Spectacular close-up views of Kanchenjunga', 'Ancient monasteries with rich history', 'Perfect base for trekking adventures', 'Cascading Kanchenjunga waterfall nearby', 'Paragliding and adventure sports available'],
+    highlights2: ['Peaceful hill station atmosphere', 'Photography paradise for nature lovers', 'Traditional Sikkimese cultural experience', 'Cool mountain climate year-round', 'Easy access to multiple top attractions'],
+  },
+  {
+    id: 2,
+    name: 'Yuksom (Yuksam)',
+    description:
+      'Yuksom meaning "Meeting Place of Three Lamas" was the first capital of Sikkim (1642 CE) and is the gateway to the Kanchenjunga National Park and the famous Goecha La trek. The Coronation Throne of Norbugang, where the first Chogyal of Sikkim was crowned, stands as a remarkable historical monument.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/Yuksum2.png',
+    image2: Yuksom,
+    highlights1: ['Gateway to Kanchenjunga National Park', 'First capital of Sikkim since 1642 CE', 'Historic Coronation Throne of Norbugang', 'Starting point for Goecha La trek', 'Rich royal heritage and cultural depth'],
+    highlights2: ['Sacred Dubdi Monastery nearby', 'Traditional Sikkimese village atmosphere', 'Trekking equipment and guides available', 'Ancient chortens and prayer wheels', 'Kathok Lake a sacred site for trekkers'],
+  },
+  {
+    id: 3,
+    name: 'Singhshore Bridge',
+    description:
+      'Singhshore Bridge, at 198 m long and 96 m above the Rimbi River valley, is among the highest suspension bridges in Asia. Located near Uttarey, it spans a dramatic gorge framed by dense forests and waterfalls. Walking across while the bridge sways gently in mountain breeze is an unforgettable adrenaline experience.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/Singshore2.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/Singshore.jpg',
+    highlights1: ['198 m long one of Asia\'s highest suspension bridges', '96 m above the Rimbi River gorge', 'Spectacular valley views below', 'Adrenaline thrill for bridge walkers', 'Perfect for photography enthusiasts'],
+    highlights2: ['Cool mountain breeze while crossing', 'Waterfalls visible from bridge', 'Dense forest canopy surroundings', 'Safe walkway with protective railings', 'Accessible from Uttarey village'],
+  },
+  {
+    id: 4,
+    name: 'Rabdentse Ruins',
+    description:
+      'Rabdentse was the second capital of the Kingdom of Sikkim from 1670 to 1814, and its atmospheric ruins are now a UNESCO protected site. Set on a forested ridge accessible by a scenic trail from Pemayangtse Monastery, the stone palace ruins, three stone chortens, and sweeping valley views make it a hauntingly beautiful place.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/Rabdents2.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/Rabdents.jpg',
+    highlights1: ['Second capital of Sikkim 1670 to 1814', 'UNESCO protected archaeological site', 'Three imposing stone chortens', 'Forest trail leads to site', 'Peaceful and scenic forest journey'],
+    highlights2: ['Sweeping views of the Rangit valley', 'Lush greenery surrounds the ruins', 'Archaeological significance preserved', 'Quiet contemplative atmosphere', 'Easily combined with Pemayangtse visit'],
+  },
+  {
+    id: 5,
+    name: 'Kanchenjunga Falls',
+    description:
+      'Kanchenjunga Falls is a magnificent multi-tiered waterfall fed by the glaciers of Mount Kanchenjunga, creating a powerful and mesmerising flow. Located 4 km from Pelling, the falls plunge through dense forest with a thundering roar, and visitors can dip their feet in the icy glacial stream at its base.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/KanchanFalls2.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/KanchanFalls.jpg',
+    highlights1: ['Massive multi-tiered glacial waterfall', 'Fed by Kanchenjunga glacier meltwater', 'Powerful and mesmerising year-round flow', 'Dense forest surroundings', 'Popular photography destination'],
+    highlights2: ['Cold glacial stream for foot dipping', 'Cascading water sounds deeply soothing', 'Accessible 4 km from Pelling town', 'Mist creates refreshing cool atmosphere', 'Ideal picnic spot for families'],
+  },
+  {
+    id: 6,
+    name: 'Chenrezig Statue',
+    description:
+      'The Chenrezig Statue in Pelling is one of the largest statues of Avalokiteshvara (the Buddha of Compassion) in the region. Standing atop a hill, it offers panoramic views of the Kanchenjunga range. The adjacent glass Sky Walk the first of its kind in India adds a modern thrill to this spiritual site.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/ChenzStatue.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/ChenzStatue2.jpg',
+    highlights1: ['One of the largest Chenrezig statues', 'Buddha of Compassion Avalokiteshvara', 'Panoramic Kanchenjunga mountain views', 'Adjacent to India\'s first glass Sky Walk', 'Deep spiritual significance for Buddhists'],
+    highlights2: ['Golden statue gleams in sunlight', 'Hilltop location offers 360° views', 'Modern engineering meets ancient tradition', 'Popular meditation and prayer site', 'Architectural marvel worth visiting'],
+  },
+  {
+    id: 7,
+    name: 'Varsey Rhododendron Sanctuary',
+    description:
+      'The Varsey Rhododendron Sanctuary is a paradise for nature lovers, covering 104 sq km of Barsey forest in West Sikkim. During spring (March-May), the entire region transforms into a vibrant canvas of 26 rhododendron species. It is also home to red pandas, Himalayan black bears, blood pheasants, and satyr tragopans.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/RhodePark.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/RhodePark2.jpg',
+    highlights1: ['26 rhododendron species in one sanctuary', 'Spring blooms in red, pink, and white', 'Home to Red Pandas (near-threatened)', 'Himalayan Black Bears habitat', 'Rare blood pheasant and satyr tragopan'],
+    highlights2: ['Trekking paradise with minimal crowds', 'Photography opportunities throughout', 'Serene and peaceful forest atmosphere', 'Kanchenjunga range visible on clear days', 'Biodiversity conservation area'],
+  },
+  {
+    id: 8,
+    name: 'Pemayangtse Monastery',
+    description:
+      'Pemayangtse Monastery, founded in the 17th century, is one of the oldest and most revered Buddhist monasteries in Sikkim. Belonging to the Nyingma sect, it houses exquisite murals, sculptures, and rare thangkas. Its greatest treasure is the "Zangdok Palri" a seven-tiered wooden sculpture depicting Guru Padmasambhava\'s heavenly palace.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/PemagystaGompa.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/PemagystaGompa2.jpg',
+    highlights1: ['One of the oldest monasteries in Sikkim', 'Founded in the 17th century, Nyingma sect', 'Exquisite ancient murals and sculptures', 'Rare thangka collection preserved', 'Active monastery with resident monks'],
+    highlights2: ['Seven-tiered Zangdok Palri masterpiece', "Depicts Guru Padmasambhava's celestial abode", 'Spiritual ceremonies and festivals', 'Architectural heritage preservation', 'Adjacent to Rabdentse ruins trail'],
+  },
+  {
+    id: 9,
+    name: 'Sky Walk, Pelling',
+    description:
+      'The Pelling Sky Walk is India\'s first glass skywalk, built adjacent to the Chenrezig Statue. Walking on its transparent glass floor, visitors experience the thrill of floating above the mountainside while gazing at snow-capped Himalayan peaks, deep valleys, and the giant golden Buddha statue a truly unique perspective.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/SkyWalk2.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/Sky%20walk.jpg',
+    highlights1: ["India's first glass skywalk", 'Transparent glass floor experience', 'Stunning mountain and valley views', 'Adjacent to the giant golden Buddha', 'Adrenaline thrill for all visitors'],
+    highlights2: ['Perfect backdrop for photography', 'Snow-capped peaks clearly visible', 'Safe tempered-glass construction', 'Must-visit for adventure seekers', 'Unique floating-above-mountain feeling'],
+  },
+  {
+    id: 10,
+    name: 'Dzongri La',
+    description:
+      'Dzongri La (4,020 m) is a high-altitude trekking pass and one of the finest vantage points for views of the Kanchenjunga massif. The trek from Yuksom to Dzongri (approx. 25 km) passes through lush forests, rhododendron corridors, and alpine meadows considered one of India\'s most rewarding treks.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/Dzongri.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/Dzongri2.jpg',
+    highlights1: ['High-altitude pass at 4,020 m', 'World-class Kanchenjunga views', 'Trek from Yuksom - approx. 25 km', 'Multiple Himalayan peaks visible', 'Challenging, rewarding 5-6 day trek'],
+    highlights2: ['Lush forests and rhododendron corridors', 'Alpine meadows with seasonal wildflowers', 'Dzongri Top 4,280 m panoramic viewpoint', 'Camp under star-filled high-altitude skies', 'Entry via permit from Yuksom checkpoint'],
+  },
+  {
+    id: 11,
+    name: 'Kirateshwar Mahadev Temple',
+    description:
+      'Kirateshwar Mahadev Temple is a revered Hindu temple dedicated to Lord Shiva in his form as Kirateshwar, situated on the banks of the Rangit River in West Sikkim. The riverside location creates a deeply peaceful atmosphere, and the temple is thronged by devotees during the Maha Shivratri festival.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/Mahadev%20temple.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/Mahadev%20temple.png',
+    highlights1: ['Sacred temple to Lord Shiva as Kirateshwar', 'Located on the banks of Rangit River', 'Powerful spiritual site for devotees', 'Draws pilgrims from across the region', 'Thronged during Maha Shivratri festival'],
+    highlights2: ['Peaceful riverside location for prayers', 'Ideal for meditation by the river', 'Holy river adds deep spiritual ambiance', 'Traditional Nepali temple architecture', 'Religious ceremonies held throughout year'],
+  },
+  {
+    id: 12,
+    name: 'Yangthang Farms',
+    description:
+      'Yangthang Farms is a serene countryside retreat in West Sikkim where visitors can experience traditional organic farming and authentic Sikkimese village life. The farm produces fresh dairy, seasonal fruits, and organic vegetables. A relaxing walk through the fields, farm-to-table meals, and interaction with local families make this a soulful rural experience.',
+    image1: 'https://glacialtravels.com/Travel/westsikkim/Yangthang.jpg',
+    image2: 'https://glacialtravels.com/Travel/westsikkim/Yangthang2.jpg',
+    highlights1: ['Quiet countryside organic farm retreat', 'Hands-on organic farming experience', 'Traditional Sikkimese village lifestyle', 'Fresh dairy products made on-site', 'Seasonal organic fruits and vegetables'],
+    highlights2: ['Relaxing walks through farm fields', 'Learn sustainable farming techniques', 'Taste authentic homemade Sikkimese food', 'Perfect for nature and slow-travel lovers', 'Peaceful rural escape from city life'],
+  },
+];
 
-  return (
-    <div className={styles.container}>
-      {/* Hero Section */}
-      <section className={styles.heroSection}>
-        <div className={styles.videoContainer}>
-          <VideoHero 
-            className={styles.heroVideo} 
-            src="https://media.istockphoto.com/id/2216220084/video/breathtaking-landscapes-of-the-everest-region-with-snow-capped-peaks-glacial-rivers-and.mp4?s=mp4-640x640-is&k=20&c=OqiD7F0Y4KSeKAw4wPulhWx4MO7g2MF9yNM2TjkMdgU=" 
-          />
-          <div className={styles.videoOverlay}></div>
-        </div>
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>West Sikkim</h1>
-          <p className={styles.heroCaption}>Your Himalayan Escape</p>
-        </div>
-      </section>
+const quickInfo = [
+  { icon: <polyline points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />, text: 'HQ: Geyzing (Gyalshing)' },
+  { icon: <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0" />, text: 'Altitude: 300 – 4,200 m' },
+  { icon: <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />, text: 'Best time: Mar - May, Oct - Dec' },
+  { icon: <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />, text: 'Must-see: Pelling, Pemayangtse' },
+];
 
-      {/* Overview Section */}
-      <section className={styles.overviewSection}>
-        <h2 className={styles.overviewTitle}>West Sikkim Overview</h2>
-        <p className={styles.overviewText}>
-          West Sikkim enchants visitors with its stunning natural landscapes, vibrant culture, and peaceful spiritual atmosphere. Discover the picturesque hill station of Pelling, famed for its spectacular views of the Kanchenjunga range.
-        </p>
-      </section>
-
-      {/* Destinations Section */}
-      <section className={styles.destinationsSection}>
-        {destinations.map((destination) => (
-          <div key={destination.id} className={styles.destinationCard}>
-            <h3 className={styles.destinationTitle}>{destination.name}</h3>
-            <p className={styles.destinationDescription}>{destination.description}</p>
-            <div className={styles.imageGrid}>
-              <div className={styles.imageContainer}>
-                <div className={styles.flipCard}>
-                  <div className={styles.flipCardInner}>
-                    <div className={styles.flipCardFront}>
-                      <img
-                        src={destination.image1}
-                        alt={`${destination.name} view 1`}
-                        className={styles.destinationImage}
-                        loading="lazy"
-                        width="400"
-                        height="300"
-                        decoding="async"
-                      />
-                    </div>
-                    <div className={styles.flipCardBack}>
-                      <div className={styles.highlightsContent}>
-                        <h4 className={styles.highlightsTitle}>Highlights</h4>
-                        <ul className={styles.highlightsList}>
-                          {destination.highlights1.map((highlight, index) => (
-                            <li key={index} className={styles.highlightItem}>{highlight}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.imageContainer}>
-                <div className={styles.flipCard}>
-                  <div className={styles.flipCardInner}>
-                    <div className={styles.flipCardFront}>
-                      <img
-                        src={destination.image2}
-                        alt={`${destination.name} view 2`}
-                        className={styles.destinationImage}
-                        loading="lazy"
-                        width="400"
-                        height="300"
-                        decoding="async"
-                      />
-                    </div>
-                    <div className={styles.flipCardBack}>
-                      <div className={styles.highlightsContent}>
-                        <h4 className={styles.highlightsTitle}>Highlights</h4>
-                        <ul className={styles.highlightsList}>
-                          {destination.highlights2.map((highlight, index) => (
-                            <li key={index} className={styles.highlightItem}>{highlight}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </section>
-    </div>
-  );
-};
+const WestSikkim = () => (
+  <RegionPage
+    regionName="West Sikkim"
+    heroCaption="Your Himalayan Escape Ancient Monasteries & Wild Peaks"
+    heroVideo="https://res.cloudinary.com/dncj0cmt4/video/upload/w_1280,q_auto:eco,f_auto/v1778500682/West_Sikkim_14mb_nnigu7.mp4"
+    heroPoster="https://res.cloudinary.com/dncj0cmt4/video/upload/so_0,w_1280,q_auto,f_auto/v1778500682/West_Sikkim_14mb_nnigu7.jpg"
+    overviewText="West Sikkim enchants travellers with its stunning natural landscapes, vibrant culture, and deeply spiritual atmosphere. The district is home to some of Sikkim's most treasured landmarks — the first capital Yuksom, India's first glass skywalk in Pelling, the ancient Pemayangtse Monastery, and the awe-inspiring Kanchenjunga Falls. Adventure lovers can trek to the Dzongri La pass, while wildlife enthusiasts can explore the Varsey Rhododendron Sanctuary, home to red pandas and rare Himalayan birds. West Sikkim truly offers the full Himalayan experience."
+    quickInfo={quickInfo}
+    destinations={destinations}
+  />
+);
 
 export default WestSikkim;

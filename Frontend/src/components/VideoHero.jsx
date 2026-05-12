@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-const VideoHero = ({ src, className }) => {
+const VideoHero = ({ src, poster, className }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ const VideoHero = ({ src, className }) => {
   }, []);
 
   return (
-    <video ref={videoRef} className={className} muted loop playsInline preload="none">
+    <video ref={videoRef} className={className} muted loop playsInline preload="auto" poster={poster}>
       <source src={src} type="video/mp4" />
     </video>
   );
