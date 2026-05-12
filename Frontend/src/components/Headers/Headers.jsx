@@ -68,9 +68,14 @@ const Headers = () => {
   };
 
   const forceScrolled =
-    pathname.startsWith("/owner") ||
-    pathname.startsWith("/bikes") ||
-    pathname.startsWith("/login");
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/government-login") ||
+    pathname.startsWith("/traveler-login") ||
+    pathname.startsWith("/owner-login") ||
+    pathname.startsWith("/owner/bike-rental/dashboard") ||
+    pathname.startsWith("/owner/bike-rental/my-bikes") ||
+    pathname.startsWith("/owner/bike-rental/edit-bike") ||
+    pathname.startsWith("/owner/bike-rental/bookings");
   const rootClass = [
     "sh-header",
     scrolled || forceScrolled ? "sh-scrolled" : "",
@@ -88,7 +93,7 @@ const Headers = () => {
             onClick={() => goTo("/")}
             style={{ cursor: "pointer" }}
           >
-            Sikkim Pal
+            SikkimPal
           </span>
 
           {/* Desktop Nav */}

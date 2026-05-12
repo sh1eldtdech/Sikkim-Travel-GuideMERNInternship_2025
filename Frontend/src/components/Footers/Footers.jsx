@@ -3,41 +3,41 @@ import { useNavigate } from 'react-router-dom';
 import './Footer.css';
 
 import instagramIcon from '../../assets/icons/instagram.png';
-import facebookIcon  from '../../assets/icons/facebook.png';
-import twitterIcon   from '../../assets/icons/twitter.png';
+import facebookIcon from '../../assets/icons/facebook.png';
+import twitterIcon from '../../assets/icons/twitter.png';
 
 const scrollTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" });
 
 const EXPLORE = [
-  { label:'Home',             to:'/' },
-  { label:'Destinations',     to:'/places' },
-  { label:'Adventure',        to:'/adventure-zone' },
-  { label:'Blogs & Articles', to:'/vlog' },
-  { label:'Hotels & Stays',   to:'/hotels' },
-  { label:'Disaster Alerts',  to:'/disaster-alerts' },
+  { label: 'Home', to: '/' },
+  { label: 'Destinations', to: '/places' },
+  { label: 'Adventure', to: '/adventure-zone' },
+  { label: 'Blogs & Articles', to: '/vlog' },
+  { label: 'Hotels & Stays', to: '/hotels' },
+  { label: 'Disaster Alerts', to: '/disaster-alerts' },
 ];
 
 const DISTRICTS = [
-  { label:'North Sikkim', to:'/north-sikkim' },
-  { label:'East Sikkim',  to:'/east-sikkim' },
-  { label:'West Sikkim',  to:'/west-sikkim' },
-  { label:'South Sikkim', to:'/south-sikkim' },
+  { label: 'North Sikkim', to: '/north-sikkim' },
+  { label: 'East Sikkim', to: '/east-sikkim' },
+  { label: 'West Sikkim', to: '/west-sikkim' },
+  { label: 'South Sikkim', to: '/south-sikkim' },
 ];
 
 const COMPANY = [
-  { label:'About Us',    to:'/about' },
-  { label:'Contact Us',  to:'/contact' },
-  { label:'Admin Login', to:'/login' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Contact Us', to: '/contact' },
+  { label: 'Admin Login', to: '/login' },
 ];
 
 const SOCIALS = [
-  { icon: instagramIcon, alt: 'Instagram',   href: 'https://www.instagram.com', label: 'Instagram', color: '#E1306C', bg: '#fce4ec' },
-  { icon: facebookIcon,  alt: 'Facebook',    href: 'https://www.facebook.com',  label: 'Facebook',  color: '#1877F2', bg: '#e3f0ff' },
-  { icon: twitterIcon,   alt: 'Twitter / X', href: 'https://www.twitter.com',   label: 'Twitter',   color: '#1DA1F2', bg: '#e1f5fe' },
+  { icon: instagramIcon, alt: 'Instagram', href: 'https://www.instagram.com', label: 'Instagram', color: '#E1306C', bg: '#fce4ec' },
+  { icon: facebookIcon, alt: 'Facebook', href: 'https://www.facebook.com', label: 'Facebook', color: '#1877F2', bg: '#e3f0ff' },
+  { icon: twitterIcon, alt: 'Twitter / X', href: 'https://www.twitter.com', label: 'Twitter', color: '#1DA1F2', bg: '#e1f5fe' },
 ];
 
 export default function Footers() {
-  const year     = new Date().getFullYear();
+  const year = new Date().getFullYear();
   const navigate = useNavigate();
 
   const goTo = (path) => { scrollTop(); navigate(path); };
@@ -52,7 +52,7 @@ export default function Footers() {
 
           {/* Brand */}
           <div className="ft-brand">
-            <span className="ft-logo" onClick={() => goTo("/")} style={{ cursor:"pointer" }}>
+            <span className="ft-logo" onClick={() => goTo("/")} style={{ cursor: "pointer" }}>
               SH1ELD Tech
             </span>
             <p className="ft-tagline">

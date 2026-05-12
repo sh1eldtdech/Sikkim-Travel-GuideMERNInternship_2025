@@ -5,6 +5,8 @@ import { useOwnerAuth } from "../../../context/OwnerAuthContext";
 import { useBikeOwnerAuth } from "../../../context/BikeOwnerAuthContext";
 import API from "../../../utils/api";
 import styles from "./OwnerLogin.module.css";
+import { ArrowLeft, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 
 /* ── Business type definitions ─────────────────────────────────────── */
 const BUSINESS_TYPES = [
@@ -110,6 +112,10 @@ const OwnerLogin = () => {
   const { login: bikeOwnerLogin } = useBikeOwnerAuth();
 
   const [activeTab, setActiveTab] = useState("login");
+
+  // Password visibility state
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegPassword, setShowRegPassword] = useState(false);
 
   /* Login state */
   const [loginForm, setLoginForm] = useState({
@@ -246,11 +252,17 @@ const OwnerLogin = () => {
     }
   };
 
+  const handleGoogleSignIn = () => {
+    // TODO: Implement Google OAuth for business owners
+    console.log("Google Sign-In clicked");
+  };
+
   return (
     <div className={styles.page}>
       <div className={styles.card}>
         {/* Back button */}
         <button className={styles.backBtn} onClick={() => navigate("/login")}>
+          <ArrowLeft size={16} />
           Back
         </button>
 
@@ -283,30 +295,51 @@ const OwnerLogin = () => {
         {/* ── Login Form ── */}
         {activeTab === "login" && (
           <form className={styles.form} onSubmit={handleLogin}>
+            {/* Email */}
             <div className={styles.fieldGroup}>
               <label>Email Address</label>
-              <input
-                type="email"
-                placeholder="owner@business.com"
-                value={loginForm.email}
-                onChange={(e) =>
-                  setLoginForm({ ...loginForm, email: e.target.value })
-                }
-                required
-              />
+              <div className={styles.inputWrapper}>
+                <Mail size={18} className={styles.inputIcon} />
+                <input
+                  type="email"
+                  placeholder="owner@business.com"
+                  value={loginForm.email}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, email: e.target.value })
+                  }
+                  style={{ paddingLeft: "42px" }}
+                  required
+                />
+              </div>
             </div>
+
+            {/* Password */}
             <div className={styles.fieldGroup}>
               <label>Password</label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={loginForm.password}
-                onChange={(e) =>
-                  setLoginForm({ ...loginForm, password: e.target.value })
-                }
-                required
-              />
+              <div className={styles.passwordWrapper}>
+                <Lock size={18} className={styles.inputIcon} />
+                <input
+                  type={showLoginPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={loginForm.password}
+                  onChange={(e) =>
+                    setLoginForm({ ...loginForm, password: e.target.value })
+                  }
+                  style={{ paddingLeft: "42px", paddingRight: "45px" }}
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowLoginPassword((p) => !p)}
+                  tabIndex={-1}
+                >
+                  {showLoginPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
+
+            {/* Business Type */}
             <div className={styles.fieldGroup}>
               <label>Select Business Type</label>
               <BusinessTypeSelect
@@ -325,6 +358,19 @@ const OwnerLogin = () => {
             >
               {loginLoading ? "Logging in..." : "Login to Dashboard"}
             </button>
+
+            <div className={styles.divider}>
+              <span>Or sign in with</span>
+            </div>
+            <button
+              type="button"
+              className={styles.googleButton}
+              onClick={handleGoogleSignIn}
+            >
+              <FcGoogle size={22} />
+              Sign in with Google
+            </button>
+
             <p className={styles.switchText}>
               Don't have an account?{" "}
               <span onClick={() => setActiveTab("register")}>
@@ -377,15 +423,26 @@ const OwnerLogin = () => {
             </div>
             <div className={styles.fieldGroup}>
               <label>Password</label>
-              <input
-                type="password"
-                placeholder="Create a strong password"
-                value={regForm.password}
-                onChange={(e) =>
-                  setRegForm({ ...regForm, password: e.target.value })
-                }
-                required
-              />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showRegPassword ? "text" : "password"}
+                  placeholder="Create a strong password"
+                  value={regForm.password}
+                  onChange={(e) =>
+                    setRegForm({ ...regForm, password: e.target.value })
+                  }
+                  style={{ paddingRight: "45px" }}
+                  required
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowRegPassword((p) => !p)}
+                  tabIndex={-1}
+                >
+                  {showRegPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
             <div className={styles.fieldGroup}>
               <label>Select Business Type</label>
