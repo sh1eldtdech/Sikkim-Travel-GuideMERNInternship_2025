@@ -30,14 +30,8 @@ const ContactUs = lazy(() => import("./pages/Contact Us/ContactUs"));
 const Login = lazy(() => import("./pages/Login/Login"));
 const Traveler = lazy(() => import("./pages/Login/Traveler"));
 const Government = lazy(() => import("./pages/Login/Government"));
-const Business = lazy(() => import("./pages/Login/Business"));
 const DisasterAlert = lazy(() => import("./pages/Disaster/DisasterAlert"));
-const SikkimTourDashboard = lazy(
-  () => import("./pages/Login/Dashboard/Dashboard"),
-);
-const GovernmentDashboard = lazy(
-  () => import("./pages/Login/Dashboard/GovernmentDashboard"),
-);
+const GovernmentDashboard = lazy(() => import("./pages/Login/Dashboard/GovernmentDashboard"));
 const Article = lazy(() => import("./pages/Vlog/Article"));
 const MyBookings = lazy(() => import("./pages/Login/Hotels/MyBookings/MyBookings"));
 
@@ -159,7 +153,6 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/traveler-login" element={<Traveler />} />
           <Route path="/government-login" element={<Government />} />
-          <Route path="/business-login" element={<Business />} />
           <Route path="/disaster-alerts" element={<DisasterAlert />} />
           <Route
             path="/government-dashboard"

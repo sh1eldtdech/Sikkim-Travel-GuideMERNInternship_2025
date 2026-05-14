@@ -3,9 +3,9 @@ import "./Home.css";
 import { Link, useNavigate } from "react-router-dom";
 
 import HomestayImage from "../../assets/Homestays.jpg";
-import BikeImage     from "../../assets/BikeRents.jpg";
-import PlacesImage   from "../../assets/Places.jpg";
-import CtaBg         from "../../assets/North Sikkim/Gurudongmar Lake.jpg";
+import BikeImage from "../../assets/BikeRents.jpg";
+import PlacesImage from "../../assets/Places.jpg";
+import CtaBg from "../../assets/North Sikkim/Gurudongmar Lake.jpg";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
@@ -51,51 +51,51 @@ import southImg6 from "../../assets/South Sikkim/TendongHill.jpg";
 /* ─── District cards — each has its own image carousel ─── */
 const DESTINATIONS = [
   {
-    name:"North Sikkim", tag:"Alpine Wonder",
-    desc:"Glacial lakes, snow-draped valleys and remote tribal villages at the roof of the world.",
-    accent:"#0ea5e9", pill:"#e0f2fe", pillTxt:"#0369a1",
-    link:"/north-sikkim", emoji:"🏔️",
-    slides:[northImg1, northImg2, northImg3, northImg4, northImg5, northImg6],
+    name: "North Sikkim", tag: "Alpine Wonder",
+    desc: "Glacial lakes, snow-draped valleys and remote tribal villages at the roof of the world.",
+    accent: "#0ea5e9", pill: "#e0f2fe", pillTxt: "#0369a1",
+    link: "/north-sikkim", emoji: "🏔️",
+    slides: [northImg1, northImg2, northImg3, northImg4, northImg5, northImg6],
   },
   {
-    name:"East Sikkim", tag:"Cultural Heart",
-    desc:"Gangtok's vibrant bazaars, Nathu La Pass and sweeping Himalayan panoramas at every turn.",
-    accent:"#10b981", pill:"#d1fae5", pillTxt:"#065f46",
-    link:"/east-sikkim", emoji:"🌄",
-    slides:[eastImg1, eastImg2, eastImg3, eastImg4, eastImg5, eastImg6],
+    name: "East Sikkim", tag: "Cultural Heart",
+    desc: "Gangtok's vibrant bazaars, Nathu La Pass and sweeping Himalayan panoramas at every turn.",
+    accent: "#10b981", pill: "#d1fae5", pillTxt: "#065f46",
+    link: "/east-sikkim", emoji: "🌄",
+    slides: [eastImg1, eastImg2, eastImg3, eastImg4, eastImg5, eastImg6],
   },
   {
-    name:"West Sikkim", tag:"Monastery Trail",
-    desc:"Ancient monasteries on misty ridgelines — Pelling's Kangchenjunga view is simply unmissable.",
-    accent:"#8b5cf6", pill:"#ede9fe", pillTxt:"#5b21b6",
-    link:"/west-sikkim", emoji:"🌿",
-    slides:[westImg1, westImg2, westImg3, westImg4, westImg5, westImg6],
+    name: "West Sikkim", tag: "Monastery Trail",
+    desc: "Ancient monasteries on misty ridgelines — Pelling's Kangchenjunga view is simply unmissable.",
+    accent: "#8b5cf6", pill: "#ede9fe", pillTxt: "#5b21b6",
+    link: "/west-sikkim", emoji: "🌿",
+    slides: [westImg1, westImg2, westImg3, westImg4, westImg5, westImg6],
   },
   {
-    name:"South Sikkim", tag:"Lush Escape",
-    desc:"Terraced cardamom gardens, tropical forests and the serene Ravangla Buddha Park await.",
-    accent:"#f97316", pill:"#ffedd5", pillTxt:"#9a3412",
-    link:"/south-sikkim", emoji:"🌸",
-    slides:[southImg1, southImg2, southImg3, southImg4, southImg5, southImg6],
+    name: "South Sikkim", tag: "Lush Escape",
+    desc: "Terraced cardamom gardens, tropical forests and the serene Ravangla Buddha Park await.",
+    accent: "#f97316", pill: "#ffedd5", pillTxt: "#9a3412",
+    link: "/south-sikkim", emoji: "🌸",
+    slides: [southImg1, southImg2, southImg3, southImg4, southImg5, southImg6],
   },
 ];
 
 const EXPERIENCES = [
-  { img:HomestayImage, title:"Homestays",      sub:"Live Like a Local",  desc:"Wake up to mountain views and share meals cooked over firewood with Sikkimese families.",   tag:"Accommodations", link:"/hotels" },
-  { img:BikeImage,     title:"Bike Rentals",   sub:"Ride the Himalayas", desc:"Conquer high-altitude passes on your own schedule — the open road through clouds awaits.",   tag:"Adventure",      link:"/bikes" },
-  { img:PlacesImage,   title:"Curated Places", sub:"Expert Guides",      desc:"From hidden monasteries to glacial lakes — guides that take you beyond the tourist trail.",   tag:"Discovery",      link:"/places" },
+  { img: HomestayImage, title: "Homestays", sub: "Live Like a Local", desc: "Wake up to mountain views and share meals cooked over firewood with Sikkimese families.", tag: "Accommodations", link: "/hotels" },
+  { img: BikeImage, title: "Bike Rentals", sub: "Ride the Himalayas", desc: "Conquer high-altitude passes on your own schedule — the open road through clouds awaits.", tag: "Adventure", link: "/bikes" },
+  { img: PlacesImage, title: "Curated Places", sub: "Expert Guides", desc: "From hidden monasteries to glacial lakes — guides that take you beyond the tourist trail.", tag: "Discovery", link: "/places" },
 ];
 
 const WHY = [
-  { icon:"🛡️", title:"Safety First",       desc:"Real-time disaster alerts, road conditions and emergency contacts always at your fingertips." },
-  { icon:"🗺️", title:"Local Expertise",    desc:"Built by people who live and breathe Sikkim — not a generic travel aggregator." },
-  { icon:"📱", title:"Always Updated",     desc:"Live weather and permit requirements refreshed around the clock." },
-  { icon:"🌱", title:"Responsible Travel", desc:"We promote eco-conscious tourism that preserves Sikkim's fragile ecosystem." },
-  { icon:"🤝", title:"Community Driven",   desc:"Every listing supports local homestay owners, guides and small businesses." },
-  { icon:"⚡", title:"Instant Access",     desc:"No sign-up friction — find what you need in seconds, plan in minutes." },
+  { icon: "🛡️", title: "Safety First", desc: "Real-time disaster alerts, road conditions and emergency contacts always at your fingertips." },
+  { icon: "🗺️", title: "Local Expertise", desc: "Built by people who live and breathe Sikkim — not a generic travel aggregator." },
+  { icon: "📱", title: "Always Updated", desc: "Live weather and permit requirements refreshed around the clock." },
+  { icon: "🌱", title: "Responsible Travel", desc: "We promote eco-conscious tourism that preserves Sikkim's fragile ecosystem." },
+  { icon: "🤝", title: "Community Driven", desc: "Every listing supports local homestay owners, guides and small businesses." },
+  { icon: "⚡", title: "Instant Access", desc: "No sign-up friction — find what you need in seconds, plan in minutes." },
 ];
 
-const TICKER = ["Gangtok","Lachen","Yumthang","Nathu La","Pelling","Ravangla","Yuksom","Namchi","Rumtek","Tsomgo Lake","Gurudongmar","Zuluk"];
+const TICKER = ["Gangtok", "Lachen", "Yumthang", "Nathu La", "Pelling", "Ravangla", "Yuksom", "Namchi", "Rumtek", "Tsomgo Lake", "Gurudongmar", "Zuluk"];
 
 /* ── Mini carousel inside each district card ── */
 function DistrictCarousel({ slides, accent }) {
@@ -105,7 +105,7 @@ function DistrictCarousel({ slides, accent }) {
   const next = useCallback(() => setIdx(i => (i + 1) % slides.length), [slides.length]);
 
   useEffect(() => {
-    timer.current = setInterval(next, 3000);
+    timer.current = setInterval(next, 2100);
     return () => clearInterval(timer.current);
   }, [next]);
 
@@ -126,8 +126,8 @@ function DistrictCarousel({ slides, accent }) {
             key={i}
             className={`dc-dot ${i === idx ? "dc-dot-on" : ""}`}
             style={i === idx ? { background: accent } : {}}
-            onClick={() => { setIdx(i); clearInterval(timer.current); timer.current = setInterval(next, 3000); }}
-            aria-label={`Slide ${i+1}`}
+            onClick={() => { setIdx(i); clearInterval(timer.current); timer.current = setInterval(next, 2100); }}
+            aria-label={`Slide ${i + 1}`}
           />
         ))}
       </div>
@@ -158,7 +158,7 @@ export default function Home() {
 
   useEffect(() => {
     // Preload first image of each region for fast carousel start
-    [northImg1, eastImg1, westImg1, southImg1].forEach(u => { const i=new Image(); i.src=u; });
+    [northImg1, eastImg1, westImg1, southImg1].forEach(u => { const i = new Image(); i.src = u; });
   }, []);
 
   useEffect(() => {
@@ -183,20 +183,20 @@ export default function Home() {
 
   return (
     <div className="hm">
-      <SEO 
-        title="Home" 
+      <SEO
+        title="Home"
         description="Welcome to Sikkim Travel Guide or Sikkim Pal. Discover the best places, hotels, and bikes in Sikkim. Real-time alerts, curated experiences, and more."
       />
 
       {/* ══════ HERO — video only, your text shows in video ══════ */}
       <div className="hm-hero">
         {/* Main video */}
-        <video 
-          ref={videoRef} 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
           preload="auto"
           className="hm-video"
           poster="https://res.cloudinary.com/dncj0cmt4/video/upload/so_0,w_1280,q_auto,f_auto/v1778424161/HeroVideo_fetolx.jpg"
@@ -212,14 +212,14 @@ export default function Home() {
           </button>
         </div>
 
-        <button className="hm-mute" onClick={toggleMute} aria-label={isMuted?"Unmute":"Mute"}>
+        <button className="hm-mute" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
           {isMuted ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16.5 12c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM19 12c0 3.53-2.61 6.45-6 6.93v-2.06c2.33-.44 4-2.45 4-4.87 0-2.42-1.67-4.43-4-4.87V5.07c3.39.48 6 3.4 6 6.93zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/>
+              <path d="M16.5 12c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM19 12c0 3.53-2.61 6.45-6 6.93v-2.06c2.33-.44 4-2.45 4-4.87 0-2.42-1.67-4.43-4-4.87V5.07c3.39.48 6 3.4 6 6.93zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 0 0 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z" />
             </svg>
           ) : (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
             </svg>
           )}
         </button>
@@ -237,12 +237,12 @@ export default function Home() {
         <div className={`hm-slider-wrap ${v("discover") ? "hm-up hm-d2" : ""}`}>
           <Carousel
             autoPlay infiniteLoop showThumbs={false} showStatus={false}
-            interval={3200} transitionTime={800} swipeable emulateTouch
+            interval={2500} transitionTime={900} swipeable emulateTouch
             useKeyboardArrows showArrows stopOnHover animationHandler="fade"
           >
-            {[Slide1,Slide2,Slide3,Slide4,Slide5].map((img,i) => (
+            {[Slide1, Slide2, Slide3, Slide4, Slide5].map((img, i) => (
               <div className="hm-slide" key={i}>
-                <img src={img} alt={`Slide ${i+1}`} loading="lazy" width="800" height="400" decoding="async" />
+                <img src={img} alt={`Slide ${i + 1}`} loading="lazy" width="800" height="400" decoding="async" />
                 <div className="hm-slide-shade" />
               </div>
             ))}
@@ -264,7 +264,7 @@ export default function Home() {
               key={i}
               onClick={() => go(d.link)}
               className={`hm-dist-card ${v("dist") ? "hm-in" : ""}`}
-              style={{ "--acc": d.accent, animationDelay: `${i * 0.12}s`, cursor:"pointer" }}
+              style={{ "--acc": d.accent, animationDelay: `${i * 0.12}s`, cursor: "pointer" }}
             >
               {/* Image carousel at top of card */}
               <DistrictCarousel slides={d.slides} accent={d.accent} />
@@ -290,7 +290,7 @@ export default function Home() {
       {/* ══════ MARQUEE ══════ */}
       <div className="hm-marquee">
         <div className="hm-marquee-track">
-          {[...TICKER,...TICKER,...TICKER,...TICKER].map((p,i) => (
+          {[...TICKER, ...TICKER, ...TICKER, ...TICKER].map((p, i) => (
             <span key={i} className="hm-mitem">{p}<span className="hm-mdot">✦</span></span>
           ))}
         </div>
@@ -310,7 +310,7 @@ export default function Home() {
               key={i}
               onClick={() => go(e.link)}
               className={`hm-exp-card ${v("exp") ? "hm-in" : ""}`}
-              style={{ animationDelay: `${i * 0.15}s`, cursor:"pointer" }}
+              style={{ animationDelay: `${i * 0.15}s`, cursor: "pointer" }}
             >
               <div className="hm-exp-img">
                 <img src={e.img} alt={e.title} loading="lazy" width="400" height="300" decoding="async" />
@@ -353,7 +353,7 @@ export default function Home() {
       {/* ══════ CTA — image background ══════ */}
       <section className="hm-cta-sec" data-s="cta" style={{ backgroundImage: `url(${CtaBg})` }}>
         <div className="hm-cta-orbs">
-          <div className="orb o1"/><div className="orb o2"/><div className="orb o3"/>
+          <div className="orb o1" /><div className="orb o2" /><div className="orb o3" />
         </div>
         <div className={`hm-cta-inner ${v("cta") ? "hm-up" : ""}`}>
           <span className="hm-cta-badge">🌿 Plan Your Trip Today</span>

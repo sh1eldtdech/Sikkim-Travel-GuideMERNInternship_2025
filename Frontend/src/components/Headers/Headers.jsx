@@ -72,6 +72,7 @@ const Headers = () => {
     pathname.startsWith("/government-login") ||
     pathname.startsWith("/traveler-login") ||
     pathname.startsWith("/owner-login") ||
+    pathname.startsWith("/bikes") ||
     pathname.startsWith("/owner/bike-rental/dashboard") ||
     pathname.startsWith("/owner/bike-rental/my-bikes") ||
     pathname.startsWith("/owner/bike-rental/edit-bike") ||
