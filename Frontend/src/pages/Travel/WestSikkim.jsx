@@ -137,9 +137,9 @@ const WestSikkim = () => (
   <RegionPage
     regionName="West Sikkim"
     heroCaption="Your Himalayan Escape Ancient Monasteries & Wild Peaks"
-    heroVideo="https://res.cloudinary.com/dncj0cmt4/video/upload/w_1280,q_auto:eco,f_auto/v1778500682/West_Sikkim_14mb_nnigu7.mp4"
+    heroVideo="https://res.cloudinary.com/dncj0cmt4/video/upload/v1778500682/West_Sikkim_14mb_nnigu7.mp4"
     heroPoster="https://res.cloudinary.com/dncj0cmt4/video/upload/so_0,w_1280,q_auto,f_auto/v1778500682/West_Sikkim_14mb_nnigu7.jpg"
-    overviewText="West Sikkim enchants travellers with its stunning natural landscapes, vibrant culture, and deeply spiritual atmosphere. The district is home to some of Sikkim's most treasured landmarks — the first capital Yuksom, India's first glass skywalk in Pelling, the ancient Pemayangtse Monastery, and the awe-inspiring Kanchenjunga Falls. Adventure lovers can trek to the Dzongri La pass, while wildlife enthusiasts can explore the Varsey Rhododendron Sanctuary, home to red pandas and rare Himalayan birds. West Sikkim truly offers the full Himalayan experience."
+    overviewText="West Sikkim enchants travellers with its stunning natural landscapes, vibrant culture, and deeply spiritual atmosphere. The district is home to some of Sikkim's most treasured landmarks - the first capital Yuksom, India's first glass skywalk in Pelling, the ancient Pemayangtse Monastery, and the awe-inspiring Kanchenjunga Falls. Adventure lovers can trek to the Dzongri La pass, while wildlife enthusiasts can explore the Varsey Rhododendron Sanctuary, home to red pandas and rare Himalayan birds. West Sikkim truly offers the full Himalayan experience."
     quickInfo={quickInfo}
     destinations={destinations}
   />

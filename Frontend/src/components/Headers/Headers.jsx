@@ -76,6 +76,7 @@ const Headers = () => {
     pathname.startsWith("/owner/bike-rental/dashboard") ||
     pathname.startsWith("/owner/bike-rental/my-bikes") ||
     pathname.startsWith("/owner/bike-rental/edit-bike") ||
+    pathname.startsWith("/owner/bike-rental/add-bike") ||
     pathname.startsWith("/owner/bike-rental/bookings");
   const rootClass = [
     "sh-header",

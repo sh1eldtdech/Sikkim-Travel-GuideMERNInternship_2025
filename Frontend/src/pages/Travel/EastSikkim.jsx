@@ -137,7 +137,7 @@ const EastSikkim = () => (
   <RegionPage
     regionName="East Sikkim"
     heroCaption="Discover the breathtaking beauty of Eastern Himalayas"
-    heroVideo="https://res.cloudinary.com/dncj0cmt4/video/upload/w_1280,q_auto:eco,f_auto/v1778498595/East_sikkim_Hero_Video_12mb_x1e7bl.mp4"
+    heroVideo="https://res.cloudinary.com/dncj0cmt4/video/upload/v1778498595/East_sikkim_Hero_Video_12mb_x1e7bl.mp4"
     heroPoster="https://res.cloudinary.com/dncj0cmt4/video/upload/so_0,w_1280,q_auto,f_auto/v1778498595/East_sikkim_Hero_Video_12mb_x1e7bl.jpg"
     overviewText="East Sikkim, home to the vibrant capital Gangtok, offers a captivating blend of natural beauty, cultural richness, and adventure. Explore the majestic Kanchenjunga the world's third-highest peak and witness breathtaking sunrises over the snow-capped Himalayas. Immerse yourself in the spiritual ambiance of ancient monasteries like Rumtek and Enchey, and delve into the local culture at vibrant markets and handicraft centres. For adventure seekers, East Sikkim offers thrilling opportunities for trekking, hiking, and the legendary Old Silk Route expedition."
     quickInfo={quickInfo}

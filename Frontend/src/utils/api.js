@@ -15,6 +15,7 @@ const getRefreshEndpoint = (url = "", method = "get") => {
   if (
     url.startsWith("/bike-owner") ||
     url.startsWith("/bikes/owner") ||
+    url.startsWith("/bike-bookings") ||
     (url.startsWith("/bikes/") && lowerMethod !== "get")
   ) {
     return "/bike-owner/refresh";
@@ -112,5 +113,25 @@ API.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// Bike Booking API
+export const createBikeOrder = (bookingData) =>
+  API.post("/bike-bookings/create-order", bookingData);
+
+export const verifyBikePayment = (paymentData) =>
+  API.post("/bike-bookings/verify-payment", paymentData);
+
+export const getMyBikeBookings = () => API.get("/bike-bookings/my-bookings");
+
+export const getBikeBookingById = (id) => API.get(`/bike-bookings/${id}`);
+
+export const cancelBikeBooking = (id) =>
+  API.post(`/bike-bookings/${id}/cancel`);
+
+export const getBikeOwnerBookings = () =>
+  API.get("/bike-bookings/owner/bookings");
+
+export const updateBikeBookingStatus = (id, status) =>
+  API.patch(`/bike-bookings/owner/${id}/status`, { status });
 
 export default API;

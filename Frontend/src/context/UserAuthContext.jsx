@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getCurrentUser as apiGetCurrentUser } from "../pages/Login/Hotels/api";
+import { getCurrentUser as apiGetCurrentUser, loginUser as apiLoginUser, registerUser as apiRegisterUser } from "../pages/Login/Hotels/api";
 
 const UserAuthContext = createContext();
 
@@ -50,12 +50,40 @@ export const UserAuthProvider = ({ children }) => {
     }
   };
 
+  const login = async (credentials) => {
+    try {
+      const data = await apiLoginUser(credentials);
+      setUser(data.user);
+      setIsAuthenticated(true);
+      return data;
+    } catch (error) {
+      setUser(null);
+      setIsAuthenticated(false);
+      throw error;
+    }
+  };
+
+  const register = async (userData) => {
+    try {
+      const data = await apiRegisterUser(userData);
+      setUser(data.user);
+      setIsAuthenticated(true);
+      return data;
+    } catch (error) {
+      setUser(null);
+      setIsAuthenticated(false);
+      throw error;
+    }
+  };
+
   const value = {
     user,
     isAuthenticated,
     authLoading,
     checkAuth,
     logout,
+    login,
+    register,
   };
 
   return <UserAuthContext.Provider value={value}>{children}</UserAuthContext.Provider>;

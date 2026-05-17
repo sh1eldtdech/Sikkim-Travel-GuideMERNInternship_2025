@@ -75,6 +75,12 @@ const BikeList = lazy(() => import("./pages/BikeRental/BikeList/BikeList"));
 const BikeDetails = lazy(
   () => import("./pages/BikeRental/BikeDetails/BikeDetails"),
 );
+const BikeBookingSuccess = lazy(
+  () => import("./pages/BikeRental/BikeBookingSuccess/BikeBookingSuccess"),
+);
+const MyBikeBookings = lazy(
+  () => import("./pages/BikeRental/MyBikeBookings/MyBikeBookings"),
+);
 
 // Protected route wrapper for Hotel Owner pages (cookie session + context)
 const OwnerRoute = ({ children }) => {
@@ -240,6 +246,24 @@ function AppContent() {
           {/* Public Bike Rental routes */}
           <Route path="/bikes" element={<BikeList />} />
           <Route path="/bikes/:id" element={<BikeDetails />} />
+          
+          {/* User Bike Booking routes */}
+          <Route
+            path="/my-bike-bookings"
+            element={
+              <UserRoute>
+                <MyBikeBookings />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/bike-bookings/success/:id"
+            element={
+              <UserRoute>
+                <BikeBookingSuccess />
+              </UserRoute>
+            }
+          />
 
           {/* Owner Bike Rental routes (protected by BikeOwnerRoute — separate from OwnerRoute) */}
           <Route

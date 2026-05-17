@@ -19,6 +19,7 @@ const bookingRoutes = require("./routes/bookings");
 const paymentRoutes = require("./routes/payment"); // Payment and payout routes
 const adminRoutes = require("./routes/admin");
 const bikeRoutes = require("./routes/bikes");
+const bikeBookingRoutes = require("./routes/bikeBookings");
 const govAuthRoutes = require("./routes/govAuth"); // Government official auth
 const noticeRoutes = require("./routes/notices"); // Notice board
 
@@ -134,6 +135,7 @@ app.use("/bookings", bookingRoutes); // POST /create-order, /verify-payment, GET
 app.use("/payment", paymentRoutes); // POST /payment/create-order, /payment/verify, /payment/webhook, etc.
 app.use("/admin", adminRoutes); // GET /admin/stats, PUT /admin/owners/:id/approve, etc. (requires JWT auth)
 app.use("/bikes", bikeRoutes); // GET /bikes, POST /bikes/add, etc.
+app.use("/bike-bookings", bikeBookingRoutes); // POST /create-order, /verify-payment, GET /my-bookings, /owner/bookings
 app.use("/gov", govAuthRoutes); // POST /gov/register, /gov/login, /gov/refresh, /gov/logout, GET /gov/me
 app.use("/notices", noticeRoutes); // POST /notices/upload, GET /notices/all, GET /notices/my, DELETE /notices/:id
 

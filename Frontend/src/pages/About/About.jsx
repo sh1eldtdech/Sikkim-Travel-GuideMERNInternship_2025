@@ -41,9 +41,9 @@ const TRAVEL_SECTIONS = [
     intro: "Embark on an unforgettable journey through Sikkim's breathtaking landscapes and rich cultural heritage.",
     reverse: false,
     items: [
-      { icon:"🗓️", title:"Best Time to Visit",      desc:"March–May and October–December offer the most pleasant weather. Spring brings blooming rhododendrons; autumn gives clear mountain views." },
+      { icon:"🗓️", title:"Best Time to Visit",      desc:"March-May and October-December offer the most pleasant weather. Spring brings blooming rhododendrons; autumn gives clear mountain views." },
       { icon:"🚌", title:"Local Transportation",     desc:"Shared jeeps and taxis are the primary modes of transport. Pre-book vehicles for long distances. Buses connect major towns." },
-      { icon:"🏨", title:"Accommodation Options",    desc:"From luxury resorts to budget homestays — Sikkim offers diverse lodging. Book in advance during peak seasons." },
+      { icon:"🏨", title:"Accommodation Options",    desc:"From luxury resorts to budget homestays - Sikkim offers diverse lodging. Book in advance during peak seasons." },
       { icon:"🍜", title:"Local Cuisine Guide",      desc:"Try momos, thukpa, and gundruk. Don't miss the local tea and organic produce from Sikkim's farms." },
     ],
   },
@@ -65,7 +65,7 @@ const TRAVEL_SECTIONS = [
     intro: "Essential information for smooth entry into Sikkim.",
     reverse: false,
     items: [
-      { icon:"📄", title:"Entry Permits",              desc:"Inner Line Permit (ILP) required for all visitors. Apply online or at entry checkpoints. Valid for 7–30 days." },
+      { icon:"📄", title:"Entry Permits",              desc:"Inner Line Permit (ILP) required for all visitors. Apply online or at entry checkpoints. Valid for 7-30 days." },
       { icon:"📍", title:"Border Checkpoints",         desc:"Major entry points at Rangpo, Melli, and Jorethang. Keep documents ready. Foreign nationals need additional permits." },
       { icon:"🔒", title:"Restricted Areas",           desc:"Special permits needed for border areas. Photography restrictions in sensitive zones. Follow local guidelines strictly." },
       { icon:"🪪", title:"Documentation Requirements", desc:"Valid ID proof, passport photos, and travel itinerary required. Foreign nationals need passport and visa copies." },
@@ -77,7 +77,7 @@ const TRAVEL_SECTIONS = [
     intro: "Navigate the permit process for North Sikkim's pristine landscapes.",
     reverse: true,
     items: [
-      { icon:"📝", title:"Permit Application", desc:"Apply through registered travel agents or online portal. Processing time: 1–2 working days. Group permits available." },
+      { icon:"📝", title:"Permit Application", desc:"Apply through registered travel agents or online portal. Processing time: 1-2 working days. Group permits available." },
       { icon:"🪪", title:"Required Documents", desc:"Valid ID proof, passport photos, hotel bookings, and travel itinerary. Foreign nationals need additional documentation." },
       { icon:"⏱️", title:"Permit Validity",    desc:"Valid for specific dates only. Maximum stay: 7 days. Non-extendable. Must be carried at all times." },
       { icon:"🚫", title:"Restricted Areas",   desc:"Special permits needed for Gurudongmar Lake and Yumthang Valley. Photography restrictions in certain areas." },
@@ -127,7 +127,7 @@ export default function About() {
         <div className="ab-hero-inner">
           <span className="ab-badge">🏔 Sikkim Travel Guide</span>
           <h1 className="ab-hero-title">Discover Sikkim</h1>
-          <p className="ab-hero-sub">Your Gateway to the Himalayan Paradise — curated guides, safety info and everything in between.</p>
+          <p className="ab-hero-sub">Your Gateway to the Himalayan Paradise - curated guides, safety info and everything in between.</p>
         </div>
         <div className="ab-hero-scroll">
           <span>Scroll to explore</span>
@@ -145,7 +145,7 @@ export default function About() {
               An <strong>ISO 9001:2015 certified</strong> Information Technology training &amp; service provider dedicated to promoting Cyber Security, IT, Web Development and Digital Awareness across India.
             </p>
             <p className="ab-company-desc">
-              Our skilled team empowers organizations with the knowledge and tools to navigate the digital landscape securely — from VAPT and infrastructure to training events and strategic consulting.
+              Our skilled team empowers organizations with the knowledge and tools to navigate the digital landscape securely - from VAPT and infrastructure to training events and strategic consulting.
             </p>
             <div className="ab-company-btns">
               <a href="mailto:shieldslabs@gmail.com" className="ab-btn-primary">
@@ -177,7 +177,7 @@ export default function About() {
           <div className="ab-sec-hdr">
             <span className="ab-eyebrow">✦ What We Do</span>
             <h2 className="ab-sec-title">Our Services</h2>
-            <p className="ab-sec-sub">From cyber security to web development — we build and protect your digital presence.</p>
+            <p className="ab-sec-sub">From cyber security to web development - we build and protect your digital presence.</p>
           </div>
           <div className="ab-services-grid">
             {SERVICES.map((s, i) => (
