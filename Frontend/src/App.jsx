@@ -30,14 +30,8 @@ const ContactUs = lazy(() => import("./pages/Contact Us/ContactUs"));
 const Login = lazy(() => import("./pages/Login/Login"));
 const Traveler = lazy(() => import("./pages/Login/Traveler"));
 const Government = lazy(() => import("./pages/Login/Government"));
-const Business = lazy(() => import("./pages/Login/Business"));
 const DisasterAlert = lazy(() => import("./pages/Disaster/DisasterAlert"));
-const SikkimTourDashboard = lazy(
-  () => import("./pages/Login/Dashboard/Dashboard"),
-);
-const GovernmentDashboard = lazy(
-  () => import("./pages/Login/Dashboard/GovernmentDashboard"),
-);
+const GovernmentDashboard = lazy(() => import("./pages/Login/Dashboard/GovernmentDashboard"));
 const Article = lazy(() => import("./pages/Vlog/Article"));
 const MyBookings = lazy(() => import("./pages/Login/Hotels/MyBookings/MyBookings"));
 
@@ -80,6 +74,12 @@ const BikeBookings = lazy(
 const BikeList = lazy(() => import("./pages/BikeRental/BikeList/BikeList"));
 const BikeDetails = lazy(
   () => import("./pages/BikeRental/BikeDetails/BikeDetails"),
+);
+const BikeBookingSuccess = lazy(
+  () => import("./pages/BikeRental/BikeBookingSuccess/BikeBookingSuccess"),
+);
+const MyBikeBookings = lazy(
+  () => import("./pages/BikeRental/MyBikeBookings/MyBikeBookings"),
 );
 
 // Protected route wrapper for Hotel Owner pages (cookie session + context)
@@ -159,7 +159,6 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/traveler-login" element={<Traveler />} />
           <Route path="/government-login" element={<Government />} />
-          <Route path="/business-login" element={<Business />} />
           <Route path="/disaster-alerts" element={<DisasterAlert />} />
           <Route
             path="/government-dashboard"
@@ -247,6 +246,24 @@ function AppContent() {
           {/* Public Bike Rental routes */}
           <Route path="/bikes" element={<BikeList />} />
           <Route path="/bikes/:id" element={<BikeDetails />} />
+          
+          {/* User Bike Booking routes */}
+          <Route
+            path="/my-bike-bookings"
+            element={
+              <UserRoute>
+                <MyBikeBookings />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/bike-bookings/success/:id"
+            element={
+              <UserRoute>
+                <BikeBookingSuccess />
+              </UserRoute>
+            }
+          />
 
           {/* Owner Bike Rental routes (protected by BikeOwnerRoute — separate from OwnerRoute) */}
           <Route

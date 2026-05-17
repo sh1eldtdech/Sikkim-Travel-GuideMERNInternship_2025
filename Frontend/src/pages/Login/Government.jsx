@@ -4,6 +4,8 @@ import { useGovAuth } from "../../context/GovAuthContext";
 import API from "../../utils/api";
 import { toast } from "react-toastify";
 import styles from "./Government.module.css";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
 
 const Government = () => {
   const navigate = useNavigate();
@@ -133,52 +135,20 @@ const Government = () => {
     setServerError("");
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      // TODO: Implement Google OAuth
+      console.log("Google Sign In clicked");
+    } catch (error) {
+      console.error("Google Sign In error:", error);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.backgroundOverlay}></div>
 
       <div className={styles.content}>
-        {/* Header */}
-        <div className={styles.header}>
-          <div className={styles.backButton} onClick={() => navigate("/login")}>
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <div className={styles.logoContainer}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className={styles.logo}
-            >
-              <path d="M12 2L2 7V10C2 16 6 20.5 12 22C18 20.5 22 16 22 10V7L12 2Z" fill="currentColor"/>
-              <path d="M9 12L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <h1 className={styles.title}>Government Agencies</h1>
-          <p className={styles.subtitle}>
-            {isLogin ? "Welcome back! Sign in to your account" : "Create your government account"}
-          </p>
-        </div>
-
-        {/* Toggle Buttons */}
-        <div className={styles.toggleContainer}>
-          <button
-            className={`${styles.toggleBtn} ${isLogin ? styles.active : ""}`}
-            onClick={() => setIsLogin(true)}
-          >
-            Login
-          </button>
-          <button
-            className={`${styles.toggleBtn} ${!isLogin ? styles.active : ""}`}
-            onClick={() => setIsLogin(false)}
-          >
-            Sign Up
-          </button>
-        </div>
-
-        {/* Form Container */}
         <div className={styles.formContainer}>
           <div className={styles.formHeader}>
             <h2>{isLogin ? "Login" : "Sign Up"}</h2>
@@ -189,43 +159,38 @@ const Government = () => {
               <>
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={`${styles.input} ${errors.email ? styles.error : ""}`}
-                    placeholder="Enter your email"
-                  />
+                  <div className={styles.inputWrapper}>
+                    <Mail size={18} className={styles.inputIcon} />
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={`${styles.input} ${styles.hasIcon} ${errors.email ? styles.error : ""}`}
+                      placeholder="Email"
+                    />
+                  </div>
                   {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                 </div>
 
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>Password</label>
                   <div className={styles.passwordContainer}>
+                    <Lock size={18} className={styles.inputIcon} />
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`${styles.input} ${errors.password ? styles.error : ""}`}
-                      placeholder="Enter your password"
+                      className={`${styles.input} ${styles.hasIcon} ${styles.passwordInput} ${errors.password ? styles.error : ""}`}
+                      placeholder="Password"
                     />
                     <button
                       type="button"
                       className={styles.passwordToggle}
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? (
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M3 3L21 21M10.584 10.587A2 2 0 0 0 13.416 13.416M9.363 5.365A9.466 9.466 0 0 1 12 5C17 5 21 9 21 12A9.26 9.26 0 0 1 19.49 15.49M6.51 8.51A9.26 9.26 0 0 0 3 12C3 15 7 19 12 19A9.466 9.466 0 0 0 15.635 18.635" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      ) : (
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      )}
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                   {errors.password && <span className={styles.errorText}>{errors.password}</span>}
@@ -334,16 +299,7 @@ const Government = () => {
                       className={styles.passwordToggle}
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? (
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M3 3L21 21M10.584 10.587A2 2 0 0 0 13.416 13.416M9.363 5.365A9.466 9.466 0 0 1 12 5C17 5 21 9 21 12A9.26 9.26 0 0 1 19.49 15.49M6.51 8.51A9.26 9.26 0 0 0 3 12C3 15 7 19 12 19A9.466 9.466 0 0 0 15.635 18.635" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      ) : (
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      )}
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                   {errors.password && <span className={styles.errorText}>{errors.password}</span>}
@@ -354,17 +310,33 @@ const Government = () => {
             <button type="submit" className={styles.submitButton} disabled={isLoading}>
               {isLoading ? "Processing..." : isLogin ? "Login" : "Sign Up"}
             </button>
+
+            {isLogin && (
+              <>
+                <div className={styles.divider}>
+                  <span>Or sign in with</span>
+                </div>
+                <button
+                  type="button"
+                  className={styles.googleButton}
+                  onClick={handleGoogleSignIn}
+                >
+                  <FcGoogle size={22} />
+                  Sign in with Google
+                </button>
+              </>
+            )}
           </form>
 
-          {/* Toggle Form */}
-          <div className={styles.toggleContainer}>
-            <p>
-              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-              <button type="button" onClick={toggleForm}>
-                {isLogin ? "Sign Up" : "Login"}
-              </button>
-            </p>
-          </div>
+            {/* Toggle Form */}
+            <div className={styles.toggleContainer}>
+              <p>
+                {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+                <button type="button" onClick={toggleForm}>
+                  {isLogin ? "Sign Up" : "Login"}
+                </button>
+              </p>
+            </div>
         </div>
       </div>
     </div>

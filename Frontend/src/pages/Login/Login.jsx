@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Compass, Landmark, Briefcase } from "lucide-react";
 import styles from "./Login.module.css";
 
 const Login = () => {
@@ -23,17 +24,16 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
-      {/* Background with Sikkim-inspired gradient */}
-      <div className={styles.backgroundOverlay}></div>
-
+      <div className={styles.fogOverlay}></div>
       <div className={styles.content}>
         {/* Header Section */}
         <div className={styles.header}>
           <h1 className={styles.title}>
-            Welcome to{" "}
-            <span className={styles.highlight}>Sikkim Travel Guidebook</span>
+            Welcome to <span className={styles.highlight}>Sikkim</span> Travel Guide
           </h1>
-          <p className={styles.subtitle}>Choose your account type</p>
+          <p className={styles.subtitle}>
+            Choose your account type to continue your journey
+          </p>
         </div>
 
         {/* Cards Container */}
@@ -44,17 +44,15 @@ const Login = () => {
             onClick={() => handleCardClick("traveler")}
           >
             <div className={styles.cardIcon}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="currentColor" />
-                <path d="M12 14C7.58172 14 4 17.5817 4 22H20C20 17.5817 16.4183 14 12 14Z" fill="currentColor" />
-              </svg>
+              <Compass size={32} strokeWidth={1.5} />
             </div>
             <h3 className={styles.cardTitle}>Traveler</h3>
             <p className={styles.cardDescription}>
               Explore Sikkim's breathtaking landscapes and discover hidden gems
             </p>
-            <div className={styles.cardFooter}>
-              <span className={styles.clickText}>Click to Continue</span>
+            <div className={styles.cardAction}>
+              <span>Enter Portal</span>
+              <div className={styles.arrow}>→</div>
             </div>
           </div>
 
@@ -64,17 +62,15 @@ const Login = () => {
             onClick={() => handleCardClick("government")}
           >
             <div className={styles.cardIcon}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7V10C2 16 6 20.5 12 22C18 20.5 22 16 22 10V7L12 2Z" fill="currentColor" />
-                <path d="M9 12L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Landmark size={32} strokeWidth={1.5} />
             </div>
-            <h3 className={styles.cardTitle}>Government Agencies</h3>
+            <h3 className={styles.cardTitle}>Government</h3>
             <p className={styles.cardDescription}>
-              We provide reliable travel information to promote tourism and local growth
+              Official access for government agencies and tourism departments
             </p>
-            <div className={styles.cardFooter}>
-              <span className={styles.clickText}>Click to Continue</span>
+            <div className={styles.cardAction}>
+              <span>Enter Portal</span>
+              <div className={styles.arrow}>→</div>
             </div>
           </div>
 
@@ -84,25 +80,22 @@ const Login = () => {
             onClick={() => handleCardClick("business")}
           >
             <div className={styles.cardIcon}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 21H21V19H3V21ZM5 10V18H7V10H5ZM11 6V18H13V6H11ZM17 2V18H19V2H17Z" fill="currentColor" />
-              </svg>
+              <Briefcase size={32} strokeWidth={1.5} />
             </div>
-            <h3 className={styles.cardTitle}>Private Business</h3>
+            <h3 className={styles.cardTitle}>Business</h3>
             <p className={styles.cardDescription}>
-              Showcase your services, connect with travelers, and grow your tourism business
+              Showcase your services and connect with travelers
             </p>
-            <div className={styles.cardFooter}>
-              <span className={styles.clickText}>Click to Continue</span>
+            <div className={styles.cardAction}>
+              <span>Enter Portal</span>
+              <div className={styles.arrow}>→</div>
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className={styles.footer}>
-          <p>
-            Experience the magic of Sikkim with our comprehensive travel guide
-          </p>
+          <p>Experience the magic of the Himalayas</p>
         </div>
       </div>
     </div>
