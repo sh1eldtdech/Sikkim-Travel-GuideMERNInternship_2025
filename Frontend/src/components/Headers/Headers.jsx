@@ -95,7 +95,7 @@ const Headers = () => {
             onClick={() => goTo("/")}
             style={{ cursor: "pointer" }}
           >
-            SikkimPal
+            SH1ELDTech
           </span>
 
           {/* Desktop Nav */}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./Traveler.module.css";
-import { loginUser, registerUser } from "./Hotels/api";
+import { useUserAuth } from "../../context/UserAuthContext";
 import { toast } from "react-toastify";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
@@ -10,6 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 const Traveler = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login: loginAuth, register: registerAuth } = useUserAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -83,13 +84,13 @@ const Traveler = () => {
     try {
       let resData;
       if (isLogin) {
-        resData = await loginUser({
+        resData = await loginAuth({
           email: formData.email,
           password: formData.password,
         });
         toast.success("Welcome back! You're now logged in.");
       } else {
-        resData = await registerUser({
+        resData = await registerAuth({
           name: `${formData.firstName} ${formData.lastName}`.trim(),
           email: formData.email,
           password: formData.password,

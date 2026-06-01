@@ -119,10 +119,6 @@ const BikeRentalDashboard = () => {
             <TrendingUp size={120} />
           </div>
           <div className="bike-dashboard__hero-content">
-            <div className="bike-dashboard__pill">
-              <span />
-              Partner Portal
-            </div>
             <h2 className="bike-dashboard__hero-title">
               Welcome back, {bikeOwner?.name || "Partner"}!
             </h2>

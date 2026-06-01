@@ -110,13 +110,6 @@
   font-weight: 700;
 }
 
-.bike-dashboard__pill span {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 999px;
-  background: #34d399;
-}
-
 .bike-dashboard__hero-title {
   margin: 0 0 0.5rem;
   font-size: 1.875rem;
