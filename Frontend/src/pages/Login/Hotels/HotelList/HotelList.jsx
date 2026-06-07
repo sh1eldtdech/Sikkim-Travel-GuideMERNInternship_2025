@@ -51,7 +51,6 @@ export default function HotelList() {
       <div className="hl-hero">
         <div className="hl-hero-overlay" />
         <div className="hl-hero-content">
-          <span className="hl-hero-tag">Sikkim Tourism</span>
           <h1 className="hl-hero-title">Find Your Mountain Stay</h1>
           <p className="hl-hero-sub">
             Curated accommodations across all four districts of Sikkim
